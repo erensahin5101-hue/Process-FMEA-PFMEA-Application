@@ -27,7 +27,7 @@
         <button class="nav-item" data-view="instruction"><span class="nav-icon">▤</span><span>Operatör Talimatı</span><span class="status-dot muted"></span></button>
         <button class="nav-item" data-view="documents"><span class="nav-icon">□</span><span>PPAP Merkezi</span><span class="nav-badge ppap-badge">78%</span></button>
         <p class="nav-label">SİSTEM</p>
-        <button class="nav-item" data-view="library"><span class="nav-icon">▥</span><span>Proses Kütüphanesi</span></button>
+        <button class="nav-item" data-view="library"><span class="nav-icon">▥</span><span>Proses Kütüphanesi</span><span id="libraryCountBadge" class="nav-badge library-nav-badge">18</span></button>
         <button class="nav-item"><span class="nav-icon">⚙</span><span>Ayarlar</span></button>
       </nav>
 
@@ -190,8 +190,79 @@
 
       <section id="documents" class="view ppap-view"><div class="page-heading"><div><p class="eyebrow">PPAP SEVİYE 3 • KONTROLLÜ YAYIN</p><h1>PPAP Paket Merkezi</h1><p>18 PPAP unsurunu, onay durumunu ve eksik kanıtları tek kalite kapısında yönetin.</p></div><button class="primary-button" data-action="ppap-package">□ PPAP Paketini Hazırla</button></div><div class="ppap-summary"><article class="panel ppap-readiness"><div class="readiness-ring"><span>78%</span></div><div><p class="eyebrow">PAKET HAZIRLIĞI</p><h2>Müşteri sunumuna yaklaşıyor</h2><p>14 unsur hazır, 3 unsur işlemde, 1 unsur bekliyor.</p></div></article><article class="panel ppap-kpi"><span class="green-text">14</span><b>Hazır</b><small>Onaylı ve güncel</small></article><article class="panel ppap-kpi"><span class="amber-text">3</span><b>İşlemde</b><small>Sorumlu atanmış</small></article><article class="panel ppap-kpi"><span class="red-text">1</span><b>Bloke</b><small>MSA sonucu gerekli</small></article></div><article class="panel ppap-panel"><div class="panel-header"><div><h2>PPAP Unsurları</h2><p>AIAG PPAP 4. baskı temel sunum listesi</p></div><div class="header-tools"><button class="chip active" data-ppap-filter="all">Tümü <span>18</span></button><button class="chip" data-ppap-filter="open">Açık <span>4</span></button><button class="filter-button">☷ Sorumlu</button></div></div><div id="ppapChecklist" class="ppap-checklist"></div></article></section>
 
-      <section id="library" class="view"><div class="page-heading"><div><p class="eyebrow">MERKEZİ VERİ YÖNETİMİ</p><h1>Proses Kütüphanesi</h1><p>Standart prosesleri, ekipmanları ve kontrol yöntemlerini yönetin.</p></div><button class="primary-button">＋ Yeni Standart Proses</button></div><div class="library-kpis"><article class="panel"><span>Standart proses</span><b>48</b><small>8 proses ailesi</small></article><article class="panel"><span>Kontrol yöntemi</span><b>36</b><small>MSA bağlantılı</small></article><article class="panel"><span>Ölçüm ekipmanı</span><b>29</b><small>Kalibrasyon izlemeli</small></article><article class="panel"><span>Reaksiyon planı</span><b>18</b><small>Onaylı şablon</small></article></div></section>
+      <section id="library" class="view library-view">
+        <div class="page-heading"><div><p class="eyebrow">MERKEZİ PROSES BİLGİ BANKASI • REVİZYON KONTROLLÜ</p><h1>Proses Kütüphanesi</h1><p>Proses, ekipman, karakteristik, PFMEA riski ve kontrol metodunu tek onaylı kayıtta yönetin.</p></div><div class="heading-actions"><button class="secondary-button" data-action="export-library">⇩ Dışa Aktar</button><button class="primary-button" data-action="new-process">＋ Yeni Standart Proses</button></div></div>
+
+        <div class="library-kpis professional-kpis">
+          <article class="panel"><span>Aktif proses</span><b id="libraryActiveCount">18</b><small id="libraryFamilyCount">8 proses ailesi</small><i class="kpi-accent blue-accent"></i></article>
+          <article class="panel"><span>Özel proses</span><b id="librarySpecialCount">4</b><small>CQI değerlendirmeli</small><i class="kpi-accent amber-accent"></i></article>
+          <article class="panel"><span>Onaylı kayıt</span><b id="libraryApprovedCount">16</b><small id="libraryApprovalRate">%89 yayın oranı</small><i class="kpi-accent green-accent"></i></article>
+          <article class="panel"><span>Dış kaynak</span><b id="libraryOutsourceCount">1</b><small>Tedarikçi kontrollü</small><i class="kpi-accent purple-accent"></i></article>
+        </div>
+
+        <div class="library-workspace">
+          <article class="panel library-register">
+            <div class="library-toolbar">
+              <label class="register-search"><span>⌕</span><input id="librarySearch" placeholder="Kod, proses, ekipman veya kontrol metodu ara..."></label>
+              <select id="libraryFamilyFilter" aria-label="Proses ailesi"><option value="all">Tüm aileler</option></select>
+              <select id="libraryStatusFilter" aria-label="Kayıt durumu"><option value="active">Aktif kayıtlar</option><option value="archived">Arşiv</option><option value="all">Tüm durumlar</option></select>
+              <label class="special-toggle"><input id="librarySpecialFilter" type="checkbox"><span>◆</span> Yalnız özel proses</label>
+            </div>
+            <div class="register-meta"><div><b id="libraryResultCount">18 proses</b><span>Son güncelleme ve revizyon bilgileriyle</span></div><div class="quality-key"><span><i class="approved-dot"></i>Onaylı</span><span><i class="draft-dot"></i>Taslak</span><span><i class="special-dot"></i>Özel proses</span></div></div>
+            <div class="process-register-scroll">
+              <div class="process-register-head"><span>PROSES / KOD</span><span>AİLE</span><span>EKİPMAN &amp; KONTROL</span><span>KALİTE BAĞLANTILARI</span><span>ÇEVRİM</span><span>REVİZYON</span><span></span></div>
+              <div id="processLibraryRows" class="process-register-body"><div class="library-loading">Proses kayıtları yükleniyor…</div></div>
+            </div>
+          </article>
+
+          <aside class="panel library-health">
+            <div class="health-header"><span>VERİ KALİTESİ</span><b id="libraryQualityScore">94</b><small>/100</small></div>
+            <div class="health-ring"><div><strong id="libraryQualityPercent">94%</strong><small>tamlık</small></div></div>
+            <h3>Kütüphane kalite kapısı</h3><p>Akış, PFMEA, kontrol planı ve operatör talimatı aynı ana kaydı kullanır.</p>
+            <div class="health-checks"><div><span>✓</span><p><b>Kimlik ve revizyon</b><small id="healthIdentity">Tüm aktif kayıtlarda mevcut</small></p></div><div><span>✓</span><p><b>Kontrol metodu</b><small id="healthControl">18/18 tanımlı</small></p></div><div class="health-warning"><span>!</span><p><b>Onay bekleyen</b><small id="healthDrafts">2 taslak proses</small></p></div></div>
+            <button class="secondary-button full" data-action="show-drafts">Taslak Kayıtları Göster</button>
+            <div class="library-rule"><span>⛓</span><p><b>Tek kaynak kuralı</b><small>Proses düzenlendiğinde bağlı dokümanlar revizyon incelemesine düşer.</small></p></div>
+          </aside>
+        </div>
+      </section>
     </main>
+  </div>
+
+  <div id="processDrawer" class="drawer-shell hidden" aria-hidden="true">
+    <button class="drawer-backdrop" data-action="close-process-drawer" aria-label="Pencereyi kapat"></button>
+    <aside class="process-drawer" role="dialog" aria-modal="true" aria-labelledby="processDrawerTitle">
+      <div class="drawer-header"><div><p class="eyebrow">STANDART PROSES KARTI</p><h2 id="processDrawerTitle">Yeni Proses Tanımla</h2><span id="processDrawerSubtitle">Kalite dokümanlarının kullanacağı ana proses kaydı</span></div><button class="drawer-close" data-action="close-process-drawer" aria-label="Kapat">×</button></div>
+      <form id="processForm" novalidate>
+        <input id="processId" type="hidden">
+        <section class="drawer-section"><div class="drawer-section-title"><span>01</span><div><h3>Kimlik ve Doküman Kontrolü</h3><p>Benzersiz kod, sahiplik ve revizyon durumu</p></div></div><div class="drawer-form-grid">
+          <label>Proses kodu *<input id="processCode" required placeholder="PR-140"></label><label>Proses adı *<input id="processName" required placeholder="Örn. Honlama"></label>
+          <label>Proses ailesi *<input id="processFamily" list="processFamilyOptions" required placeholder="Mevcut aileyi seçin veya yenisini yazın"><datalist id="processFamilyOptions"><option>Talaşlı İmalat</option><option>Şekillendirme</option><option>Isıl İşlem</option><option>Yüzey Kaplama</option><option>Yüzey Hazırlama</option><option>Birleştirme</option><option>Montaj</option><option>Kalite Kontrol</option><option>Fonksiyon Testi</option><option>İzlenebilirlik</option><option>Lojistik</option><option>Ön Şekillendirme</option></datalist></label>
+          <label>Kategori *<select id="processCategory" required><option>Üretim</option><option>Kontrol</option><option>Özel Proses</option><option>Lojistik</option></select></label>
+          <label>Kayıt sahibi<input id="processOwner" value="Kalite Mühendisliği"></label><label>Revizyon<select id="processRevision"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></label>
+          <label>Onay durumu<select id="processApproval"><option value="draft">Taslak</option><option value="approved">Onaylı</option></select></label><label>Doküman referansı<input id="processDocumentRef" placeholder="WI-PR-140"></label>
+          <label class="span-2">Proses açıklaması<textarea id="processDescription" rows="3" placeholder="Prosesin kapsamı ve amacı"></textarea></label>
+        </div></section>
+
+        <section class="drawer-section"><div class="drawer-section-title"><span>02</span><div><h3>Teknik Proses Tanımı</h3><p>Girdi–çıktı, kaynak, ekipman ve süreler</p></div></div><div class="drawer-form-grid">
+          <label>Girdi / yarı mamul<input id="processInput" placeholder="İşlenmiş parça"></label><label>Çıktı / yarı mamul<input id="processOutput" placeholder="Honlanmış parça"></label>
+          <label>Ekipman / makine *<input id="processEquipment" required placeholder="CNC honlama tezgahı"></label><label>Takım / fikstür<input id="processTooling" placeholder="Honlama taşı, bağlama fikstürü"></label>
+          <label>Çevrim süresi (sn)<input id="processCycle" type="number" min="0" step="0.1" value="0"></label><label>Hazırlık süresi (dk)<input id="processSetup" type="number" min="0" step="0.1" value="0"></label>
+          <label class="checkbox-field"><input id="processSpecial" type="checkbox"><span><b>Özel proses</b><small>Sonuç yalnızca sonradan muayene ile tam doğrulanamıyor</small></span></label><label class="checkbox-field"><input id="processOutsource" type="checkbox"><span><b>Dış kaynak</b><small>Tedarikçi kalite ve giriş kontrol bağlantısı kurulur</small></span></label>
+        </div></section>
+
+        <section class="drawer-section quality-section"><div class="drawer-section-title"><span>03</span><div><h3>Kalite ve PFMEA Bağlantıları</h3><p>Kontrol planı ve risk analizinin otomatik veri kaynağı</p></div></div><div class="drawer-form-grid">
+          <label class="span-2">Proses fonksiyonu<textarea id="processPfmeaFunction" rows="2" placeholder="Prosesin ürün üzerinde sağlaması gereken fonksiyon"></textarea></label>
+          <label class="span-2">Kontrol metodu *<textarea id="processControlMethod" required rows="2" placeholder="İlk parça, SPC, %100 kontrol..."></textarea></label>
+          <label>Kontrol karakteristikleri<textarea id="processCharacteristics" rows="5" placeholder="Her satıra bir karakteristik"></textarea><small>Her satır ayrı kontrol planı önerisine dönüşür.</small></label>
+          <label>Başlangıç PFMEA riskleri<textarea id="processRisks" rows="5" placeholder="Her satıra bir hata türü / risk"></textarea><small>Yeni PFMEA oluşturulurken risk şablonu olarak gelir.</small></label>
+          <label class="span-2">Standart / CQI / müşteri şartı<input id="processStandard" placeholder="CQI-9, VDA 19.1, müşteri CSR..."></label>
+          <label class="span-2">Reaksiyon planı<textarea id="processReaction" rows="3" placeholder="Prosesi durdur, ürünü bloke et, son uygun parçadan itibaren ayır..."></textarea></label>
+          <label class="span-2">Operatör talimat referansı / temel adımlar<textarea id="processWorkInstruction" rows="2" placeholder="WI numarası veya temel uygulama notları"></textarea></label>
+        </div></section>
+
+        <div class="drawer-footer"><button id="archiveProcessButton" class="danger-button hidden" type="button" data-action="archive-process">Arşivle</button><span id="processFormStatus">* Zorunlu alanlar</span><button class="secondary-button" type="button" data-action="close-process-drawer">İptal</button><button class="primary-button" type="submit">✓ Prosesi Kaydet</button></div>
+      </form>
+    </aside>
   </div>
 
   <div id="toast" class="toast"><span>✓</span><div><b>İşlem tamamlandı</b><small>Doküman başarıyla oluşturuldu.</small></div></div>
