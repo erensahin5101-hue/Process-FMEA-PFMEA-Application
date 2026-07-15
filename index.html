@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10213f">
   <title>Q-Flow | Otomotiv Kalite Dokümantasyonu</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/qflow-icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,8 +35,8 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="standard-card"><span>✓</span><div><strong>IATF 16949</strong><small>Doküman yapısı uyumlu</small></div></div>
-        <div class="user-mini"><div class="avatar">EK</div><div><strong>Eren K.</strong><small>Ar-Ge Mühendisi</small></div><button>⋮</button></div>
+        <div class="standard-card"><span>✓</span><div><strong>IATF 16949</strong><small>Core Tools destekli iş akışı</small></div></div>
+        <div class="user-mini"><div class="avatar">EK</div><div><strong>Eren K.</strong><small>Kalite Sistem Mühendisi</small></div><button>⋮</button></div>
       </div>
     </aside>
 
@@ -49,7 +52,7 @@
 
       <section id="dashboard" class="view active">
         <div class="hero-row">
-          <div><p class="eyebrow">13 TEMMUZ 2026 • PAZARTESİ</p><h1>Günaydın, Eren <span>👋</span></h1><p>Ürün dokümantasyon süreçlerinizi tek merkezden yönetin.</p></div>
+          <div><p class="eyebrow">15 TEMMUZ 2026 • ÇARŞAMBA</p><h1>Günaydın, Eren <span>👋</span></h1><p>Ürün dokümantasyon süreçlerinizi tek doğrulanmış veri omurgasından yönetin.</p></div>
           <button class="primary-button" data-action="new-product"><span>＋</span> Yeni Ürün Dokümantasyonu</button>
         </div>
 
@@ -100,32 +103,82 @@
         <div class="page-heading"><div><p class="eyebrow">YENİ DOKÜMANTASYON • YÖNLENDİRMELİ KURULUM</p><h1>Ürün ve Teknik Resim Tanımlama</h1><p>Sistem size gerekli soruları sorar; yanıtlar tüm kalite dokümanlarının tek veri kaynağı olur.</p></div><span id="draftStatus" class="page-status saved">✓ Taslak kaydedildi</span></div>
 
         <div class="wizard-steps" aria-label="Kurulum adımları">
-          <button class="wizard-step active" data-wizard-step="1"><span>1</span><b>Ürün</b><small>Temel tanım</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="2"><span>2</span><b>Proses soruları</b><small>Akıllı seçim</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="3"><span>3</span><b>Karakteristikler</b><small>Sayısal değerler</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="4"><span>4</span><b>Doğrulama</b><small>Kalite kapısı</small></button>
+          <button class="wizard-step active" data-wizard-step="1"><span>1</span><b>Ürün &amp; antet</b><small>Ana veri</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="2"><span>2</span><b>Teknik şartlar</b><small>Malzeme &amp; yüzey</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="3"><span>3</span><b>Proses soruları</b><small>Akıllı seçim</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="4"><span>4</span><b>Karakteristikler</b><small>Ölçü &amp; kontrol</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="5"><span>5</span><b>Doğrulama</b><small>Kalite kapısı</small></button>
         </div>
 
         <div class="form-layout">
           <div class="wizard-main">
             <article class="panel form-panel wizard-pane active" data-pane="1">
-              <div class="section-title"><span>01</span><div><h2>Ürün Bilgileri</h2><p>Kontrol planı, PFMEA ve PPAP başlıklarında ortak kullanılacak ana bilgiler</p></div></div>
+              <div class="section-title"><span>01</span><div><h2>Ürün, Müşteri ve Kontrollü Antet</h2><p>Kontrol planı, PFMEA, proses akışı ve talimatlarda ortak kullanılacak ana bilgiler</p></div></div>
               <div class="form-grid">
                 <label>Ürün grubu<select id="productGroup"><option value="steering">Direksiyon Sistemleri</option><option value="suspension">Süspansiyon Sistemleri</option><option value="chassis">Şasi Bağlantı Elemanları</option><option value="machined">Talaşlı İmalat Parçaları</option></select></label>
                 <label>Ürün tipi<select id="productType"></select></label>
                 <label>Parça numarası<input id="partNumber" value="5101-234-001" required></label>
                 <label>Parça adı<input id="partName" value="Rot Başı, Sağ" required></label>
                 <label>Müşteri<select id="customer"><option>OEM Müşteri A</option><option>OEM Müşteri B</option><option>Yenileme Pazarı</option></select></label>
+                <label>Müşteri parça numarası<input id="customerPartNumber" value="OEM-TR-88421"></label>
                 <label>Üretim fazı<select id="productionPhase"><option>Seri Üretim</option><option>Ön Seri / Safe Launch</option><option>Prototip</option></select></label>
-                <label>Teknik resim revizyonu<input id="drawingRevision" value="C" maxlength="4"></label>
                 <label>Yıllık üretim adedi<input id="annualVolume" type="number" min="1" step="1000" value="120000"></label>
+                <label>Kontrol planı no<input id="controlPlanNumber" value="CP-5101-234-001"></label>
+                <label>Proje / APQP no<input id="projectCode" value="DT-2026-0042"></label>
+                <label>Teknik resim no<input id="drawingNumber" value="TR-5101-234-001"></label>
+                <label>Teknik resim revizyonu<input id="drawingRevision" value="C" maxlength="8"></label>
+              </div>
+              <div class="subsection-label"><span>ANTET VE ONAY BİLGİLERİ</span><i></i></div>
+              <div class="form-grid form-grid-3">
+                <label>Kuruluş / tedarikçi<input id="supplierName" value="Ditaş Otomotiv A.Ş."></label>
+                <label>Üretim sahası<input id="supplierSite" value="Merkez Fabrika"></label>
+                <label>Tedarikçi kodu<input id="supplierCode" value="DIT-001"></label>
+                <label>Anahtar personel<input id="keyContact" value="Eren K."></label>
+                <label>Telefon / e-posta<input id="keyContactPhone" value="+90 000 000 00 00"></label>
+                <label>Çekirdek ekip<input id="coreTeam" value="Kalite, Üretim, Proses, Ar-Ge"></label>
+                <label>İlk yayın tarihi<input id="originalDate" type="date" value="2026-07-15"></label>
+                <label>Revizyon tarihi<input id="revisionDate" type="date" value="2026-07-15"></label>
+                <label>Doküman durumu<select id="documentStatus"><option>Taslak</option><option>İncelemede</option><option>Onay Bekliyor</option><option>Yürürlükte</option></select></label>
               </div>
               <div class="drawing-upload"><div class="pdf-icon">PDF</div><div><strong id="drawingFileName">5101-234-001_REV-C.pdf</strong><small>Teknik resim referansı • Kullanıcı verileriyle doğrulanacak</small></div><button class="secondary-button" data-action="drawing-change">Değiştir</button><span class="verified">✓ Kaynak tanımlı</span></div>
-              <div class="wizard-actions"><span>Zorunlu alanlar dolu</span><button class="primary-button" data-next-step="2">Proses Sorularına Geç →</button></div>
+              <div class="wizard-actions"><span>Zorunlu alanlar dolu</span><button class="primary-button" data-next-step="2">Teknik Şartlara Geç →</button></div>
             </article>
 
             <article class="panel form-panel wizard-pane" data-pane="2">
-              <div class="section-title"><span>02</span><div><h2>Proses Yönlendirme Soruları</h2><p>Seçimleriniz uygun proses şablonunu, risk kütüphanesini ve PPAP kapsamını belirler</p></div></div>
+              <div class="section-title"><span>02</span><div><h2>Malzeme, Isıl İşlem ve Yüzey Şartları</h2><p>Teknik resimdeki kontrollü şartları seçin veya sayısal olarak girin; tüm çıktılar aynı kaydı kullanır</p></div></div>
+              <div class="guided-questions technical-specs">
+                <fieldset><legend>Malzeme tanımı</legend><div class="form-grid form-grid-3">
+                  <label>Malzeme ailesi<select id="materialFamily"><option>Alaşımlı çelik</option><option>Karbon çeliği</option><option>Dökme demir</option><option>Alüminyum alaşımı</option><option>Polimer / elastomer</option></select></label>
+                  <label>Malzeme kalite / sınıf<input id="materialGrade" value="42CrMo4+QT"></label>
+                  <label>Malzeme standardı<input id="materialStandard" value="EN 10083-3"></label>
+                  <label>Hammadde formu<select id="rawMaterialForm"><option>Çubuk</option><option>Dövme taslağı</option><option>Döküm</option><option>Sac</option><option>Boru</option></select></label>
+                  <label>Parça ağırlığı (kg)<input id="partWeight" type="number" min="0" step="0.001" value="1.245"></label>
+                  <label>Malzeme sertifika şartı<select id="materialCertificate"><option>EN 10204 3.1</option><option>EN 10204 2.2</option><option>Müşteri sertifikası</option><option>Gerekli değil</option></select></label>
+                </div></fieldset>
+                <fieldset><legend>Isıl işlem ve mekanik özellik</legend><div class="form-grid form-grid-3">
+                  <label>Isıl işlem<select id="heatTreatment"><option>İndüksiyon sertleştirme</option><option>Su verme + temperleme</option><option>Sementasyon</option><option>Nitrasyon</option><option>Uygulanmıyor</option></select></label>
+                  <label>Sertlik şartı<input id="hardnessSpec" value="58–62 HRC"></label>
+                  <label>Etkin sertlik derinliği<input id="caseDepthSpec" value="1,5–2,5 mm"></label>
+                </div></fieldset>
+                <fieldset><legend>Kaplama ve yüzey performansı</legend><div class="form-grid form-grid-3">
+                  <label>Kaplama sistemi<select id="coatingType"><option>Zn-Ni lamel kaplama</option><option>Çinko kaplama</option><option>Kataforez</option><option>Fosfat</option><option>Geomet</option><option>Kaplama yok</option></select></label>
+                  <label>Kaplama standardı<input id="coatingStandard" value="OEM STD 1234"></label>
+                  <label>Kalınlık (µm)<input id="coatingThickness" type="number" min="0" step="0.1" value="12"></label>
+                  <label>Renk / görünüş<input id="coatingColor" value="Gümüş, homojen"></label>
+                  <label>Korozyon direnci (saat)<input id="corrosionHours" type="number" min="0" step="1" value="720"></label>
+                  <label>Yüzey pürüzlülüğü<input id="roughnessSpec" value="Ra 1,6 µm"></label>
+                </div></fieldset>
+                <fieldset><legend>Ek teknik / mevzuat şartları</legend><div class="form-grid">
+                  <label>Temizlik şartı<input id="cleanlinessSpec" value="VDA 19.1 / müşteri şartı"></label>
+                  <label>İzlenebilirlik<select id="traceabilityLevel"><option>Parça + lot + vardiya</option><option>Lot bazlı</option><option>Seri numara bazlı</option></select></label>
+                  <label class="span-2">Müşteri özel şartı / CSR<textarea id="customerSpecificRequirements" rows="2">Müşteri özel karakteristik sembolleri ve Safe Launch kontrol sıklığı proje kalite planına göre uygulanacaktır.</textarea></label>
+                </div></fieldset>
+              </div>
+              <div class="wizard-actions"><button class="secondary-button" data-prev-step="1">← Geri</button><span>Teknik şartlar düzenlenebilir</span><button class="primary-button" data-next-step="3">Proses Sorularına Geç →</button></div>
+            </article>
+
+            <article class="panel form-panel wizard-pane" data-pane="3">
+              <div class="section-title"><span>03</span><div><h2>Proses Yönlendirme Soruları</h2><p>Seçimleriniz uygun proses şablonunu, risk kütüphanesini ve PPAP kapsamını belirler</p></div></div>
               <div class="guided-questions">
                 <fieldset><legend>Ana şekillendirme yöntemi nedir?</legend><div class="choice-grid"><label class="choice-card selected"><input type="radio" name="forming" value="forging" checked><span>♨</span><b>Sıcak dövme</b><small>Dövme + ısıl işlem riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="casting"><span>◒</span><b>Döküm</b><small>Porozite ve kalıp riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="machining"><span>◎</span><b>Talaşlı imalat</b><small>Takım ve ölçü riskleri</small></label></div></fieldset>
                 <fieldset><legend>Üründe emniyet / mevzuat karakteristiği var mı?</legend><div class="segmented"><label class="active"><input type="radio" name="safety" value="yes" checked>Evet, emniyet kritik</label><label><input type="radio" name="safety" value="no">Hayır</label><label><input type="radio" name="safety" value="unknown">Henüz belirlenmedi</label></div></fieldset>
@@ -133,27 +186,27 @@
                 <fieldset><legend>PPAP sunum seviyesi</legend><div class="segmented ppap-level"><label><input type="radio" name="ppap" value="2">Seviye 2</label><label class="active"><input type="radio" name="ppap" value="3" checked>Seviye 3</label><label><input type="radio" name="ppap" value="4">Seviye 4</label><label><input type="radio" name="ppap" value="5">Seviye 5</label></div></fieldset>
               </div>
               <div class="recommendation"><span>✦</span><div><b>Öneri hazır</b><p>Direksiyon / sıcak dövme omurgası için 12 operasyon, 16 başlangıç riski ve PPAP Seviye 3 kontrol listesi önerildi.</p></div></div>
-              <div class="wizard-actions"><button class="secondary-button" data-prev-step="1">← Geri</button><button class="primary-button" data-next-step="3">Teknik Değerleri Gir →</button></div>
+              <div class="wizard-actions"><button class="secondary-button" data-prev-step="2">← Geri</button><button class="primary-button" data-next-step="4">Teknik Değerleri Gir →</button></div>
             </article>
 
-            <article class="panel form-panel wizard-pane characteristics-pane" data-pane="3">
-              <div class="section-title"><span>03</span><div><h2>Teknik Resim Karakteristikleri</h2><p>Nominal, tolerans ve birimleri teknik resimde yazdığı şekilde sayısal olarak girin</p></div><button class="secondary-button add-characteristic" data-action="add-characteristic">＋ Satır Ekle</button></div>
-              <div class="characteristic-help"><span>i</span><p>Alt/üst limitler otomatik hesaplanır. Ölçüm yöntemi ve proses eşleştirmesi kontrol planına aktarılır.</p></div>
-              <div class="characteristics-table">
-                <div class="characteristic-row characteristic-head"><span>NO</span><span>KARAKTERİSTİK</span><span>NOMİNAL</span><span>− TOL.</span><span>＋ TOL.</span><span>BİRİM</span><span>SINIF</span><span>LİMİTLER</span><span></span></div>
+            <article class="panel form-panel wizard-pane characteristics-pane" data-pane="4">
+              <div class="section-title"><span>04</span><div><h2>Teknik Resim ve Kontrol Karakteristikleri</h2><p>Balon numarası, tolerans, proses, ölçüm cihazı ve kontrol sıklığını tek kartta tanımlayın</p></div><button class="secondary-button add-characteristic" data-action="add-characteristic">＋ Karakteristik Ekle</button></div>
+              <div class="characteristic-help"><span>i</span><p>Ondalık virgül veya nokta kullanabilirsiniz. Alt/üst limit, kontrol planı satırı ve operatör kontrol noktası otomatik üretilir.</p></div>
+              <div class="characteristics-table characteristic-card-list">
                 <div id="characteristicRows"></div>
               </div>
-              <div class="wizard-actions"><button class="secondary-button" data-prev-step="2">← Geri</button><span id="characteristicValidation">3 karakteristik doğrulandı</span><button class="primary-button" data-next-step="4">Verileri Doğrula →</button></div>
+              <div class="wizard-actions"><button class="secondary-button" data-prev-step="3">← Geri</button><span id="characteristicValidation">3 karakteristik doğrulandı</span><button class="primary-button" data-next-step="5">Verileri Doğrula →</button></div>
             </article>
 
-            <article class="panel form-panel wizard-pane" data-pane="4">
-              <div class="section-title"><span>04</span><div><h2>Kalite Kapısı</h2><p>Doküman üretiminden önce veri bütünlüğü ve standart kapsamı kontrolü</p></div></div>
+            <article class="panel form-panel wizard-pane" data-pane="5">
+              <div class="section-title"><span>05</span><div><h2>Kalite Kapısı ve Doküman Omurgası</h2><p>Doküman üretiminden önce veri bütünlüğü, izlenebilirlik ve standart kapsamı kontrolü</p></div></div>
               <div class="quality-gate">
                 <div class="quality-score"><div class="score-ring"><span id="qualityScore">96</span><small>/100</small></div><div><b>Üretime hazır</b><p>Girilen veriler temel doküman setini oluşturmak için yeterli.</p></div></div>
                 <div class="gate-list"><div class="pass"><span>✓</span><p><b>Ürün ana verisi</b><small>8/8 zorunlu alan tamam</small></p></div><div class="pass"><span>✓</span><p><b>Teknik karakteristikler</b><small id="gateCharacteristicCount">3 satır, sayısal limitler geçerli</small></p></div><div class="pass"><span>✓</span><p><b>Proses omurgası</b><small>Ürün grubuna göre 12 operasyon eşleşti</small></p></div><div class="warning"><span>!</span><p><b>Müşteri özel isteği</b><small>CSR kontrolü PPAP onayından önce tamamlanmalı</small></p></div></div>
               </div>
-              <div class="standards-strip"><span>AIAG &amp; VDA FMEA 1. Baskı</span><span>AIAG APQP 3. Baskı</span><span>AIAG Control Plan 1. Baskı</span><span>PPAP 4. Baskı</span><span>IATF 16949:2016</span></div>
-              <div class="wizard-actions"><button class="secondary-button" data-prev-step="3">← Geri</button><button class="primary-button" data-action="save-product">Omurgayı Oluştur ve Prosese Geç →</button></div>
+              <div class="standards-strip"><span>AIAG &amp; VDA FMEA 1. Baskı</span><span>AIAG APQP 3. Baskı</span><span>AIAG Control Plan 1. Baskı</span><span>PPAP 4. Baskı</span><span>IATF 16949:2016 gerekliliklerini destekler</span></div>
+              <p class="compliance-note">Bu yazılım sertifika vermez; kuruluş QMS’si, güncel IATF SI/FAQ ve seçilen müşteri özel şartları ayrıca doğrulanmalıdır.</p>
+              <div class="wizard-actions"><button class="secondary-button" data-prev-step="4">← Geri</button><button class="primary-button" data-action="save-product">Kaydet, Omurgayı Oluştur ve Prosese Geç →</button></div>
             </article>
           </div>
 
@@ -162,7 +215,7 @@
       </section>
 
       <section id="flow" class="view flow-view">
-        <div class="page-heading"><div><p class="eyebrow">DT-2026-0042 • ROT BAŞI, SAĞ</p><h1>Proses Akışı Oluşturucu</h1><p>Kütüphaneden operasyonları seçin, sıralayın ve proses akışını üretin.</p></div><div class="heading-actions"><button class="secondary-button">Şablondan Getir</button><button class="primary-button" data-action="generate-flow">⇢ Proses Akışı Oluştur</button></div></div>
+        <div class="page-heading"><div><p class="eyebrow">DT-2026-0042 • ROT BAŞI, SAĞ</p><h1>Proses Akışı Oluşturucu</h1><p>Kütüphaneden operasyonları seçin, sürükleyin, tekrarlayın ve kontrollü akış çıktısını üretin.</p></div><div class="heading-actions"><button class="secondary-button" data-action="export-flow-pdf">Akış PDF</button><button class="secondary-button" data-action="export-control-dxf">CAD .dxf</button><button class="primary-button" data-action="generate-flow">⇢ Proses Akışı Oluştur</button></div></div>
         <div class="builder-grid">
           <aside class="panel process-library"><div class="panel-header"><div><h2>Proses Kütüphanesi</h2><p>Seçmek için operasyona tıklayın</p></div><span class="count">18</span></div><label class="library-search">⌕<input placeholder="Proses ara..."></label><div id="processOptions" class="process-options"></div></aside>
           <article class="panel sequence-panel"><div class="panel-header"><div><h2>Seçilen Proses Sırası</h2><p>Sürükleyerek sıralayabilirsiniz</p></div><span id="operationCount" class="count blue-count">0 operasyon</span></div><div id="processSequence" class="process-sequence empty"><div class="empty-state"><span>⇢</span><h3>Proses adımlarınızı seçin</h3><p>Sol taraftaki kütüphaneden operasyon ekleyin.</p></div></div><div class="sequence-footer"><div><span>Toplam operasyon</span><b id="totalOps">0</b></div><div><span>Özel proses</span><b id="specialOps">0</b></div><div><span>Dış kaynak</span><b id="outsourcedOps">0</b></div><button class="primary-button" data-action="generate-flow">Proses Akışı Oluştur →</button></div></article>
@@ -171,24 +224,49 @@
       </section>
 
       <section id="pfmea" class="view document-view">
-        <div class="page-heading"><div><p class="eyebrow">DT-2026-0042 • AIAG-VDA METODU</p><h1>Proses FMEA</h1><p>Proses risklerini analiz edin, kontrolleri ve aksiyonları yönetin.</p></div><div class="heading-actions"><span class="page-status warning">● 3 açık aksiyon</span><button class="primary-button" data-action="complete-pfmea">✓ PFMEA'yı Tamamla</button></div></div>
+        <div class="page-heading"><div><p class="eyebrow">DT-2026-0042 • AIAG-VDA 7 ADIM</p><h1>Proses FMEA</h1><p>Proses risklerini Action Priority ile analiz edin; açık yüksek öncelik kalite kapısını bloke eder.</p></div><div class="heading-actions"><span class="page-status warning">● 3 açık aksiyon</span><button class="primary-button" data-action="complete-pfmea">✓ PFMEA Kalite Kapısını Kontrol Et</button></div></div>
         <div class="risk-strip"><div><span>Toplam hata türü</span><b>16</b></div><div><span>Yüksek öncelik</span><b class="red-text">3</b></div><div><span>Orta öncelik</span><b class="amber-text">5</b></div><div><span>Düşük öncelik</span><b class="green-text">8</b></div><div class="risk-progress"><span>Tamamlanma</span><i><b style="width:68%"></b></i><strong>68%</strong></div></div>
         <article class="panel document-table"><div class="doc-toolbar"><div class="tabs"><button class="active">Risk Analizi</button><button>Aksiyonlar <span>3</span></button><button>Yapı Analizi</button></div><button class="secondary-button">＋ Hata Türü Ekle</button></div><div class="fmea-grid table-scroll"><div class="fmea-row fmea-head"><span>OP.</span><span>PROSES FONKSİYONU</span><span>HATA TÜRÜ / ETKİSİ</span><span>Ş</span><span>OLUŞMA NEDENİ</span><span>O</span><span>MEVCUT KONTROL</span><span>T</span><span>AP</span></div><div class="fmea-row"><span><b>OP 40</b></span><span>CNC tornalama<br><small>Çap ve diş işleme</small></span><span><b>Çap tolerans dışı</b><small>Montajda boşluk, fonksiyon kaybı</small></span><span class="score high">8</span><span>Takım aşınması / yanlış ofset</span><span class="score medium">4</span><span>İlk parça kontrolü, takım ömrü takibi</span><span class="score medium">4</span><span><mark class="ap high-ap">H</mark></span></div><div class="fmea-row"><span><b>OP 60</b></span><span>İndüksiyon sertleştirme<br><small>Küresel pim</small></span><span><b>Sertlik yetersiz</b><small>Erken aşınma, güvenlik riski</small></span><span class="score high">9</span><span>Güç/süre parametre sapması</span><span class="score low">2</span><span>Parametre kilidi, vardiya sertlik kontrolü</span><span class="score medium">5</span><span><mark class="ap high-ap">H</mark></span></div><div class="fmea-row"><span><b>OP 90</b></span><span>Montaj<br><small>Pim-gövde birleştirme</small></span><span><b>Tork yetersiz</b><small>Bağlantıda gevşeme</small></span><span class="score high">8</span><span>Hatalı sıkma programı</span><span class="score low">2</span><span>Program doğrulama ve tork izleme</span><span class="score low">3</span><span><mark class="ap medium-ap">M</mark></span></div></div></article>
       </section>
 
       <section id="control" class="view document-view">
-        <div class="page-heading"><div><p class="eyebrow">DT-2026-0042 • SERİ ÜRETİM</p><h1>Kontrol Planı</h1><p>Proses akışı, teknik resim karakteristikleri ve PFMEA kontrollerinden oluşturuldu.</p></div><div class="heading-actions"><button class="secondary-button">Ön İzleme</button><button class="primary-button" data-action="generate-control">▦ Otomatik Kontrol Planı Oluştur</button></div></div>
+        <div class="page-heading"><div><p class="eyebrow" id="controlEyebrow">DT-2026-0042 • SERİ ÜRETİM</p><h1>Kontrol Planı</h1><p>Teknik resim → proses akışı → PFMEA → kontrol → talimat zincirinin kontrollü çıktısı.</p></div><div class="heading-actions"><button class="secondary-button" data-action="generate-control">↻ Yeniden Üret</button><button class="primary-button" data-action="generate-control">▦ Antetli Kontrol Planı Oluştur</button></div></div>
         <div id="controlEmpty" class="panel generation-state"><div class="generation-icon">▦</div><h2>Kontrol planınız oluşturulmaya hazır</h2><p>12 proses adımı, 18 ürün karakteristiği ve 16 PFMEA kontrolü eşleştirildi.</p><div class="source-pills"><span>✓ Proses Akışı</span><span>✓ Teknik Resim</span><span>✓ PFMEA</span></div><button class="primary-button" data-action="generate-control">Otomatik Kontrol Planı Oluştur →</button></div>
-        <article id="controlResult" class="panel document-table hidden"><div class="generated-banner"><span>✓</span><div><b>Kontrol planı başarıyla oluşturuldu</b><small>CP-5101-234-001 / Rev. C • 12 operasyon • 28 kontrol satırı</small></div><button class="secondary-button">PDF Ön İzleme</button></div><div class="control-grid table-scroll"><div class="control-row control-head"><span>OP.</span><span>PROSES</span><span>KARAKTERİSTİK</span><span>SPESİFİKASYON</span><span>KONTROL METODU</span><span>NUMUNE / SIKLIK</span><span>REAKSİYON PLANI</span></div><div class="control-row"><span><b>40</b></span><span>CNC Tornalama</span><span><b>⌀18 Pim Çapı</b><small>◆ Özel karakteristik</small></span><span>18,000 ±0,013 mm</span><span>Havalı komparatör</span><span>5 adet / 2 saatte</span><span>Prosesi durdur, son uygun parçadan ayır</span></div><div class="control-row"><span><b>60</b></span><span>İndüksiyon</span><span><b>Yüzey sertliği</b><small>◆ Emniyet karakteristiği</small></span><span>58–62 HRC</span><span>Rockwell sertlik cihazı</span><span>3 adet / vardiya</span><span>Partiyi karantinaya al, laboratuvara bildir</span></div><div class="control-row"><span><b>90</b></span><span>Montaj</span><span><b>Sıkma torku</b></span><span>42 ±3 Nm</span><span>Dijital tork sistemi</span><span>%100</span><span>Hattı durdur, hatalı parçayı bloke et</span></div></div><div class="doc-footer"><span>28 kontrol satırından 3'ü gösteriliyor</span><button class="primary-button" data-action="generate-instruction">Operatör Talimatlarını Oluştur →</button></div></article>
+        <article id="controlResult" class="panel document-table hidden">
+          <div class="generated-banner"><span>✓</span><div><b>Kontrol planı tek doğrulanmış veri anlık görüntüsünden üretildi</b><small id="controlGeneratedMeta">CP-5101-234-001 / Rev. C</small></div><div class="export-actions"><button class="secondary-button" data-action="export-control-xlsx">Excel .xlsx</button><button class="secondary-button" data-action="export-control-pdf">PDF</button><button class="secondary-button" data-action="export-control-dxf">CAD .dxf</button><button class="secondary-button dwg-bridge" data-action="dwg-info">DWG köprüsü</button></div></div>
+          <div id="controlPlanSheet" class="cp-sheet">
+            <div class="cp-document-title"><span class="qflow-print-mark">Q-FLOW</span><h2>KONTROL PLANI / CONTROL PLAN</h2><span id="cpDocumentState">TASLAK</span></div>
+            <div class="cp-phase-row"><b>Faz:</b><span id="phasePrototype">□ Prototip</span><span id="phasePrelaunch">□ Ön Seri / Safe Launch</span><span id="phaseProduction">☒ Seri</span><span class="cp-confidentiality">KONTROLLÜ KOPYA</span></div>
+            <div id="controlPlanHeader" class="cp-title-grid"></div>
+            <div class="cp-table-wrap">
+              <table class="cp-table">
+                <thead><tr><th>Op.</th><th>Operasyon / Sorumlu</th><th>Makine / Teçhizat / Aparat</th><th>Kar. No</th><th>Ürün / Proses Karakteristiği</th><th>Spesifikasyon / Tolerans</th><th>Özel Sınıf</th><th>Kontrol / Poka‑Yoke</th><th>Ölçüm Tekniği / Cihaz</th><th>Numune / Sıklık</th><th>Referans</th><th>Reaksiyon Planı</th></tr></thead>
+                <tbody id="controlPlanBody"></tbody>
+              </table>
+            </div>
+            <div class="cp-footer"><span>Reaksiyon: durdur → şüpheli ürünü sınırla → ayır → %100 doğrula → yetkili onayıyla yeniden başlat</span><span id="cpPageInfo">Sayfa 1 / 1</span></div>
+          </div>
+          <div class="doc-footer"><span id="controlRowCount">0 kontrol satırı</span><button class="primary-button" data-action="generate-instruction">Operatör Talimatlarını Oluştur →</button></div>
+        </article>
       </section>
 
       <section id="instruction" class="view document-view">
-        <div class="page-heading"><div><p class="eyebrow">DT-2026-0042 • 12 OPERASYON</p><h1>Operatör Talimatları</h1><p>Kontrol planından operasyona özel, görsel iş talimatları üretin.</p></div><button class="primary-button" data-action="generate-instruction">▤ Tüm Talimatları Oluştur</button></div>
+        <div class="page-heading"><div><p class="eyebrow" id="instructionEyebrow">DT-2026-0042 • 12 OPERASYON</p><h1>Operatör Talimatları</h1><p>Her operasyon için PPE, işlem adımları, kontrol noktaları ve reaksiyon planı düzenlenebilir olarak üretilir.</p></div><div class="heading-actions"><button class="secondary-button" data-action="export-all-instructions">Tümünü PDF</button><button class="primary-button" data-action="generate-instruction">▤ Talimatları Oluştur</button></div></div>
         <div id="instructionEmpty" class="panel generation-state"><div class="generation-icon purple-bg">▤</div><h2>Operatör talimatları üretime hazır</h2><p>Kontrol planındaki metot, sıklık ve reaksiyonlar 12 istasyona ayrılacak.</p><button class="primary-button" data-action="generate-instruction">Tüm Talimatları Oluştur →</button></div>
-        <div id="instructionResult" class="instruction-grid hidden"><article class="instruction-card"><div class="instruction-top"><span>OP 40</span><mark>YENİ</mark></div><div class="instruction-visual">◉<small>CNC</small></div><h3>CNC Tornalama Kontrolü</h3><p>⌀18 pim çapı ölçüm ve takım ofset kontrol talimatı</p><div class="instruction-meta"><span>6 adım</span><span>2 kontrol noktası</span></div><button class="secondary-button full">Talimatı Aç →</button></article><article class="instruction-card"><div class="instruction-top"><span>OP 60</span><mark>YENİ</mark></div><div class="instruction-visual heat">♨<small>HRC</small></div><h3>İndüksiyon Sertleştirme</h3><p>Parametre doğrulama ve sertlik kontrol talimatı</p><div class="instruction-meta"><span>8 adım</span><span>3 kontrol noktası</span></div><button class="secondary-button full">Talimatı Aç →</button></article><article class="instruction-card"><div class="instruction-top"><span>OP 90</span><mark>YENİ</mark></div><div class="instruction-visual assembly">⚙<small>MONTAJ</small></div><h3>Montaj ve Tork Kontrolü</h3><p>Pim-gövde montajı ve %100 tork doğrulama talimatı</p><div class="instruction-meta"><span>10 adım</span><span>4 kontrol noktası</span></div><button class="secondary-button full">Talimatı Aç →</button></article></div>
+        <div id="instructionResult" class="instruction-grid professional-instructions hidden"></div>
       </section>
 
-      <section id="documents" class="view ppap-view"><div class="page-heading"><div><p class="eyebrow">PPAP SEVİYE 3 • KONTROLLÜ YAYIN</p><h1>PPAP Paket Merkezi</h1><p>18 PPAP unsurunu, onay durumunu ve eksik kanıtları tek kalite kapısında yönetin.</p></div><button class="primary-button" data-action="ppap-package">□ PPAP Paketini Hazırla</button></div><div class="ppap-summary"><article class="panel ppap-readiness"><div class="readiness-ring"><span>78%</span></div><div><p class="eyebrow">PAKET HAZIRLIĞI</p><h2>Müşteri sunumuna yaklaşıyor</h2><p>14 unsur hazır, 3 unsur işlemde, 1 unsur bekliyor.</p></div></article><article class="panel ppap-kpi"><span class="green-text">14</span><b>Hazır</b><small>Onaylı ve güncel</small></article><article class="panel ppap-kpi"><span class="amber-text">3</span><b>İşlemde</b><small>Sorumlu atanmış</small></article><article class="panel ppap-kpi"><span class="red-text">1</span><b>Bloke</b><small>MSA sonucu gerekli</small></article></div><article class="panel ppap-panel"><div class="panel-header"><div><h2>PPAP Unsurları</h2><p>AIAG PPAP 4. baskı temel sunum listesi</p></div><div class="header-tools"><button class="chip active" data-ppap-filter="all">Tümü <span>18</span></button><button class="chip" data-ppap-filter="open">Açık <span>4</span></button><button class="filter-button">☷ Sorumlu</button></div></div><div id="ppapChecklist" class="ppap-checklist"></div></article></section>
+      <section id="documents" class="view ppap-view">
+        <div class="page-heading"><div><p class="eyebrow">PPAP SEVİYE 3 • KONTROLLÜ YAYIN</p><h1>PPAP ve Çıktı Merkezi</h1><p>18 PPAP unsurunu, doküman durumunu ve kontrollü çıktı formatlarını tek kalite kapısında yönetin.</p></div><button class="primary-button" data-action="ppap-package">□ PPAP Paketini Doğrula</button></div>
+        <div class="ppap-summary"><article class="panel ppap-readiness"><div class="readiness-ring"><span>78%</span></div><div><p class="eyebrow">PAKET HAZIRLIĞI</p><h2>Müşteri sunumuna yaklaşıyor</h2><p>14 unsur hazır, 3 unsur işlemde, 1 unsur bekliyor.</p></div></article><article class="panel ppap-kpi"><span class="green-text">14</span><b>Hazır</b><small>Onaylı ve güncel</small></article><article class="panel ppap-kpi"><span class="amber-text">3</span><b>İşlemde</b><small>Sorumlu atanmış</small></article><article class="panel ppap-kpi"><span class="red-text">1</span><b>Bloke</b><small>MSA sonucu gerekli</small></article></div>
+        <article class="panel export-center"><div class="panel-header"><div><h2>Kontrollü Doküman Üretimi</h2><p>Aynı doğrulanmış anlık görüntüden antetli Excel, PDF ve CAD çıktıları</p></div><mark class="snapshot-badge">SHA-256 SNAPSHOT</mark></div><div class="export-matrix">
+          <div><span class="export-icon excel">X</span><p><b>Kontrol Planı</b><small>Birleşik antet, A3 yatay, tekrar eden başlık</small></p><button data-action="export-control-xlsx">.xlsx</button></div>
+          <div><span class="export-icon pdf">P</span><p><b>Kontrol Planı PDF</b><small>Çerçeveli antet ve kontrollü kopya bilgisi</small></p><button data-action="export-control-pdf">.pdf</button></div>
+          <div><span class="export-icon cad">D</span><p><b>Proses Akışı CAD</b><small>Milimetre, katmanlı, antetli ASCII DXF</small></p><button data-action="export-control-dxf">.dxf</button></div>
+          <div class="planned"><span class="export-icon dwg">W</span><p><b>DWG Dönüşüm Köprüsü</b><small>Masaüstünde lisanslı ODA / RealDWG motoru</small></p><button data-action="dwg-info">MASAÜSTÜ</button></div>
+        </div></article>
+        <article class="panel ppap-panel"><div class="panel-header"><div><h2>PPAP Unsurları</h2><p>AIAG PPAP 4. baskı temel sunum listesi</p></div><div class="header-tools"><button class="chip active" data-ppap-filter="all">Tümü <span>18</span></button><button class="chip" data-ppap-filter="open">Açık <span>4</span></button><button class="filter-button">☷ Sorumlu</button></div></div><div id="ppapChecklist" class="ppap-checklist"></div></article>
+      </section>
 
       <section id="library" class="view library-view">
         <div class="page-heading"><div><p class="eyebrow">MERKEZİ PROSES BİLGİ BANKASI • REVİZYON KONTROLLÜ</p><h1>Proses Kütüphanesi</h1><p>Proses, ekipman, karakteristik, PFMEA riski ve kontrol metodunu tek onaylı kayıtta yönetin.</p></div><div class="heading-actions"><button class="secondary-button" data-action="export-library">⇩ Dışa Aktar</button><button class="primary-button" data-action="new-process">＋ Yeni Standart Proses</button></div></div>
@@ -266,6 +344,9 @@
   </div>
 
   <div id="toast" class="toast"><span>✓</span><div><b>İşlem tamamlandı</b><small>Doküman başarıyla oluşturuldu.</small></div></div>
+  <script src="/vendor/pdfmake.min.js"></script>
+  <script src="/vendor/vfs_fonts.js"></script>
+  <script src="/vendor/exceljs.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

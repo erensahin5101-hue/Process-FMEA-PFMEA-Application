@@ -32,6 +32,31 @@ const schemaSql = `CREATE TABLE IF NOT EXISTS processes (
   updated_at TEXT NOT NULL
 )`;
 
+const projectSchemaSql = `CREATE TABLE IF NOT EXISTS projects (
+  id TEXT PRIMARY KEY NOT NULL,
+  project_code TEXT NOT NULL,
+  part_number TEXT NOT NULL,
+  part_name TEXT NOT NULL,
+  product_group TEXT NOT NULL,
+  revision TEXT NOT NULL DEFAULT 'A',
+  phase TEXT NOT NULL DEFAULT 'Prototip',
+  status TEXT NOT NULL DEFAULT 'Taslak',
+  version INTEGER NOT NULL DEFAULT 1,
+  payload TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+)`;
+
+const auditSchemaSql = `CREATE TABLE IF NOT EXISTS audit_events (
+  id TEXT PRIMARY KEY NOT NULL,
+  entity_type TEXT NOT NULL,
+  entity_id TEXT NOT NULL,
+  action TEXT NOT NULL,
+  actor TEXT NOT NULL,
+  detail TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL
+)`;
+
 const processColumns = [
   'id', 'code', 'name', 'family', 'category', 'description', 'input_material',
   'output_material', 'equipment', 'tooling', 'special_process', 'outsourced',
@@ -82,8 +107,12 @@ async function ensureDatabase(env) {
   if (!env.DB) throw new Error('D1 binding DB is unavailable');
   await env.DB.batch([
     env.DB.prepare(schemaSql),
+    env.DB.prepare(projectSchemaSql),
+    env.DB.prepare(auditSchemaSql),
     env.DB.prepare('CREATE INDEX IF NOT EXISTS processes_family_idx ON processes (family)'),
-    env.DB.prepare('CREATE INDEX IF NOT EXISTS processes_status_idx ON processes (status)')
+    env.DB.prepare('CREATE INDEX IF NOT EXISTS processes_status_idx ON processes (status)'),
+    env.DB.prepare('CREATE INDEX IF NOT EXISTS projects_updated_idx ON projects (updated_at DESC)'),
+    env.DB.prepare('CREATE INDEX IF NOT EXISTS audit_entity_idx ON audit_events (entity_type, entity_id, created_at DESC)')
   ]);
   const count = await env.DB.prepare('SELECT COUNT(*) AS total FROM processes').first();
   if (Number(count?.total || 0) === 0) {
@@ -96,7 +125,7 @@ async function ensureDatabase(env) {
 }
 
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+  return new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'referrer-policy': 'no-referrer' } });
 }
 
 function validateProcess(process) {
@@ -104,6 +133,71 @@ function validateProcess(process) {
   if (missing.length) return `Zorunlu alanlar eksik: ${missing.join(', ')}`;
   if (Number(process.cycleTimeSec) < 0 || Number(process.setupTimeMin) < 0) return 'Süre değerleri negatif olamaz.';
   return null;
+}
+
+function actorFrom(request) {
+  return request.headers.get('cf-access-authenticated-user-email') || request.headers.get('x-authenticated-user') || 'private-site-user';
+}
+
+async function writeAudit(env, request, entityType, entityId, action, detail = {}) {
+  await env.DB.prepare('INSERT INTO audit_events (id, entity_type, entity_id, action, actor, detail, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
+    .bind(crypto.randomUUID(), entityType, entityId, action, actorFrom(request), JSON.stringify(detail), new Date().toISOString()).run();
+}
+
+function fromProjectDb(row) {
+  let payload = {};
+  try { payload = JSON.parse(row.payload || '{}'); } catch {}
+  return { id: row.id, projectCode: row.project_code, partNumber: row.part_number, partName: row.part_name, productGroup: row.product_group, revision: row.revision, phase: row.phase, status: row.status, version: row.version, payload, createdAt: row.created_at, updatedAt: row.updated_at };
+}
+
+function validateProject(project) {
+  const missing = ['projectCode', 'partNumber', 'partName', 'productGroup', 'revision', 'phase'].filter(field => !String(project[field] || '').trim());
+  if (missing.length) return `Zorunlu proje alanları eksik: ${missing.join(', ')}`;
+  if (!project.payload || typeof project.payload !== 'object') return 'Proje veri anlık görüntüsü geçersiz.';
+  if (JSON.stringify(project.payload).length > 750000) return 'Proje kaydı izin verilen boyutu aşıyor.';
+  return null;
+}
+
+async function handleProjects(request, env, url) {
+  await ensureDatabase(env);
+  const suffix = decodeURIComponent(url.pathname.replace('/api/projects', '').replace(/^\//, ''));
+  if (request.method === 'GET' && suffix === 'latest') {
+    const row = await env.DB.prepare('SELECT * FROM projects ORDER BY updated_at DESC LIMIT 1').first();
+    return json({ project: row ? fromProjectDb(row) : null });
+  }
+  if (request.method === 'GET' && !suffix) {
+    const result = await env.DB.prepare('SELECT id, project_code, part_number, part_name, product_group, revision, phase, status, version, created_at, updated_at FROM projects ORDER BY updated_at DESC LIMIT 100').all();
+    return json({ projects: result.results.map(row => ({ id: row.id, projectCode: row.project_code, partNumber: row.part_number, partName: row.part_name, productGroup: row.product_group, revision: row.revision, phase: row.phase, status: row.status, version: row.version, createdAt: row.created_at, updatedAt: row.updated_at })) });
+  }
+  if (request.method === 'GET' && suffix) {
+    const row = await env.DB.prepare('SELECT * FROM projects WHERE id = ?').bind(suffix).first();
+    return row ? json({ project: fromProjectDb(row) }) : json({ error: 'Proje bulunamadı.' }, 404);
+  }
+  if (request.method === 'POST' && !suffix) {
+    const body = await request.json();
+    const error = validateProject(body); if (error) return json({ error }, 400);
+    const now = new Date().toISOString(); const id = crypto.randomUUID();
+    await env.DB.prepare('INSERT INTO projects (id, project_code, part_number, part_name, product_group, revision, phase, status, version, payload, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)')
+      .bind(id, body.projectCode.trim(), body.partNumber.trim(), body.partName.trim(), body.productGroup.trim(), body.revision.trim(), body.phase.trim(), String(body.status || 'Taslak'), JSON.stringify({ ...body.payload, projectId: id }), now, now).run();
+    await writeAudit(env, request, 'project', id, 'created', { revision: body.revision, snapshotSha256: body.payload.sha256 || '' });
+    const row = await env.DB.prepare('SELECT * FROM projects WHERE id = ?').bind(id).first();
+    return json({ project: fromProjectDb(row) }, 201);
+  }
+  if (request.method === 'PUT' && suffix) {
+    const body = await request.json();
+    const error = validateProject(body); if (error) return json({ error }, 400);
+    const current = await env.DB.prepare('SELECT * FROM projects WHERE id = ?').bind(suffix).first();
+    if (!current) return json({ error: 'Proje bulunamadı.' }, 404);
+    if (Number(body.version) !== Number(current.version)) return json({ error: `Kayıt başka bir oturumda değiştirildi. Güncel sürüm v${current.version}.`, currentVersion: current.version }, 409);
+    const nextVersion = Number(current.version) + 1; const now = new Date().toISOString();
+    const result = await env.DB.prepare('UPDATE projects SET project_code = ?, part_number = ?, part_name = ?, product_group = ?, revision = ?, phase = ?, status = ?, version = ?, payload = ?, updated_at = ? WHERE id = ? AND version = ?')
+      .bind(body.projectCode.trim(), body.partNumber.trim(), body.partName.trim(), body.productGroup.trim(), body.revision.trim(), body.phase.trim(), String(body.status || 'Taslak'), nextVersion, JSON.stringify({ ...body.payload, projectId: suffix }), now, suffix, current.version).run();
+    if (!result.meta?.changes) return json({ error: 'Eşzamanlı güncelleme algılandı; proje yeniden yüklenmeli.' }, 409);
+    await writeAudit(env, request, 'project', suffix, 'updated', { fromVersion: current.version, toVersion: nextVersion, revision: body.revision, snapshotSha256: body.payload.sha256 || '' });
+    const row = await env.DB.prepare('SELECT * FROM projects WHERE id = ?').bind(suffix).first();
+    return json({ project: fromProjectDb(row) });
+  }
+  return json({ error: 'Desteklenmeyen proje işlemi.' }, 405);
 }
 
 async function handleProcesses(request, env, url) {
@@ -121,6 +215,7 @@ async function handleProcesses(request, env, url) {
     const sql = `INSERT INTO processes (${processColumns.join(', ')}) VALUES (${processColumns.map(() => '?').join(', ')})`;
     try {
       await env.DB.prepare(sql).bind(...processColumns.map(column => record[column])).run();
+      await writeAudit(env, request, 'process', record.id, 'created', { code: record.code, revision: record.revision });
       return json({ process: fromDb(record) }, 201);
     } catch (error) {
       return json({ error: String(error).includes('UNIQUE') ? 'Proses kodu veya adı zaten kayıtlı.' : 'Kayıt oluşturulamadı.' }, 409);
@@ -138,6 +233,7 @@ async function handleProcesses(request, env, url) {
     const sql = `UPDATE processes SET ${updateColumns.map(column => `${column} = ?`).join(', ')} WHERE id = ?`;
     try {
       await env.DB.prepare(sql).bind(...updateColumns.map(column => record[column]), id).run();
+      await writeAudit(env, request, 'process', id, 'updated', { code: record.code, revision: record.revision });
       return json({ process: fromDb({ ...record, id, created_at: current.created_at }) });
     } catch (error) {
       return json({ error: String(error).includes('UNIQUE') ? 'Proses kodu veya adı başka bir kayıtta kullanılıyor.' : 'Kayıt güncellenemedi.' }, 409);
@@ -145,6 +241,7 @@ async function handleProcesses(request, env, url) {
   }
   if (request.method === 'DELETE' && id) {
     const result = await env.DB.prepare("UPDATE processes SET status = 'archived', updated_at = ? WHERE id = ?").bind(new Date().toISOString(), id).run();
+    if (result.meta?.changes) await writeAudit(env, request, 'process', id, 'archived');
     return result.meta?.changes ? json({ ok: true }) : json({ error: 'Proses bulunamadı.' }, 404);
   }
   return json({ error: 'Desteklenmeyen işlem.' }, 405);
@@ -153,9 +250,20 @@ async function handleProcesses(request, env, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith('/api/') && !['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+      const origin = request.headers.get('origin');
+      if (origin && origin !== url.origin) return json({ error: 'Çapraz kaynaklı değişiklik isteği reddedildi.' }, 403);
+      const length = Number(request.headers.get('content-length') || 0);
+      if (length > 1000000) return json({ error: 'İstek gövdesi çok büyük.' }, 413);
+      if (['POST', 'PUT', 'PATCH'].includes(request.method) && !String(request.headers.get('content-type') || '').toLowerCase().startsWith('application/json')) return json({ error: 'JSON içerik türü gerekli.' }, 415);
+    }
+    if (url.pathname.startsWith('/api/projects')) {
+      try { return await handleProjects(request, env, url); }
+      catch { return json({ error: 'Proje veritabanı işlemi tamamlanamadı.' }, 500); }
+    }
     if (url.pathname.startsWith('/api/processes')) {
       try { return await handleProcesses(request, env, url); }
-      catch (error) { return json({ error: 'Proses veritabanına erişilemedi.', detail: String(error) }, 500); }
+      catch { return json({ error: 'Proses veritabanı işlemi tamamlanamadı.' }, 500); }
     }
     const asset = assets[url.pathname] || assets['/'];
     return new Response(asset.body, {
@@ -163,7 +271,10 @@ export default {
         'content-type': asset.contentType,
         'cache-control': url.pathname === '/' || url.pathname === '/index.html' ? 'no-cache' : 'public, max-age=3600',
         'x-content-type-options': 'nosniff',
-        'x-frame-options': 'SAMEORIGIN'
+        'x-frame-options': 'SAMEORIGIN',
+        'referrer-policy': 'no-referrer',
+        'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+        'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'; worker-src 'self' blob:"
       }
     });
   }

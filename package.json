@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
-    "db:generate": "drizzle-kit generate"
+    "build": "node build.mjs"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.2"
+    "drizzle-orm": "^0.45.2",
+    "exceljs": "4.4.0",
+    "pdfmake": "0.2.20"
   },
-  "devDependencies": {
-    "drizzle-kit": "^0.31.4"
+  "overrides": {
+    "uuid": "11.1.1"
   }
 }

@@ -7,7 +7,13 @@ const files = {
   '/index.html': ['index.html', 'text/html; charset=utf-8'],
   '/styles.css': ['styles.css', 'text/css; charset=utf-8'],
   '/app.js': ['app.js', 'text/javascript; charset=utf-8'],
-  '/seed-processes.json': ['seed-processes.json', 'application/json; charset=utf-8']
+  '/seed-processes.json': ['seed-processes.json', 'application/json; charset=utf-8'],
+  '/manifest.json': ['manifest.json', 'application/manifest+json; charset=utf-8'],
+  '/qflow-icon.svg': ['qflow-icon.svg', 'image/svg+xml; charset=utf-8'],
+  '/service-worker.js': ['service-worker.js', 'text/javascript; charset=utf-8'],
+  '/vendor/pdfmake.min.js': ['node_modules/pdfmake/build/pdfmake.min.js', 'text/javascript; charset=utf-8'],
+  '/vendor/vfs_fonts.js': ['node_modules/pdfmake/build/vfs_fonts.js', 'text/javascript; charset=utf-8'],
+  '/vendor/exceljs.min.js': ['node_modules/exceljs/dist/exceljs.min.js', 'text/javascript; charset=utf-8']
 };
 
 const assets = {};

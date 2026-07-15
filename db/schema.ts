@@ -33,3 +33,28 @@ export const processes = sqliteTable("processes", {
   uniqueIndex("processes_code_unique").on(table.code),
   uniqueIndex("processes_name_unique").on(table.name)
 ]);
+
+export const projects = sqliteTable("projects", {
+  id: text("id").primaryKey(),
+  projectCode: text("project_code").notNull(),
+  partNumber: text("part_number").notNull(),
+  partName: text("part_name").notNull(),
+  productGroup: text("product_group").notNull(),
+  revision: text("revision").notNull().default("A"),
+  phase: text("phase").notNull().default("Prototip"),
+  status: text("status").notNull().default("Taslak"),
+  version: integer("version").notNull().default(1),
+  payload: text("payload", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull()
+});
+
+export const auditEvents = sqliteTable("audit_events", {
+  id: text("id").primaryKey(),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id").notNull(),
+  action: text("action").notNull(),
+  actor: text("actor").notNull(),
+  detail: text("detail", { mode: "json" }).$type<Record<string, unknown>>().notNull().default({}),
+  createdAt: text("created_at").notNull()
+});
