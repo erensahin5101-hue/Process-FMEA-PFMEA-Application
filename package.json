@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.mjs"
+    "build": "node build.mjs",
+    "desktop:assets": "node desktop-build.mjs",
+    "test:worker": "node tests/worker-smoke.mjs",
+    "test:exports": "node tests/export-smoke.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",

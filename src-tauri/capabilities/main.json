@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "TYANA OTOMOTİV ana penceresi. Genel dosya sistemi, kabuk, HTTP ve eklenti komutlarına izin vermez.",
+  "local": true,
+  "windows": ["main"],
+  "platforms": ["windows"],
+  "permissions": []
+}

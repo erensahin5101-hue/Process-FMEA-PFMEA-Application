@@ -1,3 +1,6 @@
 node_modules/
 *.tgz
 output/
+desktop-dist/
+src-tauri/target/
+tmp/

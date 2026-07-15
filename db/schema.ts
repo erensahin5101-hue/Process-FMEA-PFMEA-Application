@@ -49,6 +49,21 @@ export const projects = sqliteTable("projects", {
   updatedAt: text("updated_at").notNull()
 });
 
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  displayName: text("display_name").notNull(),
+  role: text("role").notNull().default("viewer"),
+  status: text("status").notNull().default("active"),
+  plant: text("plant").notNull().default("TYANA OTOMOTİV"),
+  department: text("department").notNull().default("Kalite"),
+  version: integer("version").notNull().default(1),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull()
+}, (table) => [
+  uniqueIndex("users_email_unique").on(table.email)
+]);
+
 export const auditEvents = sqliteTable("audit_events", {
   id: text("id").primaryKey(),
   entityType: text("entity_type").notNull(),

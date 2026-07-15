@@ -1,5 +1,5 @@
-const CACHE = 'qflow-shell-v3';
-const SHELL = ['/', '/styles.css', '/app.js', '/manifest.json', '/qflow-icon.svg', '/vendor/pdfmake.min.js', '/vendor/vfs_fonts.js', '/vendor/exceljs.min.js'];
+const CACHE = 'tyana-qflow-shell-v5';
+const SHELL = ['/', '/styles.css', '/app.js', '/platform-adapter.js', '/manifest.json', '/qflow-icon.svg', '/vendor/pdfmake.min.js', '/vendor/vfs_fonts.js', '/vendor/exceljs.min.js'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
