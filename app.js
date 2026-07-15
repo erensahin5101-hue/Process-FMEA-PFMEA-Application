@@ -649,16 +649,24 @@ document.querySelector('[data-action="drawing-change"]').addEventListener('click
   picker.addEventListener('change', async () => {
     const file = picker.files[0];
     if (!file) return;
-    const hashBuffer = await crypto.subtle.digest('SHA-256', await file.arrayBuffer());
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', bytes);
     const sha256 = [...new Uint8Array(hashBuffer)].map(byte => byte.toString(16).padStart(2, '0')).join('');
-    drawingSource = { name: file.name, size: file.size, type: file.type, lastModified: file.lastModified, sha256 };
+    let stored;
+    try {
+      stored = await globalThis.TyanaPlatform.storeDrawing({ data: bytes, fileName: file.name, sha256 });
+    } catch (error) {
+      toast('Teknik resim kaydedilemedi', error.message);
+      return;
+    }
+    drawingSource = { name: file.name, size: file.size, type: file.type, lastModified: file.lastModified, sha256, storageId: stored.storageId || null };
     const name = document.getElementById('drawingFileName');
     name.textContent = file.name;
     name.dataset.manual = 'true';
     name.nextElementSibling.textContent = `${(file.size / 1024).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} KB • SHA-256 ${sha256.slice(0, 12)}… • kullanıcı doğrulaması gerekli`;
     const badge = document.querySelector('.drawing-upload .verified'); if (badge) { badge.textContent = '✓ Kaynak tanımlı'; badge.classList.remove('pending-source'); }
     markDraftDirty();
-    toast('Teknik resim kaynağı tanımlandı', 'Dosya özeti kaydedildi; karakteristikler kullanıcı onayı olmadan yayımlanmaz.');
+    toast('Teknik resim kaynağı tanımlandı', globalThis.TyanaPlatform.isDesktop ? 'Dosya kontrollü yerel depoya kopyalandı ve SHA-256 ile doğrulandı.' : 'Dosya özeti kaydedildi; karakteristikler kullanıcı onayı olmadan yayımlanmaz.');
   });
   picker.click();
 });
@@ -842,9 +850,7 @@ function normalizeProcess(process) {
 
 async function loadProcessLibrary() {
   try {
-    const response = await fetch('/api/processes', { headers: { accept: 'application/json' } });
-    if (!response.ok) throw new Error('API unavailable');
-    const data = await response.json();
+    const data = await globalThis.TyanaPlatform.data.listProcesses();
     processes = data.processes.map(normalizeProcess);
   } catch {
     try {
@@ -932,12 +938,12 @@ function renderProcessLibrary() {
   body.querySelectorAll('[data-edit-process]').forEach(button => button.addEventListener('click', () => openProcessDrawer(processes.find(process => process.id === button.dataset.editProcess))));
   body.querySelectorAll('[data-duplicate-process]').forEach(button => button.addEventListener('click', () => {
     const source = processes.find(process => process.id === button.dataset.duplicateProcess);
-    openProcessDrawer({ ...source, id: '', code: `${source.code}-K`, name: `${source.name} Kopya`, revision: 'A', approvalStatus: 'draft', status: 'active' });
+    openProcessDrawer({ ...source, id: '', version: 0, code: `${source.code}-K`, name: `${source.name} Kopya`, revision: 'A', approvalStatus: 'draft', status: 'active' });
   }));
 }
 
 const processFormFields = {
-  id: 'processId', code: 'processCode', name: 'processName', family: 'processFamily', category: 'processCategory',
+  id: 'processId', version: 'processVersion', code: 'processCode', name: 'processName', family: 'processFamily', category: 'processCategory',
   owner: 'processOwner', revision: 'processRevision', approvalStatus: 'processApproval', documentRef: 'processDocumentRef',
   desc: 'processDescription', inputMaterial: 'processInput', outputMaterial: 'processOutput', equipment: 'processEquipment',
   tooling: 'processTooling', cycleTimeSec: 'processCycle', setupTimeMin: 'processSetup', special: 'processSpecial',
@@ -988,7 +994,7 @@ function processPayloadFromForm() {
   Object.entries(processFormFields).forEach(([key, elementId]) => {
     const element = document.getElementById(elementId);
     let value = element.type === 'checkbox' ? element.checked : element.value.trim();
-    if (['cycleTimeSec', 'setupTimeMin'].includes(key)) value = Number(value) || 0;
+    if (['version', 'cycleTimeSec', 'setupTimeMin'].includes(key)) value = Number(value) || 0;
     if (['characteristics', 'riskTemplate'].includes(key)) value = String(value).split(/\r?\n/).map(item => item.trim()).filter(Boolean);
     payload[key] = value;
   });
@@ -1017,11 +1023,7 @@ async function saveProcess(event) {
   const status = document.getElementById('processFormStatus');
   status.textContent = 'Kayıt doğrulanıyor…';
   try {
-    const response = await fetch(id ? `/api/processes/${encodeURIComponent(id)}` : '/api/processes', {
-      method: id ? 'PUT' : 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Kayıt işlemi başarısız.');
+    const data = await globalThis.TyanaPlatform.data.saveProcess(payload, id || null);
     const saved = normalizeProcess(data.process);
     const existing = processes.findIndex(process => process.id === saved.id);
     if (existing >= 0) processes[existing] = saved; else processes.push(saved);
@@ -1042,11 +1044,7 @@ async function archiveOrRestoreProcess() {
   const restore = document.getElementById('archiveProcessButton').dataset.mode === 'restore';
   if (!restore && !window.confirm(`${process.code} - ${process.name} arşive alınsın mı? Bağlı akışlardan silinmez, yeni seçimlerde gösterilmez.`)) return;
   try {
-    const response = await fetch(`/api/processes/${encodeURIComponent(id)}`, restore ? {
-      method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...process, status: 'active' })
-    } : { method: 'DELETE' });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'İşlem başarısız.');
+    const data = restore ? await globalThis.TyanaPlatform.data.saveProcess({ ...process, status: 'active' }, id) : await globalThis.TyanaPlatform.data.archiveProcess(id);
     if (restore) Object.assign(process, normalizeProcess(data.process)); else process.status = 'archived';
     closeProcessDrawer();
     renderProcessLibrary(); renderOptions(); renderSequence();
@@ -1057,12 +1055,24 @@ async function archiveOrRestoreProcess() {
 }
 
 async function exportProcessLibrary() {
+  if (!globalThis.ExcelJS) { toast('Excel motoru yüklenemedi', 'Uygulama paketini yeniden kurun.'); return; }
   const headers = ['Kod', 'Proses', 'Aile', 'Kategori', 'Ekipman', 'Kontrol Metodu', 'Özel Proses', 'Dış Kaynak', 'Çevrim sn', 'Revizyon', 'Onay'];
   const rows = processes.map(process => [process.code, process.name, process.family, process.category, process.equipment, process.controlMethod, process.special ? 'Evet' : 'Hayır', process.outsource ? 'Evet' : 'Hayır', process.cycleTimeSec, process.revision, process.approvalStatus]);
-  const csv = [headers, ...rows].map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(';')).join('\r\n');
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
-  const fileName = `TYANA_Q-Flow_Proses_Kutuphanesi_${new Date().toISOString().slice(0, 10)}.csv`; const result = await saveBlob(blob, fileName);
-  if (result.saved) toast('Kütüphane dışa aktarıldı', `${processes.length} proses Excel uyumlu CSV olarak kaydedildi.`);
+  const workbook = new ExcelJS.Workbook(); workbook.creator = 'TYANA OTOMOTİV • Eren'; workbook.created = new Date();
+  const sheet = workbook.addWorksheet('Proses Kütüphanesi', { views: [{ state: 'frozen', ySplit: 3 }] });
+  sheet.columns = [16, 28, 22, 18, 30, 42, 14, 14, 14, 12, 14].map(width => ({ width }));
+  sheet.mergeCells('A1:K1'); sheet.getCell('A1').value = 'TYANA OTOMOTİV • Q-FLOW PROSES KÜTÜPHANESİ'; sheet.getCell('A1').font = { name: 'Arial', size: 16, bold: true, color: { argb: 'FFFFFFFF' } }; sheet.getCell('A1').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF10213F' } }; sheet.getCell('A1').alignment = { horizontal: 'center' }; sheet.getRow(1).height = 28;
+  sheet.getRow(3).values = headers; sheet.getRow(3).height = 28;
+  rows.forEach(row => sheet.addRow(row.map(safeExcelValue)));
+  const border = { top: { style: 'thin', color: { argb: 'FF8792A5' } }, left: { style: 'thin', color: { argb: 'FF8792A5' } }, bottom: { style: 'thin', color: { argb: 'FF8792A5' } }, right: { style: 'thin', color: { argb: 'FF8792A5' } } };
+  sheet.getRow(3).eachCell(cell => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF245CC7' } }; cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: 'FFFFFFFF' } }; cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }; });
+  sheet.eachRow((row, rowNumber) => { if (rowNumber >= 3) row.eachCell(cell => { cell.border = border; if (rowNumber > 3) { cell.font = { name: 'Arial', size: 9 }; cell.alignment = { vertical: 'middle', wrapText: true }; } }); });
+  sheet.autoFilter = { from: 'A3', to: 'K3' }; sheet.pageSetup = { paperSize: 8, orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, printArea: `A1:K${Math.max(3, rows.length + 3)}` };
+  const buffer = await workbook.xlsx.writeBuffer(); const verification = new ExcelJS.Workbook(); await verification.xlsx.load(buffer);
+  if (verification.getWorksheet('Proses Kütüphanesi').rowCount !== rows.length + 3) throw new Error('Proses kütüphanesi Excel doğrulaması başarısız.');
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const fileName = `TYANA_Q-Flow_Proses_Kutuphanesi_${new Date().toISOString().slice(0, 10)}.xlsx`; const result = await saveBlob(blob, fileName, exportFileTypes.xlsx);
+  if (result.saved) toast('Kütüphane dışa aktarıldı', `${processes.length} proses doğrulanmış Excel çalışma kitabına kaydedildi.`);
 }
 
 document.querySelector('[data-action="new-process"]').addEventListener('click', () => openProcessDrawer());
@@ -1074,17 +1084,17 @@ document.querySelector('[data-action="export-library"]').addEventListener('click
 document.querySelector('[data-action="show-drafts"]').addEventListener('click', () => { libraryQuickFilter = 'draft'; document.getElementById('libraryStatusFilter').value = 'active'; renderProcessLibrary(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && !document.getElementById('processDrawer').classList.contains('hidden')) closeProcessDrawer(); });
 
-// Durable user/profile management. Authentication remains server/platform owned.
+// Durable local responsibility directory. The Windows profile is the desktop security boundary.
 let users = [];
 const userRoleLabels = { admin: 'Sistem Yöneticisi', quality_manager: 'Kalite Yöneticisi', quality_engineer: 'Kalite Mühendisi', process_engineer: 'Proses Mühendisi', approver: 'Onay Yetkilisi', operator: 'Operatör', viewer: 'Görüntüleyici' };
-const userRoleScopes = { admin: 'Tam sistem, kütüphane ve onay', quality_manager: 'Kalite dokümanları ve onay', quality_engineer: 'PFMEA, CP, PPAP hazırlama', process_engineer: 'Rota, proses ve talimat', approver: 'İnceleme ve elektronik onay', operator: 'Yayımlı talimat görüntüleme', viewer: 'Salt okunur erişim' };
+const userRoleScopes = { admin: 'Sistem sahipliği sorumluluğu', quality_manager: 'Kalite inceleme sorumluluğu', quality_engineer: 'PFMEA, CP ve PPAP hazırlama', process_engineer: 'Rota, proses ve talimat hazırlama', approver: 'Doküman inceleme sorumluluğu', operator: 'Operasyon uygulama sorumluluğu', viewer: 'Doküman görüntüleme profili' };
 
 function renderUsers() {
   const query = document.getElementById('userSearch').value.trim().toLocaleLowerCase('tr-TR');
   const role = document.getElementById('userRoleFilter').value; const status = document.getElementById('userStatusFilter').value;
   const filtered = users.filter(user => (role === 'all' || user.role === role) && (status === 'all' || user.status === status) && `${user.displayName} ${user.email} ${user.department} ${user.plant} ${userRoleLabels[user.role] || user.role}`.toLocaleLowerCase('tr-TR').includes(query));
   const container = document.getElementById('userRows');
-  container.innerHTML = filtered.length ? filtered.map(user => `<div class="user-register-row ${user.status !== 'active' ? 'inactive-user' : ''}" data-user-id="${escapeHtml(user.id)}"><span class="user-identity"><i>${escapeHtml(user.displayName.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toLocaleUpperCase('tr-TR'))}</i><span><b>${escapeHtml(user.displayName)}</b><small>${escapeHtml(user.email)} • v${escapeHtml(user.version)}</small></span></span><span><b>${escapeHtml(userRoleLabels[user.role] || user.role)}</b><small>${escapeHtml(user.department)}</small></span><span><b>${escapeHtml(user.plant)}</b><small>TYANA çalışma alanı</small></span><span><b>${escapeHtml(userRoleScopes[user.role] || 'Rol profili')}</b><small>Sunucu tarafı yetkilendirme</small></span><span><mark class="user-status ${escapeHtml(user.status)}">${user.status === 'active' ? 'AKTİF' : user.status === 'invited' ? 'DAVET' : 'PASİF'}</mark></span><span class="user-row-actions"><button data-edit-user="${escapeHtml(user.id)}">Düzenle</button><button data-toggle-user="${escapeHtml(user.id)}">${user.status === 'active' ? 'Pasife al' : 'Aktifleştir'}</button></span></div>`).join('') : '<div class="empty-user-state">Filtreye uygun kullanıcı bulunamadı.</div>';
+  container.innerHTML = filtered.length ? filtered.map(user => `<div class="user-register-row ${user.status !== 'active' ? 'inactive-user' : ''}" data-user-id="${escapeHtml(user.id)}"><span class="user-identity"><i>${escapeHtml(user.displayName.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toLocaleUpperCase('tr-TR'))}</i><span><b>${escapeHtml(user.displayName)}</b><small>${escapeHtml(user.email)} • v${escapeHtml(user.version)}</small></span></span><span><b>${escapeHtml(userRoleLabels[user.role] || user.role)}</b><small>${escapeHtml(user.department)}</small></span><span><b>${escapeHtml(user.plant)}</b><small>TYANA çalışma alanı</small></span><span><b>${escapeHtml(userRoleScopes[user.role] || 'Rol profili')}</b><small>${globalThis.TyanaPlatform.isDesktop ? 'İş akışı etiketi • RBAC değil' : 'Sunucu tarafı yetkilendirme'}</small></span><span><mark class="user-status ${escapeHtml(user.status)}">${user.status === 'active' ? 'AKTİF' : user.status === 'invited' ? 'DAVET' : 'PASİF'}</mark></span><span class="user-row-actions"><button data-edit-user="${escapeHtml(user.id)}">Düzenle</button><button data-toggle-user="${escapeHtml(user.id)}">${user.status === 'active' ? 'Pasife al' : 'Aktifleştir'}</button></span></div>`).join('') : '<div class="empty-user-state">Filtreye uygun kullanıcı bulunamadı.</div>';
   container.querySelectorAll('[data-edit-user]').forEach(button => button.addEventListener('click', () => openUserDrawer(users.find(user => user.id === button.dataset.editUser))));
   container.querySelectorAll('[data-toggle-user]').forEach(button => button.addEventListener('click', () => toggleUserStatus(button.dataset.toggleUser)));
   document.getElementById('userActiveCount').textContent = users.filter(user => user.status === 'active').length;
@@ -1094,14 +1104,13 @@ function renderUsers() {
 
 async function loadUsers() {
   try {
-    const meResponse = await fetch('/api/users/me', { headers: { accept: 'application/json' } }); const meData = await meResponse.json();
-    if (!meResponse.ok) throw new Error(meData.error || 'Çalışma alanı kimliği doğrulanamadı.');
-    const source = meData.identity?.source === 'openai-workspace' ? 'OPENAI WORKSPACE' : meData.identity?.source === 'cloudflare-access' ? 'CLOUDFLARE ACCESS' : 'YEREL DEMO';
+    const meData = await globalThis.TyanaPlatform.data.currentUser();
+    const source = meData.identity?.source === 'openai-workspace' ? 'OPENAI WORKSPACE' : meData.identity?.source === 'cloudflare-access' ? 'CLOUDFLARE ACCESS' : ['windows-local-desktop', 'windows-profile-owner'].includes(meData.identity?.source) ? 'WINDOWS PROFİLİ' : 'YEREL / SINIRLI';
     document.getElementById('userIdentitySource').textContent = source;
     document.getElementById('userIdentityDetail').textContent = meData.bootstrapProfile ? `${meData.identity?.email || 'Doğrulanmış kullanıcı'} • Eren başlangıç profili` : `${meData.user?.displayName || 'Kullanıcı'} • ${userRoleLabels[meData.user?.role] || meData.user?.role || 'rol tanımsız'}`;
     const mini = document.querySelector('.user-mini'); if (mini && meData.user) { mini.querySelector('strong').textContent = meData.user.displayName; mini.querySelector('small').textContent = userRoleLabels[meData.user.role] || meData.user.role; mini.querySelector('.avatar').textContent = meData.user.displayName.slice(0, 1).toLocaleUpperCase('tr-TR'); }
-    const response = await fetch('/api/users', { headers: { accept: 'application/json' } }); const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Kullanıcılar yüklenemedi.'); users = data.users || [];
+    const data = await globalThis.TyanaPlatform.data.listUsers(); users = data.users || [];
+    if (globalThis.TyanaPlatform.isDesktop) document.getElementById('userAuthBoundaryText').textContent = 'Oturum sahibi Windows profilidir. Kayıtlar dar TYANA IPC komutlarıyla yerel SQLite veritabanına yazılır; değişiklikler sürümlenir ve hash bağlantılı günlük oluşturur. Profil rolleri gerçek oturum açma, e-imza veya RBAC değildir.';
   } catch (error) {
     users = [{ id: 'user-eren', email: 'eren@tyana.local', displayName: 'Eren', role: 'admin', status: 'active', plant: 'TYANA OTOMOTİV', department: 'Kalite', version: 1 }];
     document.getElementById('userIdentitySource').textContent = 'YEREL / SINIRLI'; document.getElementById('userIdentityDetail').textContent = 'Sunucu kimliği yok; Eren tanıtım profili';
@@ -1127,8 +1136,7 @@ async function saveUser(event) {
   const payload = { displayName: document.getElementById('userDisplayName').value.trim(), email: document.getElementById('userEmail').value.trim(), role: document.getElementById('userRole').value, status: document.getElementById('userStatus').value, department: document.getElementById('userDepartment').value.trim(), plant: document.getElementById('userPlant').value.trim(), version: Number(document.getElementById('userId').dataset.version || 0) };
   if (!payload.displayName || !payload.email || !payload.department || !payload.plant) { toast('Kullanıcı alanları eksik', 'Ad, e-posta, bölüm ve tesis alanlarını doldurun.'); return; }
   try {
-    const response = await fetch(id ? `/api/users/${encodeURIComponent(id)}` : '/api/users', { method: id ? 'PUT' : 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) }); const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Kullanıcı kaydedilemedi.'); const index = users.findIndex(user => user.id === data.user.id); if (index >= 0) users[index] = data.user; else users.push(data.user);
+    const data = await globalThis.TyanaPlatform.data.saveUser(payload, id || null); const index = users.findIndex(user => user.id === data.user.id); if (index >= 0) users[index] = data.user; else users.push(data.user);
     closeUserDrawer(); renderUsers(); toast(id ? 'Kullanıcı profili güncellendi' : 'Kullanıcı oluşturuldu', `${data.user.displayName} • ${userRoleLabels[data.user.role] || data.user.role} • v${data.user.version}`);
   } catch (error) { toast('Kullanıcı kaydedilemedi', error.message); }
 }
@@ -1137,8 +1145,8 @@ async function toggleUserStatus(id) {
   const user = users.find(item => item.id === id); if (!user) return;
   if (user.status === 'active' && !window.confirm(`${user.displayName} kullanıcısı pasife alınsın mı?`)) return;
   try {
-    const deactivate = user.status === 'active'; const response = await fetch(deactivate ? `/api/users/${encodeURIComponent(id)}?version=${user.version}` : `/api/users/${encodeURIComponent(id)}`, deactivate ? { method: 'DELETE' } : { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...user, status: 'active', version: user.version }) }); const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Kullanıcı durumu değiştirilemedi.'); Object.assign(user, data.user); renderUsers(); toast('Kullanıcı durumu güncellendi', `${user.displayName} • ${user.status === 'active' ? 'Aktif' : 'Pasif'} • v${user.version}`);
+    const deactivate = user.status === 'active'; const data = deactivate ? await globalThis.TyanaPlatform.data.deactivateUser(id, user.version) : await globalThis.TyanaPlatform.data.saveUser({ ...user, status: 'active', version: user.version }, id);
+    Object.assign(user, data.user); renderUsers(); toast('Kullanıcı durumu güncellendi', `${user.displayName} • ${user.status === 'active' ? 'Aktif' : 'Pasif'} • v${user.version}`);
   } catch (error) { toast('Durum değiştirilemedi', error.message); }
 }
 
@@ -1283,28 +1291,24 @@ function applySnapshot(snapshot) {
 async function saveProjectSnapshot() {
   const snapshot = await getDocumentationSnapshot();
   const payload = { projectCode: projectCode.value.trim(), partNumber: partNumber.value.trim(), partName: partName.value.trim(), productGroup: productGroup.value, revision: drawingRevision.value.trim(), phase: document.getElementById('productionPhase').value, status: document.getElementById('documentStatus').value, version: currentProjectVersion, payload: snapshot };
-  const response = await fetch(currentProjectId ? `/api/projects/${encodeURIComponent(currentProjectId)}` : '/api/projects', { method: currentProjectId ? 'PUT' : 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Proje kaydedilemedi.');
+  const data = await globalThis.TyanaPlatform.data.saveProject(payload, currentProjectId);
   currentProjectId = data.project.id; currentProjectVersion = data.project.version;
   localStorage.setItem('qflow-last-project', JSON.stringify(data.project.payload));
   const status = document.getElementById('draftStatus');
-  status.textContent = `✓ Sunucuya kaydedildi • v${currentProjectVersion}`; status.classList.add('saved'); status.classList.remove('warning');
+  status.textContent = `✓ ${globalThis.TyanaPlatform.isDesktop ? 'Yerel veritabanına' : 'Sunucuya'} kaydedildi • v${currentProjectVersion}`; status.classList.add('saved'); status.classList.remove('warning');
   return data.project.payload;
 }
 
 async function restoreLatestProject() {
   try {
-    const response = await fetch('/api/projects/latest', { headers: { accept: 'application/json' } });
-    if (!response.ok) return;
-    const data = await response.json();
+    const data = await globalThis.TyanaPlatform.data.latestProject();
     if (!data.project) return;
     currentProjectId = data.project.id; currentProjectVersion = data.project.version;
     applySnapshot(data.project.payload);
     const status = document.getElementById('draftStatus'); status.textContent = `✓ Son proje yüklendi • v${currentProjectVersion}`; status.classList.add('saved'); status.classList.remove('warning');
   } catch {
     const local = localStorage.getItem('qflow-last-project');
-    if (local) { try { applySnapshot(JSON.parse(local)); toast('Yerel kurtarma yüklendi', 'Sunucuya erişilemedi; son tarayıcı yedeği açıldı.'); } catch {} }
+    if (local) { try { applySnapshot(JSON.parse(local)); toast('Yerel kurtarma yüklendi', globalThis.TyanaPlatform.isDesktop ? 'SQLite kaydı açılamadı; son güvenli yerel snapshot yüklendi.' : 'Sunucuya erişilemedi; son tarayıcı yedeği açıldı.'); } catch {} }
   }
 }
 
@@ -1767,6 +1771,82 @@ async function exportControlPlanPdf() {
   const fileName = `${safeFileName(controlPlanNumber.value)}_Rev-${safeFileName(drawingRevision.value)}.pdf`; const blob = await pdfBlob(pdfControlDefinition(snapshot));
   const result = await saveBlob(blob, fileName, exportFileTypes.pdf); if (result.saved) toast('Antetli PDF kaydedildi', `A3 yatay • ${characteristics.length} kontrol satırı • ${components.length} BOM kalemi • Türkçe gömülü font`);
 }
+
+function pfmeaPdfDefinition(snapshot) {
+  const routeEntries = new Map(selectedProcessEntries().map(entry => [entry.routeKey, entry]));
+  const riskRows = (snapshot.pfmea || pfmeaRows).map((row, index) => {
+    const entry = routeEntries.get(row.routeKey);
+    const process = entry?.process || processes.find(candidate => candidate.id === row.processId);
+    const component = row.componentId === 'FINISHED_GOOD'
+      ? snapshot.product.partName
+      : snapshot.components.find(candidate => candidate.id === row.componentId)?.name;
+    const fillColor = index % 2 ? '#f5f7fb' : '#ffffff';
+    const normalCell = (text, options = {}) => ({ text: String(text || '—'), fontSize: 5.8, margin: [2, 2, 2, 2], fillColor, ...options });
+    const scoreCell = value => normalCell(value, { bold: true, alignment: 'center', fontSize: 6.6 });
+    const apFill = row.ap === 'H' ? '#f8d7da' : row.ap === 'M' ? '#fff1c7' : row.ap === 'L' ? '#dff3e8' : '#eef1f5';
+    const statusFill = row.status === 'Kapalı' ? '#dff3e8' : row.status === 'Devam Ediyor' ? '#fff1c7' : '#f8d7da';
+    return [
+      normalCell(entry?.detail.operationNo || row.operationNo || '—', { bold: true, alignment: 'center' }),
+      normalCell(`${process?.name || 'Manuel risk'}\n${component || 'Bileşen tanımsız'}\n${row.functionText || '—'}`, { bold: true }),
+      normalCell(`${row.failureMode || '—'}\nETKİ: ${row.effect || '—'}`),
+      scoreCell(row.severity),
+      normalCell(`${row.cause || '—'}\nÖNLEME: ${row.preventionControl || '—'}`),
+      scoreCell(row.occurrence),
+      normalCell(row.detectionControl),
+      scoreCell(row.detection),
+      normalCell(row.ap, { bold: true, alignment: 'center', fontSize: 6.6, fillColor: apFill }),
+      normalCell(row.recommendedAction),
+      normalCell(row.owner, { alignment: 'center' }),
+      normalCell(row.dueDate, { alignment: 'center' }),
+      normalCell(row.status || 'Açık', { bold: true, alignment: 'center', fillColor: statusFill }),
+      normalCell(row.evidence)
+    ];
+  });
+  const headerCell = text => ({ text, bold: true, color: '#ffffff', fillColor: '#10213f', alignment: 'center', fontSize: 5.7, margin: [1, 3, 1, 3] });
+  const metaCell = (label, value) => ({ stack: [{ text: label, fontSize: 5.2, color: '#637087' }, { text: String(value || '—'), bold: true, fontSize: 6.5, margin: [0, 2, 0, 0] }], margin: [3, 3, 3, 3] });
+  const tableLayout = { hLineWidth: () => 0.55, vLineWidth: () => 0.55, hLineColor: () => '#657188', vLineColor: () => '#657188', paddingLeft: () => 0, paddingRight: () => 0, paddingTop: () => 0, paddingBottom: () => 0 };
+  const pfmeaNumber = `${snapshot.product.projectCode || 'PROJE'}-PFMEA`;
+  const generatedAt = new Date(snapshot.generatedAt).toLocaleString('tr-TR');
+  return {
+    pageSize: 'A3', pageOrientation: 'landscape', pageMargins: [18, 18, 18, 28],
+    background: (_page, pageSize) => ({ canvas: [{ type: 'rect', x: 10, y: 10, w: pageSize.width - 20, h: pageSize.height - 20, lineWidth: 1, lineColor: '#24344f' }] }),
+    watermark: { text: documentCopyLabel(snapshot.approval.status), color: '#aeb9ca', opacity: 0.14, bold: true },
+    footer: (page, pages) => ({ margin: [20, 4, 20, 0], columns: [
+      { text: `${pfmeaNumber} • Rev. ${snapshot.product.drawingRevision || '—'} • SHA-256 ${snapshot.sha256.slice(0, 16)}`, fontSize: 5.8, color: '#68758b' },
+      { text: `${documentCopyLabel(snapshot.approval.status)} • Sayfa ${page} / ${pages}`, alignment: 'right', bold: true, fontSize: 5.8, color: '#68758b' }
+    ] }),
+    content: [
+      { table: { widths: [110, '*', 145], body: [[
+        { text: 'TYANA OTOMOTİV\nQ-FLOW', bold: true, color: '#2f6fed', alignment: 'center', fontSize: 8, margin: [0, 6, 0, 4] },
+        { text: 'PROSES FMEA / PROCESS FAILURE MODE AND EFFECTS ANALYSIS', bold: true, alignment: 'center', fontSize: 15, margin: [0, 7, 0, 5] },
+        { text: `${pfmeaNumber}\nRev. ${snapshot.product.drawingRevision || '—'} • ${snapshot.approval.status}`, bold: true, alignment: 'center', fontSize: 7, margin: [0, 5, 0, 3] }
+      ]] }, layout: tableLayout },
+      { table: { widths: ['*', '*', '*', '*'], body: [
+        [metaCell('PROJE / APQP', snapshot.product.projectCode), metaCell('PARÇA NO / ADI', `${snapshot.product.partNumber} / ${snapshot.product.partName}`), metaCell('ÜRÜN GRUBU / FAZ', `${snapshot.product.productGroupLabel} / ${snapshot.product.productionPhase}`), metaCell('TEKNİK RESİM / REVİZYON', `${snapshot.product.drawingNumber} / ${snapshot.product.drawingRevision}`)],
+        [metaCell('KURULUŞ / SAHA', `${snapshot.product.supplierName} / ${snapshot.product.supplierSite}`), metaCell('MÜŞTERİ / MÜŞTERİ PARÇA NO', `${snapshot.product.customer} / ${snapshot.product.customerPartNumber}`), metaCell('HAZIRLAYAN / ÇEKİRDEK EKİP', `${snapshot.approval.preparedBy} / ${snapshot.product.coreTeam}`), metaCell('İLK YAYIN / REVİZYON TARİHİ', `${snapshot.product.originalDate} / ${snapshot.product.revisionDate}`)],
+        [metaCell('MAMUL AĞACI / PROSES', `${snapshot.components.length} alt kalem / ${snapshot.route.length} operasyon`), metaCell('STANDART PROFİLİ', `${snapshot.standardsProfile.iatf} • ${snapshot.standardsProfile.apqp}`), metaCell('DOKÜMAN DURUMU / KOPYA', `${snapshot.approval.status} / ${documentCopyLabel(snapshot.approval.status)}`), metaCell('ÜRETİM / SNAPSHOT', `${generatedAt} / ${snapshot.sha256.slice(0, 24)}`)]
+      ] }, layout: tableLayout, margin: [0, 3, 0, 4] },
+      { table: { headerRows: 1, dontBreakRows: false, widths: [30, 105, 145, 24, 145, 24, 120, 24, 32, 125, 70, 65, 65, 126], body: [[
+        'OP.', 'PROSES / FONKSİYON', 'HATA TÜRÜ / ETKİ', 'S', 'NEDEN / ÖNLEME KONTROLÜ', 'O', 'TESPİT KONTROLÜ', 'D', 'AP', 'ÖNERİLEN AKSİYON', 'SORUMLU', 'TERMİN TARİHİ', 'DURUM', 'KANIT / KAYIT'
+      ].map(headerCell), ...riskRows] }, layout: tableLayout },
+      { text: 'Not: S-O-D ve Action Priority (AP) değerleri yetkili disiplinler arası ekip tarafından, kuruluşun lisanslı AIAG & VDA FMEA referansına göre doğrulanır. Yüksek AP aksiyonları sorumlu, termin ve nesnel kanıt ile kapatılır.', fontSize: 5.8, color: '#4e5c72', margin: [2, 5, 2, 0] }
+    ], defaultStyle: { font: 'Roboto' }
+  };
+}
+
+async function exportPfmeaPdf() {
+  if (!pfmeaRows.length) { toast('PFMEA PDF oluşturulamadı', 'En az bir PFMEA risk satırı ekleyin veya proses akışından PFMEA satırlarını oluşturun.'); return; }
+  if (!globalThis.pdfMake) { toast('PDF motoru yüklenemedi', 'Uygulama paketini yeniden yükleyin.'); return; }
+  if (!ensureDocumentExportReady()) return;
+  const snapshot = await getDocumentationSnapshot();
+  const fileName = `${safeFileName(snapshot.product.projectCode)}_PFMEA_${safeFileName(snapshot.product.partNumber)}_Rev-${safeFileName(snapshot.product.drawingRevision)}.pdf`;
+  const blob = await pdfBlob(pfmeaPdfDefinition(snapshot));
+  if (blob.size < 1024) throw new Error('PFMEA PDF byte doğrulaması başarısız.');
+  const result = await saveBlob(blob, fileName, exportFileTypes.pdf);
+  if (result.saved) toast('Kontrollü PFMEA PDF kaydedildi', `A3 yatay • ${snapshot.pfmea.length} risk satırı • S-O-D-AP ve aksiyon kanıt zinciri • ${documentCopyLabel(snapshot.approval.status)}`);
+}
+
+document.querySelectorAll('[data-action="export-pfmea-pdf"]').forEach(button => button.addEventListener('click', () => exportPfmeaPdf().catch(error => toast('PFMEA PDF üretilemedi', error.message))));
 
 function flowPdfDefinition(snapshot) {
   const chunks = [];

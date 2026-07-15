@@ -159,12 +159,62 @@
     return saveWithDownload(bytes, fileName, type);
   }
 
+  function invokeDesktop(command, args = {}) {
+    const invoke = globalThis.__TAURI__?.core?.invoke;
+    if (typeof invoke !== 'function') return Promise.reject(new Error('TYANA masaüstü veri köprüsü kullanılamıyor.'));
+    return invoke(command, args).catch(error => {
+      throw new Error(typeof error === 'string' ? error : error?.message || 'Yerel veri işlemi tamamlanamadı.');
+    });
+  }
+
+  async function webJson(path, { method = 'GET', body } = {}) {
+    const response = await fetch(path, {
+      method,
+      headers: body === undefined ? { accept: 'application/json' } : { accept: 'application/json', 'content-type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body)
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || `İstek tamamlanamadı (${response.status}).`);
+      if (payload.currentVersion) error.currentVersion = payload.currentVersion;
+      throw error;
+    }
+    return payload;
+  }
+
+  const desktop = isTauriDesktop();
+  const data = Object.freeze({
+    listProcesses: () => desktop ? invokeDesktop('process_list') : webJson('/api/processes'),
+    saveProcess: (payload, id = null) => desktop ? invokeDesktop('process_save', { id, payload }) : webJson(id ? `/api/processes/${encodeURIComponent(id)}` : '/api/processes', { method: id ? 'PUT' : 'POST', body: payload }),
+    archiveProcess: id => desktop ? invokeDesktop('process_archive', { id }) : webJson(`/api/processes/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+    currentUser: () => desktop ? invokeDesktop('user_me') : webJson('/api/users/me'),
+    listUsers: () => desktop ? invokeDesktop('user_list') : webJson('/api/users'),
+    saveUser: (payload, id = null) => desktop ? invokeDesktop('user_save', { id, payload }) : webJson(id ? `/api/users/${encodeURIComponent(id)}` : '/api/users', { method: id ? 'PUT' : 'POST', body: payload }),
+    deactivateUser: (id, version) => desktop ? invokeDesktop('user_deactivate', { id, version }) : webJson(`/api/users/${encodeURIComponent(id)}?version=${version}`, { method: 'DELETE' }),
+    latestProject: () => desktop ? invokeDesktop('project_latest') : webJson('/api/projects/latest'),
+    saveProject: (payload, id = null) => desktop ? invokeDesktop('project_save', { id, payload }) : webJson(id ? `/api/projects/${encodeURIComponent(id)}` : '/api/projects', { method: id ? 'PUT' : 'POST', body: payload })
+  });
+
+  async function storeDrawing(options = {}) {
+    const bytes = await toBytes(options.data ?? options.bytes ?? options.blob);
+    if (bytes.byteLength > 32 * 1024 * 1024) throw new RangeError('Teknik resim 32 MB sınırını aşıyor.');
+    const extension = String(options.fileName || '').split('.').pop().toLowerCase().replace('jpeg', 'jpg');
+    if (!['pdf', 'png', 'jpg'].includes(extension)) throw new TypeError('Teknik resim PDF, PNG veya JPEG olmalıdır.');
+    const sha256 = String(options.sha256 || '').toLowerCase();
+    if (!/^[a-f0-9]{64}$/.test(sha256)) throw new TypeError('Teknik resim SHA-256 özeti geçersiz.');
+    if (!desktop) return Object.freeze({ storageId: null, sha256, extension, bytesStored: bytes.byteLength, mode: 'web-reference' });
+    const result = await globalThis.__TAURI__.core.invoke('drawing_store', bytes, { headers: { 'x-tyana-sha256': sha256, 'x-tyana-extension': extension } });
+    return Object.freeze({ ...result, mode: 'tauri-controlled-store' });
+  }
+
   const adapter = Object.freeze({
-    isDesktop: isTauriDesktop(),
+    isDesktop: desktop,
     maxExportBytes: MAX_EXPORT_BYTES,
     supportedExportTypes: Object.freeze(Object.keys(EXPORT_TYPES)),
     saveArtifact,
-    saveFile: saveArtifact
+    saveFile: saveArtifact,
+    storeDrawing,
+    data
   });
 
   Object.defineProperty(globalThis, 'TyanaPlatform', {

@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "TYANA OTOMOTİV Kalite Dokümantasyonu",
-  "version": "0.1.0",
-  "identifier": "com.tyanaotomotiv.kalite",
+  "productName": "TYANA Q-Flow",
+  "version": "1.0.0",
+  "identifier": "com.tyanaotomotiv.qflow",
   "build": {
     "beforeDevCommand": "node desktop-build.mjs",
     "beforeBuildCommand": "node desktop-build.mjs",
@@ -45,10 +45,29 @@
     "targets": ["nsis"],
     "createUpdaterArtifacts": false,
     "category": "Business",
+    "publisher": "TYANA OTOMOTİV",
+    "copyright": "Copyright © 2026 TYANA OTOMOTİV. Tüm hakları saklıdır.",
     "shortDescription": "Otomotiv kalite dokumantasyonu ve kontrollu cikti sistemi",
+    "longDescription": "Kontrol planı, proses akışı, PFMEA, operatör talimatı ve ürün teknik dokümantasyonu hazırlama sistemi.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
     "windows": {
+      "allowDowngrades": false,
       "webviewInstallMode": {
         "type": "offlineInstaller"
+      },
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["Turkish", "English"],
+        "displayLanguageSelector": true,
+        "compression": "lzma",
+        "startMenuFolder": "TYANA OTOMOTİV",
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico"
       }
     }
   }

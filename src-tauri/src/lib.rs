@@ -1,7 +1,10 @@
+mod data;
+
+use data::*;
 use serde::Serialize;
 use std::{
     collections::HashMap,
-    fs::OpenOptions,
+    fs::{self, OpenOptions},
     io::Write,
     path::PathBuf,
     sync::{Mutex, OnceLock},
@@ -134,7 +137,42 @@ fn pending_exports() -> &'static Mutex<HashMap<String, PendingExport>> {
 }
 
 fn contains_bytes(haystack: &[u8], needle: &[u8]) -> bool {
-    !needle.is_empty() && haystack.windows(needle.len()).any(|window| window == needle)
+    !needle.is_empty()
+        && haystack
+            .windows(needle.len())
+            .any(|window| window == needle)
+}
+
+#[cfg(windows)]
+fn replace_file(source: &std::path::Path, destination: &std::path::Path) -> std::io::Result<()> {
+    use std::os::windows::ffi::OsStrExt;
+    use windows_sys::Win32::Storage::FileSystem::{
+        MoveFileExW, MOVEFILE_REPLACE_EXISTING, MOVEFILE_WRITE_THROUGH,
+    };
+
+    let source_wide: Vec<u16> = source.as_os_str().encode_wide().chain(Some(0)).collect();
+    let destination_wide: Vec<u16> = destination
+        .as_os_str()
+        .encode_wide()
+        .chain(Some(0))
+        .collect();
+    let result = unsafe {
+        MoveFileExW(
+            source_wide.as_ptr(),
+            destination_wide.as_ptr(),
+            MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH,
+        )
+    };
+    if result == 0 {
+        Err(std::io::Error::last_os_error())
+    } else {
+        Ok(())
+    }
+}
+
+#[cfg(not(windows))]
+fn replace_file(source: &std::path::Path, destination: &std::path::Path) -> std::io::Result<()> {
+    fs::rename(source, destination)
 }
 
 fn safe_file_name(input: &str, kind: ExportKind) -> Result<String, ExportError> {
@@ -252,7 +290,9 @@ fn write_export(
         .headers()
         .get("x-tyana-export-ticket")
         .and_then(|value| value.to_str().ok())
-        .filter(|value| value.len() == 32 && value.chars().all(|character| character.is_ascii_hexdigit()))
+        .filter(|value| {
+            value.len() == 32 && value.chars().all(|character| character.is_ascii_hexdigit())
+        })
         .ok_or(ExportError::InvalidTicket)?;
     let InvokeBody::Raw(bytes) = request.body() else {
         return Err(ExportError::RawBodyRequired);
@@ -275,16 +315,23 @@ fn write_export(
         return Err(ExportError::InvalidSignature);
     }
 
-    let mut file = OpenOptions::new()
-        .create(true)
-        .truncate(true)
-        .write(true)
-        .open(&pending.path)
-        .map_err(|error| ExportError::Io(error.to_string()))?;
-    file.write_all(bytes)
-        .and_then(|_| file.flush())
-        .and_then(|_| file.sync_all())
-        .map_err(|error| ExportError::Io(error.to_string()))?;
+    let parent = pending.path.parent().ok_or(ExportError::InvalidPath)?;
+    let temporary = parent.join(format!(".tyana-export-{}.tmp", Uuid::new_v4()));
+    let write_result = (|| -> std::io::Result<()> {
+        let mut file = OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&temporary)?;
+        file.write_all(bytes)?;
+        file.flush()?;
+        file.sync_all()?;
+        drop(file);
+        replace_file(&temporary, &pending.path)
+    })();
+    if let Err(error) = write_result {
+        let _ = fs::remove_file(&temporary);
+        return Err(ExportError::Io(error.to_string()));
+    }
 
     let file_name = pending
         .path
@@ -303,7 +350,24 @@ fn write_export(
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![prepare_export, write_export])
+        .setup(|app| {
+            data::initialize(app.handle())?;
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            prepare_export,
+            write_export,
+            process_list,
+            process_save,
+            process_archive,
+            project_latest,
+            project_save,
+            user_me,
+            user_list,
+            user_save,
+            user_deactivate,
+            drawing_store
+        ])
         .run(tauri::generate_context!())
         .expect("TYANA OTOMOTİV masaüstü uygulaması başlatılamadı");
 }
@@ -327,9 +391,7 @@ mod tests {
     #[test]
     fn export_signatures_accept_expected_document_shapes() {
         assert!(ExportKind::Pdf.validate(b"%PDF-1.7\n1 0 obj\n%%EOF\n"));
-        assert!(ExportKind::Xlsx.validate(
-            b"PK\x03\x04[Content_Types].xml xl/workbook.xml"
-        ));
+        assert!(ExportKind::Xlsx.validate(b"PK\x03\x04[Content_Types].xml xl/workbook.xml"));
         assert!(ExportKind::Dxf.validate(b"0\r\nSECTION\r\n0\r\nEOF\r\n"));
     }
 
