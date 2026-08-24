@@ -1,0 +1,14 @@
+{
+  "name": "TYANA Q-FLOW Otomotiv Kalite Dokümantasyonu",
+  "short_name": "TYANA Q-FLOW",
+  "description": "IATF 16949 ve Automotive Core Tools iş akışlarını destekleyen kalite dokümantasyon çalışma alanı.",
+  "lang": "tr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#10213f",
+  "icons": [
+    { "src": "/qflow-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

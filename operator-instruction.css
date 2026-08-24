@@ -1,0 +1,89 @@
+.professional-instruction .instruction-step-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 0 14px 10px;
+}
+
+.instruction-step-preview .instruction-step-card {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  min-height: 72px;
+  padding: 11px;
+  border: 1px solid #dfe7f2;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #ffffff, #f5f8fd);
+}
+
+.instruction-step-card .step-no {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #173f7b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.instruction-step-card .step-body b,
+.instruction-step-card .step-body small {
+  display: block;
+}
+
+.instruction-step-card .step-body b {
+  color: #203654;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.instruction-step-card .step-body small {
+  margin-top: 4px;
+  color: #6e7e97;
+  font-size: 9.5px;
+  line-height: 1.35;
+}
+
+.instruction-step-card .step-body small.safety {
+  color: #a33131;
+}
+
+.instruction-parameter-ribbon,
+.instruction-reaction-callout {
+  margin: 0 14px 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.instruction-parameter-ribbon {
+  border: 1px solid #d5e3fb;
+  background: #f1f6ff;
+  color: #244b82;
+}
+
+.instruction-parameter-ribbon b,
+.instruction-reaction-callout b {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9.5px;
+  letter-spacing: .35px;
+}
+
+.instruction-reaction-callout {
+  border: 1px solid #f1c9cf;
+  background: #fff3f4;
+  color: #8c2737;
+}
+
+@media (max-width: 680px) {
+  .professional-instruction .instruction-step-preview { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .professional-instruction .instruction-step-preview { break-inside: avoid; }
+}
