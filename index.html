@@ -8,6 +8,8 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/qflow-icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="product-universe.css">
+  <link rel="stylesheet" href="operator-instruction.css">
 </head>
 <body>
   <div class="app-shell">
@@ -17,13 +19,17 @@
         <div><strong>TYANA Q-FLOW</strong><small>Automotive Quality OS</small></div>
       </div>
 
-      <div class="plant-pill"><span class="pulse"></span>TYANA OTOMOTİV • Merkez Fabrika</div>
+      <div id="tenantPlantPill" class="plant-pill"><span class="pulse"></span>Kullanıcı Tanımlı Kuruluş • Tesis</div>
 
       <nav class="main-nav" aria-label="Ana menü">
         <button class="nav-item active" data-view="dashboard"><span class="nav-icon">⌂</span><span>Genel Bakış</span></button>
-        <p class="nav-label">ÜRÜN GELİŞTİRME</p>
-        <button class="nav-item" data-view="product"><span class="nav-icon">◇</span><span>Ürün Tanımlama</span><span class="nav-badge">1</span></button>
+        <p class="nav-label">ÜRÜN ANA VERİSİ</p>
+        <button class="nav-item" data-view="product"><span class="nav-icon">◇</span><span>Ürün Kartları</span><span class="nav-badge">1</span></button>
+        <button class="nav-item" data-view="bom"><span class="nav-icon">⑂</span><span>Ürün Ağaçları</span><span class="status-dot warn"></span></button>
+        <button class="nav-item" data-view="workplan"><span class="nav-icon">⇥</span><span>İş Planları</span><span class="status-dot warn"></span></button>
+        <p class="nav-label">ÜRÜN &amp; PROSES RİSKİ</p>
         <button class="nav-item" data-view="flow"><span class="nav-icon">⇢</span><span>Proses Akışı</span><span class="status-dot done"></span></button>
+        <button class="nav-item" data-view="dfmea"><span class="nav-icon">△</span><span>DFMEA</span><span class="status-dot warn"></span></button>
         <button class="nav-item" data-view="pfmea"><span class="nav-icon">△</span><span>PFMEA</span><span class="status-dot warn"></span></button>
         <p class="nav-label">KALİTE DOKÜMANLARI</p>
         <button class="nav-item" data-view="control"><span class="nav-icon">▦</span><span>Kontrol Planı</span><span class="status-dot muted"></span></button>
@@ -32,6 +38,7 @@
         <p class="nav-label">SİSTEM</p>
         <button class="nav-item" data-view="library"><span class="nav-icon">▥</span><span>Proses Kütüphanesi</span><span id="libraryCountBadge" class="nav-badge library-nav-badge">18</span></button>
         <button class="nav-item" data-view="users"><span class="nav-icon">⚙</span><span>Kullanıcı &amp; Yetki</span></button>
+        <button class="nav-item" data-view="admin"><span class="nav-icon">◈</span><span>Admin Merkezi</span><span class="status-dot done"></span></button>
       </nav>
 
       <div class="sidebar-footer">
@@ -44,6 +51,7 @@
       <header class="topbar">
         <div class="breadcrumb"><span>Kalite Yönetimi</span><b>/</b><strong id="breadcrumbTitle">Genel Bakış</strong></div>
         <div class="top-actions">
+          <span id="trialStatusBadge" class="trial-status-badge hidden"><b>30 GÜN</b><small>Tam sürüm</small></span>
           <label class="search"><span>⌕</span><input placeholder="Ürün, doküman veya proses ara..."><kbd>⌘ K</kbd></label>
           <button class="icon-button" aria-label="Bildirimler">♢<i></i></button>
           <button class="help-button">?</button>
@@ -55,6 +63,17 @@
           <div><p class="eyebrow">TYANA Q-FLOW • RELEASE DESKTOP • YEREL VERİ KATMANI</p><h1>Günaydın, Eren <span>👋</span></h1><p>Ürün dokümantasyon süreçlerinizi tek doğrulanmış veri omurgasından yönetin.</p></div>
           <button class="primary-button" data-action="new-product"><span>＋</span> Yeni Ürün Dokümantasyonu</button>
         </div>
+
+        <article id="tenantCommandCenter" class="tenant-command-center" aria-labelledby="tenantCommandTitle">
+          <div class="tenant-command-brand"><span class="tenant-monogram">Q</span><div><p>AKTİF KURUMSAL KURULUM</p><h2 id="tenantCommandTitle">TYANA Q-FLOW üretim ve kalite dokümantasyon merkezi</h2><small id="tenantCommandSubtitle">Kontrollü kaynaklar, proses presetleri ve yayın kapıları</small></div></div>
+          <div class="tenant-command-metrics">
+            <div><span>Kaynak kontrol planı</span><b id="tenantSourcePlanCount">—</b><small>kontrollü örnek</small></div>
+            <div><span>Operasyon preseti</span><b id="tenantOperationCount">—</b><small>TR / EN kodlu</small></div>
+            <div><span>Talimat preseti</span><b id="tenantInstructionCount">—</b><small>iş + kalite adımı</small></div>
+            <div><span>Doğrulama kuralı</span><b id="tenantValidationCount">—</b><small>yayın öncesi kapı</small></div>
+          </div>
+          <div class="tenant-command-actions"><span id="tenantLibraryState">Kütüphane doğrulanıyor…</span><button class="tenant-outline-button" type="button" data-action="open-source-control">Kontrol Planı Stüdyosu</button><button class="tenant-primary-button" type="button" data-action="open-source-instructions">Talimat Stüdyosu →</button></div>
+        </article>
 
         <div class="kpi-grid">
           <article class="kpi-card"><div class="kpi-icon blue">◇</div><div><span>Aktif Ürün</span><strong>24</strong><small><b>+3</b> bu ay</small></div><div class="spark bars"><i></i><i></i><i></i><i></i><i></i></div></article>
@@ -100,104 +119,215 @@
       </section>
 
       <section id="product" class="view form-view">
-        <div class="page-heading"><div><p class="eyebrow">YENİ DOKÜMANTASYON • YÖNLENDİRMELİ KURULUM</p><h1>Ürün ve Teknik Resim Tanımlama</h1><p>Sistem size gerekli soruları sorar; yanıtlar tüm kalite dokümanlarının tek veri kaynağı olur.</p></div><span id="draftStatus" class="page-status warning">● Henüz kaydedilmedi</span></div>
+        <div class="page-heading product-module-heading"><div><p id="productModuleEyebrow" class="eyebrow">ÜRÜN ANA VERİSİ • BAĞIMSIZ MODÜL 01</p><h1 id="productModuleTitle">Ürün Kartları ve Teknik Tanımlama</h1><p id="productModuleDescription">Ana mamulü ve tüm alt ürün kartlarını tanımlayın; bu modülde BOM miktarı veya operasyon sırası tutulmaz.</p></div><span id="draftStatus" class="page-status warning">● Henüz kaydedilmedi</span></div>
+
+        <nav class="product-module-switcher" aria-label="Ürün mühendisliği modülleri">
+          <button type="button" class="active" data-view-target="product"><span>01</span><div><b>Ürün Kartları</b><small>Kimlik, resim ve teknik şart</small></div></button>
+          <i></i><button type="button" data-view-target="bom"><span>02</span><div><b>Ürün Ağaçları</b><small>Çok seviyeli BOM ve geçerlilik</small></div></button>
+          <i></i><button type="button" data-view-target="workplan"><span>03</span><div><b>İş Planları</b><small>Operasyon, sıra ve makine</small></div></button>
+          <mark>AYRI MODÜLLER • TEK İZLENEBİLİRLİK ANAHTARI</mark>
+        </nav>
 
         <div class="wizard-steps" aria-label="Kurulum adımları">
-          <button class="wizard-step active" data-wizard-step="1"><span>1</span><b>Ürün &amp; antet</b><small>Ana veri</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="2"><span>2</span><b>Mamul ağacı</b><small>BOM &amp; teknik şart</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="3"><span>3</span><b>Proses soruları</b><small>Akıllı seçim</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="4"><span>4</span><b>Karakteristikler</b><small>Ölçü &amp; kontrol</small></button>
-          <i></i><button class="wizard-step" data-wizard-step="5"><span>5</span><b>Doğrulama</b><small>Kalite kapısı</small></button>
+          <button class="wizard-step active" data-wizard-step="1"><span>001</span><b>Ürün &amp; antet</b><small>Ana veri</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="2"><span>002</span><b>Mamul ağacı</b><small>BOM &amp; teknik şart</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="3"><span>003</span><b>İş planları</b><small>Operasyon &amp; makine</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="4"><span>004</span><b>Karakteristikler</b><small>Ölçü &amp; kontrol</small></button>
+          <i></i><button class="wizard-step" data-wizard-step="5"><span>005</span><b>Doğrulama</b><small>Kalite kapısı</small></button>
         </div>
+
+        <section id="productUpgradeCockpit" class="product-upgrade-cockpit" aria-labelledby="productUpgradeTitle">
+          <header><div><span>AKILLI ÜRÜN KURULUM KOKPİTİ</span><h2 id="productUpgradeTitle">Mühendislik kapsamını koru, eksikleri daha hızlı tamamla</h2><p>Alanları azaltmaz; ürün kartı, BOM, iş planı, makine ve karakteristik zincirini canlı olarak denetler.</p></div><div><button type="button" class="secondary-button" data-product-upgrade-action="auto-codes">Doküman Kodlarını Tamamla</button><button type="button" class="primary-button" data-product-upgrade-action="audit">Eksikleri Tara</button></div></header>
+          <div class="product-upgrade-metrics">
+            <button type="button" data-product-jump="1"><span>01</span><div><b id="upgradeIdentityState">Bekliyor</b><small>Ürün kimliği ve antet</small></div><mark id="upgradeIdentityMetric">0/5</mark></button>
+            <button type="button" data-product-jump="2" data-product-stage="masters"><span>02</span><div><b id="upgradeMasterState">Kart bekliyor</b><small>Malzeme / ürün kartları</small></div><mark id="upgradeMasterMetric">0</mark></button>
+            <button type="button" data-product-jump="2" data-product-stage="structure"><span>03</span><div><b id="upgradeBomState">BOM bekliyor</b><small>Çok seviyeli ürün ağacı</small></div><mark id="upgradeBomMetric">0</mark></button>
+            <button type="button" data-product-jump="3"><span>04</span><div><b id="upgradeRouteState">Rota bekliyor</b><small>İş planı ve makineler</small></div><mark id="upgradeRouteMetric">0/0</mark></button>
+            <button type="button" data-product-jump="4"><span>05</span><div><b id="upgradeCharacteristicState">Ölçü bekliyor</b><small>Teknik karakteristikler</small></div><mark id="upgradeCharacteristicMetric">0</mark></button>
+          </div>
+          <div id="productUpgradeIssues" class="product-upgrade-issues"><span>i</span><p>Canlı mühendislik taraması ürün verisi girildikçe güncellenir.</p></div>
+        </section>
 
         <div class="form-layout">
           <div class="wizard-main">
             <article class="panel form-panel wizard-pane active" data-pane="1">
               <div class="section-title"><span>01</span><div><h2>Ürün, Müşteri ve Kontrollü Antet</h2><p>Kontrol planı, PFMEA, proses akışı ve talimatlarda ortak kullanılacak ana bilgiler</p></div></div>
-              <fieldset class="product-origin-card"><legend>Nasıl başlamak istiyorsunuz?</legend><div class="form-grid form-grid-3">
-                <label>Başlangıç şablonu<select id="productTemplate"><option value="blank">Boş mamul — sıfırdan oluştur</option><option value="steering_rod" selected>Tanıtım: Rot Kolu Komple</option><option value="machined_component">Tanıtım: Talaşlı İmalat Mamulü</option><option value="welded_assembly">Tanıtım: Kaynaklı Montaj</option></select><small>Şablon yalnız başlangıç verisidir; tüm alanlar değiştirilebilir.</small></label>
-                <label>Ürün grubu<select id="productGroup"><option value="steering">Direksiyon Sistemleri</option><option value="suspension">Süspansiyon Sistemleri</option><option value="chassis">Şasi Bağlantı Elemanları</option><option value="braking">Fren Sistemleri</option><option value="powertrain">Güç Aktarma</option><option value="machined">Talaşlı İmalat Mamulleri</option><option value="welded">Kaynaklı Mamuller</option><option value="cast">Döküm ve İşlenmiş Döküm Mamulleri</option><option value="formed">Sac / Profil Şekillendirme Mamulleri</option><option value="polymer">Polimer ve Elastomer Mamulleri</option><option value="electrical">Elektrik / Elektronik Alt Montajlar</option><option value="service">Servis Kitleri ve Paketli Mamuller</option><option value="__custom__">＋ Yeni ürün grubu oluştur</option></select></label>
-                <label id="customProductGroupField" class="hidden">Yeni ürün grubu adı<input id="customProductGroupName" placeholder="Örn. Kabin Mekanizmaları"><small>Kütüphanenize yeni grup olarak eklenir.</small></label>
-                <label>Mamul yapısı<select id="productStructureType"><option value="assembly" selected>Çok bileşenli mamul / montaj</option><option value="single_part">Tek parça mamul</option><option value="service_kit">Servis kiti / paket</option><option value="custom">Özel yapı</option></select></label>
-              </div></fieldset>
-              <div class="form-grid">
-                <label>Ürün tipi<select id="productType"></select></label>
-                <label>Mamul / parça numarası<input id="partNumber" value="RK-5101-001" required></label>
-                <label>Mamul adı<input id="partName" value="Rot Kolu Komple" required></label>
-                <label>Müşteri<input id="customer" list="customerOptions" value="OEM Müşteri A" placeholder="Seçin veya yeni müşteri yazın"></label>
-                <label>Müşteri parça numarası<input id="customerPartNumber" value="OEM-TR-88421"></label>
-                <label>Üretim fazı<select id="productionPhase"><option>Seri Üretim</option><option>Safe Launch</option><option>Ön Seri</option><option>Prototip</option></select></label>
-                <label>Yıllık üretim adedi<input id="annualVolume" type="number" min="1" step="1000" value="120000"></label>
-                <label>Kontrol planı no<input id="controlPlanNumber" value="CP-RK-5101-001"></label>
-                <label>Proje / APQP no<input id="projectCode" value="TY-2026-0042"></label>
-                <label>Teknik resim no<input id="drawingNumber" value="TR-RK-5101-001"></label>
-                <label>Teknik resim revizyonu<input id="drawingRevision" value="C" maxlength="8"></label>
+              <fieldset class="product-origin-card"><legend>Sıfırdan ürün tanımı</legend>
+                <div class="blank-product-start"><span>＋</span><div><b>Yeni ürün — boş ana veri</b><small>Hazır ürün verisi yüklenmez. Ürün kimliği, malzeme kartları, BOM ve operasyon zinciri bu kayıt için sıfırdan kurulur.</small></div><mark>SIFIRDAN</mark><input id="productTemplate" type="hidden" value="blank"></div>
+                <div class="form-grid product-classification-grid">
+                <label>Ürün grubu<select id="productGroup"><option value="steering">Direksiyon Sistemleri</option><option value="suspension">Süspansiyon Sistemleri</option><option value="chassis">Şasi Bağlantı Elemanları</option><option value="braking">Fren Sistemleri</option><option value="powertrain">Güç Aktarma</option><option value="machined">Talaşlı İmalat Mamulleri</option><option value="welded">Kaynaklı Mamuller</option><option value="cast">Döküm ve İşlenmiş Döküm Mamulleri</option><option value="formed">Sac / Profil Şekillendirme Mamulleri</option><option value="polymer">Polimer ve Elastomer Mamulleri</option><option value="electrical">Elektrik / Elektronik Alt Montajlar</option><option value="service">Servis Kitleri ve Paketli Mamuller</option><option value="__custom__" selected>＋ Yeni ürün grubu oluştur</option></select><small>Sabit teknik soruları ve ürün grubuna ait ana proses omurgasını belirler.</small></label>
+                <label>Ürün seviyesi / akış kapsamı<select id="productStructureType"><option value="assembly" selected>Komple mamul / montaj</option><option value="subassembly">Yarı mamul / alt montaj</option><option value="single_part">Tek parça mamul</option><option value="service_kit">Servis kiti / paket</option></select><small>Proses akışının bitişini, BOM zorunluluğunu ve üretim sorularını belirler.</small></label>
+                <label id="customProductGroupField" class="hidden">Yeni ürün grubu adı<input id="customProductGroupName" placeholder="Örn. Kabin Mekanizmaları"><small>Kütüphanenize yeni ana grup olarak eklenir.</small></label>
+                <label>Ürün tipi<select id="productType"></select><small>Grup içindeki somut mamul türüdür. Listede yoksa “Kullanıcı Tanımlı Mamul” seçin.</small></label>
+                <label id="customProductTypeField" class="hidden">Özel ürün tipi adı<input id="customProductTypeName" placeholder="Örn. Elektrikli direksiyon ara mili" autocomplete="off"><small>Yazdığınız ad mamul kimliği ve doküman snapshot'ında saklanır.</small></label>
+              </div>
+              <div id="productFlowScopeHint" class="product-flow-scope" role="status" aria-live="polite"><span>MM</span><div><b>Komple mamul akışı</b><small>Alt bileşen/BOM → üretim ve montaj → son kontrol → markalama → paketleme</small></div></div>
+              <div id="productGroupMasterTemplateSlot" class="product-master-template-slot" aria-live="polite"></div>
+              <details class="product-family-advanced"><summary><span>İleri sınıflandırma</span><b>Ürün ailesi (opsiyonel)</b><small>Yalnız raporlama, filtreleme veya şablon eşleştirme için kullanın.</small></summary><div class="form-grid">
+                <label>Ürün ailesi<select id="productFamily"><option value="">Aile seçme — opsiyonel</option><option>Direksiyon bağlantı ailesi</option><option>Süspansiyon bağlantı ailesi</option><option>Şasi bağlantı ailesi</option><option>Talaşlı imalat ailesi</option><option>Kaynaklı montaj ailesi</option><option>Özel / kullanıcı tanımlı</option></select><small>Üretim rotasını belirlemez; benzer mamulleri raporlamak için ek sınıflandırmadır.</small></label>
+              </div></details></fieldset>
+              <div class="subsection-label product-identity-heading"><span>ANA MAMUL KİMLİĞİ</span><i></i></div>
+              <div class="identity-help"><span>01A</span><p><b>İki numara, iki ayrı amaç:</b> OEM No müşteri/çizim kimliğidir; kuruluş içi ürün veya stok kodu ERP/SAP ana verisidir. İkisi de bütün kalite dokümanlarına taşınır.</p></div>
+              <div class="form-grid product-identity-grid">
+                <label>OEM No *<input id="partNumber" value="" placeholder="Müşteri / OEM ürün numarası" required><small>Müşteri teknik resmi ve siparişte kullanılan ana ürün numarası.</small></label>
+                <label>Kuruluş içi ürün / stok kodu *<input id="internalProductCode" value="" placeholder="ERP / SAP malzeme kodu" required><small>Kuruluşun ERP/SAP sistemindeki kalıcı mamul ana veri kodu.</small></label>
+                <label>Mamul adı *<input id="partName" value="" placeholder="Örn. Yeni komple mamul" required></label>
+                <label>Müşteri / OEM<input id="customer" list="customerOptions" value="" placeholder="Seçin veya yeni müşteri yazın"></label>
+                <label>Müşteri ek referansı (opsiyonel)<input id="customerPartNumber" value="" placeholder="Varyant, program veya eski parça no"></label>
+                <label>Üretim fazı<select id="productionPhase"><option selected>Prototip</option><option>Ön Seri</option><option>Safe Launch</option><option>Seri Üretim</option></select></label>
+                <label>Yıllık üretim adedi<input id="annualVolume" type="number" min="1" step="1000" value="" placeholder="Adet / yıl"></label>
+                <label>Kontrol planı no<input id="controlPlanNumber" value="" placeholder="Örn. CP-0001"></label>
+                <label>Proje / APQP no<input id="projectCode" value="TY-2026-YENİ"></label>
+                <label>Teknik resim no<input id="drawingNumber" value="" placeholder="Teknik resim / şartname no"></label>
+                <label>Teknik resim revizyonu<input id="drawingRevision" value="A" maxlength="8"></label>
               </div>
               <div class="subsection-label"><span>ANTET VE ONAY BİLGİLERİ</span><i></i></div>
               <div class="form-grid form-grid-3">
-                <label>Kuruluş / tedarikçi<input id="supplierName" value="TYANA OTOMOTİV"></label>
-                <label>Üretim sahası<input id="supplierSite" value="Merkez Fabrika"></label>
-                <label>Tedarikçi kodu<input id="supplierCode" value="TYA-001"></label>
+                <label>Kuruluş / tedarikçi<input id="supplierName" value="Kullanıcı Tanımlı Kuruluş"></label>
+                <label>Üretim sahası<input id="supplierSite" value="Kullanıcı Tanımlı Tesis" placeholder="Örn. Merkez Fabrika / Hat 2"></label>
+                <label>Tedarikçi kodu<input id="supplierCode" value="" placeholder="Müşteri / tedarikçi kodu"></label>
                 <label>Anahtar personel<input id="keyContact" value="Eren"></label>
                 <label>Telefon / e-posta<input id="keyContactPhone" value="+90 000 000 00 00"></label>
                 <label>Çekirdek ekip<input id="coreTeam" value="Kalite, Üretim, Proses, Ar-Ge"></label>
                 <label>İlk yayın tarihi<input id="originalDate" type="date" value="2026-07-15"></label>
                 <label>Revizyon tarihi<input id="revisionDate" type="date" value="2026-07-15"></label>
-                <label>Doküman durumu<select id="documentStatus"><option>Taslak</option><option>İncelemede</option><option>Onay Bekliyor</option><option value="Yürürlükte">Yürürlükte — elektronik onay gerekir</option></select></label>
+                <label>Doküman durumu<select id="documentStatus"><option>Taslak</option><option>İncelemede</option><option>Düzeltme Gerekli</option><option>Onay Bekliyor</option><option>Revizyon Gerekli</option><option value="Onaylandı" disabled>Onaylandı — elektronik onay gerekir</option><option value="Yayında" disabled>Yayında — elektronik çift onay gerekir</option><option value="Eski Revizyon" disabled>Eski Revizyon — sistem tarafından atanır</option><option value="İptal Edildi" disabled>İptal Edildi — yetkili işlem gerekir</option></select><small>Masaüstü pilot sürümü onaysız kaydı yayımlayamaz.</small></label>
               </div>
-              <div class="drawing-upload"><div class="pdf-icon">PDF</div><div><strong id="drawingFileName">RK-5101-001_REV-C.pdf</strong><small>Teknik resim referansı • Kullanıcı verileriyle doğrulanacak</small></div><button class="secondary-button" data-action="drawing-change">Değiştir</button><span class="verified">✓ Kaynak tanımlı</span></div>
+              <div class="drawing-upload"><div class="pdf-icon">PDF</div><div><strong id="drawingFileName">Teknik resim kaynağı seçilmedi</strong><small>PDF veya görsel kaynak • no/revizyon ve SHA-256 doğrulaması bekliyor</small></div><button class="secondary-button" data-action="drawing-change">Kaynak Seç</button><span class="verified pending-source">Kaynak bekliyor</span></div>
               <div class="wizard-actions"><span id="productRequiredStatus">Temel alanlar doğrulanıyor</span><button class="primary-button" data-next-step="2">Teknik Şartlara Geç →</button></div>
             </article>
 
             <article class="panel form-panel wizard-pane" data-pane="2">
-              <div class="section-title"><span>02</span><div><h2>Çok Seviyeli Mamul Ağacı ve Teknik Şartlar</h2><p>Her alt bileşenin malzemesi, resmi, revizyonu, miktarı, ısıl işlemi, kaplaması ve izlenebilirliği ayrı yönetilir</p></div><button class="secondary-button" data-action="add-component">＋ Bileşen Ekle</button></div>
-              <div class="bom-toolbar">
-                <div><span id="bomModeBadge" class="demo-badge">TANITIM ŞABLONU</span><b id="bomTitle">Rot Kolu Komple — 7 alt kalem</b><small id="bomContextNote">Örnek malzemeler otomatik eşdeğerlenmez; tüm malzeme ve sayısal şartlar teknik resim/şartname ile doğrulanır.</small></div>
-                <div><button class="ghost-button" data-action="add-subassembly">＋ Alt montaj</button><button class="ghost-button" data-action="reset-bom-blank">Boş BOM</button></div>
+              <div class="section-title sap-bom-section-title"><span>02</span><div><h2>Malzeme Kartları ve Çok Seviyeli Ürün Ağacı</h2><p>Önce kuruluş ana verisinde bütün mamul, yarı mamul, parça ve hammaddeleri tanımlayın; sonra yalnız bu kartlardan çok seviyeli BOM kurun.</p></div></div>
+              <div class="sap-bom-contract"><span>ERP / SAP MANTIĞI</span><div><b id="bomTitle">Ana mamul ve alt bileşen ana veri zinciri</b><small id="bomContextNote">Kart kimliği ile BOM kullanımı ayrıdır: malzeme kartı “ne olduğunu”, BOM satırı “hangi üst üründe ne kadar kullanıldığını” tanımlar.</small></div><mark id="bomModeBadge">İKİ AŞAMALI</mark></div>
+              <nav class="sap-bom-stage-tabs" aria-label="Mamul ağacı kurulum aşamaları" role="tablist">
+                <button type="button" class="active" role="tab" aria-selected="true" data-engineering-bom-stage="masters"><span>1</span><div><b>Malzeme / Ürün Kartları</b><small>Ana mamul dahil stok ve malzeme ana verisi</small></div><mark id="itemMasterStageCount">0 kart</mark></button>
+                <i></i>
+                <button type="button" role="tab" aria-selected="false" data-engineering-bom-stage="structure"><span>2</span><div><b>Çok Seviyeli Ürün Ağacı</b><small>Tanımlı kartlardan kullanım ağacı ve alt BOM</small></div><mark id="bomDefinitionStageCount">0 BOM</mark></button>
+              </nav>
+
+              <section id="itemMasterStage" class="sap-bom-stage active" data-engineering-bom-pane="masters">
+                <div class="sap-stage-explainer"><span>1</span><div><b>Önce kartları tanımlayın</b><p>Yalnız kart tipini seçin; kod, ad ve gerekiyorsa OEM numarasını girin. Teknik ayrıntılar daha sonra tamamlanabilir.</p></div><div class="sap-stage-actions"><button type="button" class="secondary-button" data-action="bulk-item-masters">▦ Toplu Kart Oluştur</button><button type="button" class="primary-button" data-item-master-action="new">＋ Yeni Kart</button></div></div>
+                <div class="item-quick-create" aria-label="Hızlı ürün kartı oluşturma">
+                  <div><b>Hızlı kart oluştur</b><small>Kart türünü seçin; temel bilgilerle başlayın.</small></div>
+                  <button type="button" data-item-quick-create="SEMI_FINISHED"><span>YM</span><b>Yarı mamul</b><small>İş planı gerekir</small></button>
+                  <button type="button" data-item-quick-create="SUBASSEMBLY"><span>AM</span><b>Alt montaj</b><small>Alt BOM + iş planı</small></button>
+                  <button type="button" data-item-quick-create="MANUFACTURED_PART"><span>İP</span><b>İç üretim parçası</b><small>İş planı seçilebilir</small></button>
+                  <button type="button" data-item-quick-create="PURCHASED_PART"><span>SP</span><b>Satın alınan parça</b><small>Doğrudan BOM girdisi</small></button>
+                  <button type="button" data-item-quick-create="ASSEMBLY_MATERIAL"><span>MM</span><b>Montaj malzemesi</b><small>Doğrudan BOM girdisi</small></button>
+                  <button type="button" data-item-quick-create="EXTERNAL_PURCHASED"><span>XD</span><b>Dış tedarik ürünü</b><small>XD • iş planı yok</small></button>
+                  <button type="button" data-item-quick-create="RAW_MATERIAL"><span>HM</span><b>Hammadde</b><small>Doğrudan BOM girdisi</small></button>
+                </div>
+                <div id="itemMasterValidation" class="sap-validation-strip"><span>i</span><p>Kart ana verisi doğrulanıyor…</p></div>
+                <div class="item-master-workspace">
+                  <aside class="item-master-register">
+                    <div class="item-master-toolbar"><label>⌕<input id="itemMasterSearch" type="search" placeholder="İç kod, OEM no veya kart adı ara"><kbd>Esc temizle</kbd></label><select id="itemMasterTypeFilter" aria-label="Kart tipi filtresi"><option value="all">Tüm kart tipleri</option><option value="FINISHED_GOOD">Ana mamul</option><option value="SUBASSEMBLY">Alt montaj</option><option value="SEMI_FINISHED">Yarı mamul</option><option value="MANUFACTURED_PART">İç üretim parçası</option><option value="PURCHASED_PART">Satın alınan parça</option><option value="ASSEMBLY_MATERIAL">Montaj malzemesi</option><option value="EXTERNAL_PURCHASED">Dış tedarik (XD)</option><option value="RAW_MATERIAL">Hammadde</option><option value="FASTENER">Bağlantı elemanı</option><option value="CONSUMABLE">Sarf</option><option value="PACKAGING">Ambalaj</option></select></div>
+                    <div class="item-master-register-head"><span>KURULUŞ KODU / OEM</span><span>KART</span><span>DURUM</span></div>
+                    <div id="itemMasterList" class="item-master-list"><p>Kartlar hazırlanıyor…</p></div>
+                  </aside>
+                  <section id="itemMasterEditor" class="item-master-editor"><div class="empty-bom"><span>MK</span><h3>Düzenlenecek kartı seçin</h3><p>Ana mamul veya alt bileşen kartını soldaki ana veri listesinden açın.</p></div></section>
+                </div>
+                <div class="sap-stage-footer"><span>Ürün ağacına yalnız tanımlı kartlar eklenebilir.</span><button type="button" class="primary-button" data-engineering-bom-stage="structure">Kartları Tamamla, Ürün Ağacına Geç →</button></div>
+              </section>
+
+              <section id="bomStructureStage" class="sap-bom-stage hidden" data-engineering-bom-pane="structure">
+                <div class="sap-stage-explainer structure"><span>2</span><div><b>Seçili üst kart için BOM kurun</b><p>Her alt montaj kendi BOM'una sahip olabilir. Miktar, birim, revizyon, geçerlilik, alternatif ve montaj operasyon kodu kullanım satırında yönetilir.</p></div><button type="button" class="secondary-button" data-engineering-bom-stage="masters">← Kartlara Dön</button></div>
+                <div class="bom-structure-command">
+                  <label>İncelenecek üst kart<select id="bomHeaderMasterSelect"><option value="">Kart seçin</option></select></label>
+                  <label>Patlatma tarihi<input id="bomExplosionDate" type="date"></label>
+                  <label>Aktif BOM<select id="bomDefinitionSelect"><option value="">BOM tanımı yok</option></select></label>
+                  <button type="button" class="primary-button" data-engineering-bom-action="create-definition">＋ Bu Kart İçin BOM Aç</button>
+                </div>
+                <div id="engineeringBomValidation" class="sap-validation-strip"><span>i</span><p>Ürün ağacı doğrulanıyor…</p></div>
+                <div class="engineering-bom-workspace">
+                  <aside class="engineering-bom-tree-panel">
+                    <div class="bom-drag-library"><div><b>Parça Kütüphanesi</b><small>Sürükleyin, çift tıklayın veya kartları işaretleyin</small></div><div class="bom-drag-bulk-tools"><input id="bomDragMasterSearch" type="search" placeholder="Kod veya parça ara"><button type="button" class="bom-bulk-add-button" data-action="add-selected-bom-masters" disabled><span>＋</span><b>Seçerek Ekle</b><small id="bomBulkSelectionCount">0 kart seçili</small></button></div><div id="bomDragMasterLibrary"><p>Kartlar hazırlanıyor…</p></div></div>
+                    <div id="bomDefinitionDropZone" class="bom-explicit-drop-zone" tabindex="0" role="button" aria-label="Seçili üst karta malzeme kartı bırak"><span>⇣</span><div><b>SEÇİLİ ÜST KARTA BIRAK</b><small>Kartı buraya sürükleyin; çift tıklama ve + düğmesi de çalışır.</small></div></div>
+                    <div class="engineering-bom-root"><span>FG</span><div><b id="bomRootName">Ana mamul</b><small id="bomRootCode">Kuruluş kodu bekleniyor</small><em id="bomRootOem">OEM: —</em></div><mark id="bomTreeCount">0 kullanım</mark></div>
+                    <div id="engineeringBomTree" class="engineering-bom-tree"><p>Ürün ağacı hazırlanıyor…</p></div>
+                  </aside>
+                  <section id="bomDefinitionEditor" class="bom-definition-editor"><div class="empty-bom"><span>BOM</span><h3>Üst kart için BOM tanımı yok</h3><p>Tanımlı malzeme kartlarını kullanmaya başlamak için yeni BOM açın.</p></div></section>
+                </div>
+              </section>
+
+              <div class="legacy-bom-compat hidden" aria-hidden="true">
+                <div id="componentValidation" class="characteristic-help bom-help"><span>i</span><p>0/0 bileşen doğrulandı</p><button type="button" data-action="show-bom-validation">Bulgular</button></div>
+                <div id="bomBreadcrumb"></div><input id="bomSearch"><button data-bom-view="tree"></button><button data-bom-view="list"></button><button data-action="expand-bom"></button><button data-action="collapse-bom"></button><button data-action="undo-bom"></button>
+                <div data-bom-root></div><div id="bomTree"></div><div id="bomList"></div><div id="bomSelectionPath"></div><div id="bomEditorEmpty"><h3></h3><p></p></div><div id="componentRows"></div><span id="bomHistoryCount"></span><div id="bomHistoryRows"></div>
               </div>
-              <div id="componentValidation" class="characteristic-help bom-help"><span>i</span><p>0/0 bileşen doğrulandı</p></div>
-              <div id="componentRows" class="component-card-list"></div>
-              <div class="subsection-label"><span>MAMUL SEVİYESİ ORTAK PERFORMANS ŞARTLARI</span><i></i></div>
-              <div class="guided-questions technical-specs">
-                <fieldset><legend>Mamul üst seviye tanımı — bileşen malzemesi yerine geçmez</legend><div class="form-grid form-grid-3">
-                  <label>Mamul sınıfı<select id="materialFamily"><option>Çok bileşenli mekanik mamul</option><option>Tek parça işlenmiş mamul</option><option>Kaynaklı mamul</option><option>Döküm mamul</option><option>Polimer / elastomer mamul</option><option>Özel / kullanıcı tanımlı</option></select></label>
-                  <label>Üst seviye ürün şartnamesi<input id="materialGrade" value="TYANA Ürün Şartı — kullanıcı doğrulaması gerekli"></label>
-                  <label>Şartname / standart revizyonu<input id="materialStandard" value="Teknik resim ve müşteri şartına göre"></label>
-                  <label>Ana üretim tipi<select id="rawMaterialForm"><option>Çok bileşenli montaj</option><option>Talaşlı imalat</option><option>Kaynaklı montaj</option><option>Dövme + işleme</option><option>Döküm + işleme</option><option>Özel / kullanıcı tanımlı</option></select></label>
-                  <label>Parça ağırlığı (kg)<input id="partWeight" type="number" min="0" step="0.001" value="1.245"></label>
-                  <label>Malzeme sertifika şartı<select id="materialCertificate"><option value="">Seçiniz</option><option>EN 10204 3.1</option><option>EN 10204 2.2</option><option>Müşteri sertifikası</option><option>Gerekli değil — gerekçe zorunlu</option></select></label>
-                </div></fieldset>
-                <fieldset><legend>Isıl işlem ve mekanik özellik</legend><div class="form-grid form-grid-3">
-                  <label>Isıl işlem<select id="heatTreatment"><option>İndüksiyon sertleştirme</option><option>Su verme + temperleme</option><option>Sementasyon</option><option>Nitrasyon</option><option>Uygulanmıyor</option></select></label>
-                  <label>Sertlik şartı<input id="hardnessSpec" value="58–62 HRC"></label>
-                  <label>Etkin sertlik derinliği<input id="caseDepthSpec" value="1,5–2,5 mm"></label>
-                </div></fieldset>
-                <fieldset><legend>Kaplama ve yüzey performansı</legend><div class="form-grid form-grid-3">
-                  <label>Kaplama sistemi<select id="coatingType"><option>Zn-Ni lamel kaplama</option><option>Çinko kaplama</option><option>Kataforez</option><option>Fosfat</option><option>Geomet</option><option>Kaplama yok</option></select></label>
-                  <label>Kaplama standardı<input id="coatingStandard" value="OEM STD 1234"></label>
-                  <label>Kalınlık (µm)<input id="coatingThickness" type="number" min="0" step="0.1" value="12"></label>
-                  <label>Renk / görünüş<input id="coatingColor" value="Gümüş, homojen"></label>
-                  <label>Korozyon direnci (saat)<input id="corrosionHours" type="number" min="0" step="1" value="720"></label>
-                  <label>Yüzey pürüzlülüğü<input id="roughnessSpec" value="Ra 1,6 µm"></label>
-                </div></fieldset>
-                <fieldset><legend>Ek teknik / mevzuat şartları</legend><div class="form-grid">
-                  <label>Temizlik şartı<input id="cleanlinessSpec" value="VDA 19.1 / müşteri şartı"></label>
-                  <label>İzlenebilirlik<select id="traceabilityLevel"><option value="">Seçiniz</option><option>Parça + lot + vardiya</option><option>Lot bazlı</option><option>Seri numara bazlı</option><option>Tedarikçi lotu + TYANA lotu</option><option>Özel / kullanıcı tanımlı</option></select></label>
-                  <label class="span-2">Müşteri özel şartı / CSR<textarea id="customerSpecificRequirements" rows="2">Müşteri özel karakteristik sembolleri ve Safe Launch kontrol sıklığı proje kalite planına göre uygulanacaktır.</textarea></label>
-                </div></fieldset>
-              </div>
-              <div class="wizard-actions"><button class="secondary-button" data-prev-step="1">← Geri</button><span>Teknik şartlar düzenlenebilir</span><button class="primary-button" data-next-step="3">Proses Sorularına Geç →</button></div>
+              <section class="product-common-performance" aria-labelledby="commonPerformanceTitle">
+                <div class="common-performance-head"><span>03</span><div><b id="commonPerformanceTitle">Ortak mamul performans şartları</b><small>Tam mühendislik kapsamı korunur: mamul ortak şartları burada, malzeme, sertlik ve kaplama gibi bileşen şartları ise izlenebilir biçimde ilgili malzeme kartında yönetilir.</small></div><mark>TAM KAPSAM</mark></div>
+                <div class="form-grid performance-essential-grid">
+                  <label>Ortak şart kapsamı<select id="materialFamily"><option selected>BOM ve bileşen kartlarından türetilir</option><option>Komple mamul ortak şartı</option><option>Yarı mamul ortak şartı</option><option>Tek parça ortak şartı</option><option>Özel / kullanıcı tanımlı</option></select><small>Bileşen malzemesi yerine geçmez.</small></label>
+                  <label>Ürün şartnamesi / referans<input id="materialGrade" value="" placeholder="Örn. müşteri ürün şartnamesi"></label>
+                  <label>Şartname revizyonu / standart<input id="materialStandard" value="" placeholder="No ve revizyon"></label>
+                  <label>Mamul ağırlığı (kg)<input id="partWeight" type="number" min="0" step="0.001" value="" placeholder="0,000"></label>
+                  <label>İzlenebilirlik<select id="traceabilityLevel"><option value="" selected>Seçiniz</option><option>Parça + lot + vardiya</option><option>Lot bazlı</option><option>Seri numara bazlı</option><option>Tedarikçi lotu + kuruluş lotu</option><option>Özel / kullanıcı tanımlı</option></select></label>
+                  <label class="span-2">Müşteri özel şartı / CSR<textarea id="customerSpecificRequirements" rows="2" placeholder="Yalnız mamul seviyesinde geçerli müşteri özel şartını yazın"></textarea></label>
+                </div>
+                <details class="performance-advanced"><summary><span>＋</span><div><b>İleri ortak performans şartları</b><small>Yalnız tüm mamule ortaksa ısıl işlem, yüzey, sertifika ve temizlik şartlarını açın.</small></div></summary>
+                  <div class="performance-advanced-body">
+                    <fieldset><legend>Üretim ve sertifika</legend><div class="form-grid form-grid-3">
+                      <label>Üst seviye üretim tipi<select id="rawMaterialForm"><option selected>Komple mamul / montaj</option><option>Yarı mamul / alt montaj</option><option>Tek parça üretim</option><option>Servis kiti / paket</option><option>Özel / kullanıcı tanımlı</option></select></label>
+                      <label>Malzeme sertifika şartı<select id="materialCertificate"><option value="" selected>Seçiniz</option><option>EN 10204 3.1</option><option>EN 10204 2.2</option><option>Müşteri sertifikası</option><option>Gerekli değil — gerekçe zorunlu</option></select></label>
+                      <label>Temizlik şartı<input id="cleanlinessSpec" value="" placeholder="Örn. VDA 19.1 / müşteri şartı"></label>
+                    </div></fieldset>
+                    <fieldset><legend>Ortak ısıl işlem / mekanik şart</legend><div class="form-grid form-grid-3">
+                      <label>Isıl işlem<select id="heatTreatment"><option selected>Uygulanmıyor</option><option>İndüksiyon sertleştirme</option><option>Su verme + temperleme</option><option>Sementasyon</option><option>Nitrasyon</option></select></label>
+                      <label>Sertlik şartı<input id="hardnessSpec" value="" placeholder="Sayısal alt–üst limit ve birim"></label>
+                      <label>Etkin sertlik derinliği<input id="caseDepthSpec" value="" placeholder="Sayısal alt–üst limit ve birim"></label>
+                    </div></fieldset>
+                    <fieldset><legend>Ortak kaplama / yüzey performansı</legend><div class="form-grid form-grid-3">
+                      <label>Kaplama sistemi<select id="coatingType"><option selected>Kaplama yok</option><option>Zn-Ni lamel kaplama</option><option>Çinko kaplama</option><option>Kataforez</option><option>Fosfat</option><option>Geomet</option></select></label>
+                      <label>Kaplama standardı<input id="coatingStandard" value="" placeholder="Standart / revizyon"></label>
+                      <label>Kalınlık (µm)<input id="coatingThickness" type="number" min="0" step="0.1" value="" placeholder="0,0"></label>
+                      <label>Renk / görünüş<input id="coatingColor" value="" placeholder="Görsel kabul şartı"></label>
+                      <label>Korozyon direnci (saat)<input id="corrosionHours" type="number" min="0" step="1" value="" placeholder="0"></label>
+                      <label>Yüzey pürüzlülüğü<input id="roughnessSpec" value="" placeholder="Örn. Ra 1,6 µm"></label>
+                    </div></fieldset>
+                  </div>
+                </details>
+              </section>
+              <div class="wizard-actions"><button class="secondary-button" data-prev-step="1">← Geri</button><span>Kartlar ve ürün ağacı tamamlandıysa iş planlarına geçin</span><button class="primary-button" data-next-step="3">İş Planlarını Oluştur →</button></div>
             </article>
 
             <article class="panel form-panel wizard-pane" data-pane="3">
-              <div class="section-title"><span>03</span><div><h2>Proses Yönlendirme Soruları</h2><p>Seçimleriniz uygun proses şablonunu, risk kütüphanesini ve PPAP kapsamını belirler</p></div></div>
+              <div class="section-title"><span>03</span><div><h2>Mamul ve Yarı Mamul İş Planları</h2><p>Her üretilen kart için 380 operasyon arasından seçim yapın, sıralayın ve 77 makine/istasyondan uygun olanları bağlayın.</p></div></div>
+              <section id="workPlanStudio" class="work-plan-studio" aria-labelledby="workPlanStudioTitle">
+                <header class="work-plan-studio-head"><div><span>ÜRÜN KARTI → OPERASYON → MAKİNE</span><h3 id="workPlanStudioTitle">Görsel İş Planı Oluşturucu</h3><p>Solda iş planı oluşturulacak kartı seçin. Ortadaki operasyonu sağdaki akış alanına sürükleyin veya “Ekle” düğmesini kullanın.</p></div><div class="work-plan-metrics"><span><b id="workPlanProductCount">0</b> üretilecek kart</span><span><b id="workPlanCompletedCount">0</b> planlı kart</span><span><b id="workPlanMissingMachineCount">0</b> makine bekleyen adım</span></div></header>
+                <div class="work-plan-layout">
+                  <aside class="work-plan-products"><div class="work-plan-column-head"><span>1</span><div><b>Ürün / yarı mamul</b><small>İş planı kapsamı</small></div></div><div id="workPlanProductList"><p>Kartlar hazırlanıyor…</p></div></aside>
+                  <aside class="work-plan-operations"><div class="work-plan-column-head"><span>2</span><div><b>Operasyon kütüphanesi</b><small>380 standart kart</small></div></div><label class="work-plan-search">⌕<input id="workPlanOperationSearch" type="search" placeholder="Kod, Türkçe veya İngilizce ara"></label><select id="workPlanOperationFamily" aria-label="Operasyon ailesi"><option value="all">Tüm proses aileleri</option></select><div id="workPlanOperationPalette"><p>Operasyonlar hazırlanıyor…</p></div></aside>
+                  <section class="work-plan-canvas"><div class="work-plan-column-head"><span>3</span><div><b>Seçili kartın akışı</b><small>Sürükle, sırala, makine seç</small></div><mark id="workPlanSelectedBadge">KART SEÇİN</mark></div><div id="workPlanRoutingHost" class="work-plan-routing-drop"><p>Soldan bir mamul veya yarı mamul kartı seçin.</p></div></section>
+                </div>
+                <div class="work-plan-legend"><span><i class="process-shape"></i> Proses</span><span><i class="control-shape"></i> Kontrol / test</span><span><i class="warehouse-shape"></i> Depolama / sevkiyat</span><span><b>§</b> Özel karakteristik</span><span><b>&lt;C&gt;</b> Kritik</span><span><b>&lt;M&gt;</b> Makine kontrolü</span></div>
+              </section>
+              <details class="advanced-process-guidance">
+                <summary><span>İLERİ SEÇENEKLER</span><div><b>Proses yönlendirme ve teknik soru motoru</b><small>Risk, özel proses ve PPAP başlangıç önerilerini gerektiğinde açın.</small></div><i>⌄</i></summary>
+                <div class="advanced-process-guidance-body">
               <div class="guided-questions">
-                <fieldset><legend>Ana üretim / şekillendirme yöntemi nedir?</legend><div class="choice-grid"><label class="choice-card selected"><input type="radio" name="forming" value="forging" checked><span>♨</span><b>Sıcak dövme</b><small>Dövme + ısıl işlem riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="casting"><span>◒</span><b>Döküm</b><small>Porozite ve kalıp riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="machining"><span>◎</span><b>Talaşlı imalat</b><small>Takım ve ölçü riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="forming"><span>⌁</span><b>Sac / profil şekillendirme</b><small>Kesme, bükme ve pres riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="polymer"><span>⬡</span><b>Polimer / elastomer</b><small>Kalıplama ve malzeme riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="assembly"><span>⚙</span><b>Montaj / servis kiti</b><small>BOM, varyant ve bağlantı riskleri</small></label></div></fieldset>
-                <fieldset><legend>Üründe emniyet / mevzuat karakteristiği var mı?</legend><div class="segmented"><label class="active"><input type="radio" name="safety" value="yes" checked>Evet, emniyet kritik</label><label><input type="radio" name="safety" value="no">Hayır</label><label><input type="radio" name="safety" value="unknown">Henüz belirlenmedi</label></div></fieldset>
-                <fieldset><legend>Hangi özel prosesler uygulanıyor?</legend><div class="check-grid"><label><input type="checkbox" value="heat" checked><span>Isıl işlem</span></label><label><input type="checkbox" value="coating" checked><span>Kaplama / boya</span></label><label><input type="checkbox" value="welding"><span>Kaynak / lehim</span></label><label><input type="checkbox" value="bonding"><span>Yapıştırma / sızdırmazlık</span></label><label><input type="checkbox" value="molding"><span>Kalıplama / döküm</span></label><label><input type="checkbox" value="cleaning"><span>Teknik temizlik</span></label></div></fieldset>
+                <fieldset><legend>Ana üretim / şekillendirme yöntemi nedir?</legend><div class="choice-grid"><label class="choice-card"><input type="radio" name="forming" value="forging"><span>♨</span><b>Sıcak dövme</b><small>Dövme + ısıl işlem riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="casting"><span>◒</span><b>Döküm</b><small>Porozite ve kalıp riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="machining"><span>◎</span><b>Talaşlı imalat</b><small>Takım ve ölçü riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="forming"><span>⌁</span><b>Sac / profil şekillendirme</b><small>Kesme, bükme ve pres riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="polymer"><span>⬡</span><b>Polimer / elastomer</b><small>Kalıplama ve malzeme riskleri</small></label><label class="choice-card"><input type="radio" name="forming" value="assembly"><span>⚙</span><b>Montaj / servis kiti</b><small>BOM, varyant ve bağlantı riskleri</small></label></div></fieldset>
+                <fieldset><legend>Üründe emniyet / mevzuat karakteristiği var mı?</legend><div class="segmented"><label><input type="radio" name="safety" value="yes">Evet, emniyet kritik</label><label><input type="radio" name="safety" value="no">Hayır</label><label class="active"><input type="radio" name="safety" value="unknown" checked>Henüz belirlenmedi</label></div></fieldset>
+                <fieldset><legend>Hangi özel prosesler uygulanıyor?</legend><div class="check-grid"><label><input type="checkbox" value="heat"><span>Isıl işlem</span></label><label><input type="checkbox" value="coating"><span>Kaplama / boya</span></label><label><input type="checkbox" value="welding"><span>Kaynak / lehim</span></label><label><input type="checkbox" value="bonding"><span>Yapıştırma / sızdırmazlık</span></label><label><input type="checkbox" value="molding"><span>Kalıplama / döküm</span></label><label><input type="checkbox" value="cleaning"><span>Teknik temizlik</span></label></div></fieldset>
                 <fieldset><legend>PPAP sunum seviyesi</legend><div class="segmented ppap-level"><label><input type="radio" name="ppap" value="1">Seviye 1</label><label><input type="radio" name="ppap" value="2">Seviye 2</label><label class="active"><input type="radio" name="ppap" value="3" checked>Seviye 3</label><label><input type="radio" name="ppap" value="4">Seviye 4</label><label><input type="radio" name="ppap" value="5">Seviye 5</label></div></fieldset>
               </div>
               <div class="recommendation"><span>✦</span><div><b>Öneri hazır</b><p id="processRecommendationText">Seçilen ürün grubu için başlangıç rotası önerilir; tüm adımlar eklenebilir, çıkarılabilir, tekrarlanabilir ve sürüklenebilir.</p></div></div>
+              <section class="engineering-question-engine" aria-labelledby="engineeringQuestionTitle">
+                <div class="question-engine-head">
+                  <div><span class="engine-kicker">ÜRÜN GRUBU + ALT BİLEŞEN BAĞLAMI</span><h3 id="engineeringQuestionTitle">Teknik Resim ve Üretim Yöntemi Soru Motoru</h3><p>Sabit sorular seçilen ürün grubundan, koşullu sorular ise her bileşenin malzeme formu ve üretim durumundan gelir. Tüm yanıtlar düzenlenebilir ve doküman omurgasına kaydedilir.</p></div>
+                  <div class="engine-metrics"><span><b id="engineeringAnsweredCount">0</b> yanıt</span><span><b id="engineeringRequiredCount">0</b> zorunlu</span><span><b id="engineeringRouteCount">0</b> rota önerisi</span></div>
+                </div>
+                <div class="question-scope-bar">
+                  <label>İncelenecek kapsam<select id="engineeringScope"><option value="FINISHED_GOOD">Ana mamul</option></select></label>
+                  <label>Soru grubu<select id="engineeringQuestionFilter"><option value="all">Tüm teknik sorular</option><option value="identity">Kimlik ve teknik resim</option><option value="material">Malzeme ve başlangıç formu</option><option value="manufacturing">Üretim yöntemi ve çıktı durumu</option><option value="special">Özel proses ve performans</option><option value="control">Kontrol, MSA ve izlenebilirlik</option></select></label>
+                  <button class="secondary-button" type="button" data-action="add-engineering-question">＋ Özel Soru Ekle</button>
+                  <button class="primary-small" type="button" data-action="apply-engineering-route">Önerilen Rotayı Uygula</button>
+                </div>
+                <div id="engineeringQuestionRows" class="engineering-question-rows"><div class="question-engine-loading">Mühendislik kütüphanesi hazırlanıyor…</div></div>
+                <div class="engineering-note"><span>i</span><p><b>Örnek ayrım:</b> “Gövde / dövme taslak” bir giriş durumudur; “işlenmiş gövde / talaşlı imalat” ise sonraki dönüşüm ve çıktı durumudur. Sistem bunları tek cevapta ezmez.</p></div>
+              </section>
+                </div>
+              </details>
               <div class="wizard-actions"><button class="secondary-button" data-prev-step="2">← Geri</button><button class="primary-button" data-next-step="4">Teknik Değerleri Gir →</button></div>
             </article>
 
@@ -207,22 +337,50 @@
               <div class="characteristics-table characteristic-card-list">
                 <div id="characteristicRows"></div>
               </div>
-              <div class="wizard-actions"><button class="secondary-button" data-prev-step="3">← Geri</button><span id="characteristicValidation">3 karakteristik doğrulandı</span><button class="primary-button" data-next-step="5">Verileri Doğrula →</button></div>
+              <div class="wizard-actions"><button class="secondary-button" data-prev-step="3">← Geri</button><span id="characteristicValidation">1 taslak karakteristik • teknik resim bekleniyor</span><button class="primary-button" data-next-step="5">Verileri Doğrula →</button></div>
             </article>
 
             <article class="panel form-panel wizard-pane" data-pane="5">
               <div class="section-title"><span>05</span><div><h2>Kalite Kapısı ve Doküman Omurgası</h2><p>Doküman üretiminden önce veri bütünlüğü, izlenebilirlik ve standart kapsamı kontrolü</p></div></div>
+              <section id="apqpTraceabilityStudio" class="apqp-traceability-studio" aria-labelledby="apqpTraceabilityTitle">
+                <header class="apqp-traceability-head">
+                  <div><span>006 / APQP KANIT ZİNCİRİ</span><h3 id="apqpTraceabilityTitle">VOC’den operatör talimatına uçtan uca izlenebilirlik</h3><p>QFD fazlarını, tasarım doğrulamasını, ürün/proses karakteristiklerini ve üretim kontrollerini aynı kalıcı kimlik üzerinde bağlar.</p></div>
+                  <div class="apqp-profile-controls"><label>FMEA omurgası<select id="apqpFmeaProfile"><option value="foundation">Foundation FMEA</option><option value="family" selected>Family FMEA</option><option value="product">Ürüne özel FMEA</option></select></label><label>Öncelik yöntemi<select id="apqpPriorityMethod"><option value="AP" selected>AIAG-VDA AP</option><option value="RPN">Miras RPN + AP</option></select></label></div>
+                </header>
+                <div id="apqpEvidenceChain" class="apqp-evidence-chain" aria-label="APQP doküman zinciri"></div>
+                <section id="apqpAnalysisStudio" class="apqp-analysis-studio" aria-labelledby="apqpAnalysisTitle">
+                  <header>
+                    <div><span>03–04 / TASARIM ANALİZ GİRDİLERİ</span><h4 id="apqpAnalysisTitle">Boundary ve P-Diyagramı Stüdyosu</h4><p>Sistem sınırını, parça/çevre arayüzlerini ve fonksiyonun girdi–gürültü–kontrol–çıktı ilişkisini gerçek veri olarak oluşturun.</p></div>
+                    <div class="apqp-analysis-actions">
+                      <button type="button" class="secondary-button" data-apqp-action="seed-analysis">Ürün Ağacından Başlat</button>
+                      <button type="button" class="secondary-button" data-apqp-action="export-analysis-pdf">Boundary + P-Diyagram PDF</button>
+                    </div>
+                  </header>
+                  <nav class="apqp-analysis-tabs" aria-label="Tasarım analiz modülü">
+                    <button type="button" class="active" data-apqp-analysis-tab="boundary"><span>03</span><b>Boundary Diyagramı</b><small>Sistem sınırı ve arayüzler</small><mark id="apqpBoundaryReadiness">0%</mark></button>
+                    <button type="button" data-apqp-analysis-tab="pDiagram"><span>04</span><b>P-Diyagramı</b><small>Fonksiyon ve değişkenlik</small><mark id="apqpPDiagramReadiness">0%</mark></button>
+                  </nav>
+                  <div id="apqpAnalysisWorkspace" class="apqp-analysis-workspace"><p>Analiz editörü hazırlanıyor…</p></div>
+                </section>
+                <div class="apqp-traceability-toolbar">
+                  <div><b>QFD ve karakteristik matrisi</b><small>Her satır yeniden sıralanabilir, düzenlenebilir ve kaynak dokümanlarla bağlanabilir.</small></div>
+                  <button type="button" class="secondary-button" data-apqp-action="map-characteristics">Teknik Ölçülerden Başlat</button>
+                  <button type="button" class="primary-button" data-apqp-action="add-row">＋ İzlenebilirlik Satırı</button>
+                </div>
+                <div id="apqpTraceabilityRows" class="apqp-traceability-rows"><p>APQP izlenebilirlik çalışma alanı hazırlanıyor…</p></div>
+                <footer class="apqp-traceability-footer"><div><span>Kapsama oranı</span><b id="apqpCoverageValue">0%</b><i><em id="apqpCoverageBar" style="width:0%"></em></i></div><p id="apqpCoverageNote">İlk VOC veya teknik karakteristik satırını ekleyin.</p></footer>
+              </section>
               <div class="quality-gate">
                 <div class="quality-score"><div class="score-ring"><span id="qualityScore">0</span><small>/100</small></div><div><b id="qualityStateTitle">Veri doğrulaması sürüyor</b><p id="qualityStateDetail">Kalite kapısı gerçek BOM, rota, teknik kaynak, MSA ve PFMEA bağlantılarını kontrol eder.</p></div></div>
                 <div class="gate-list"><div class="pass"><span>✓</span><p><b>Ürün ana verisi</b><small>Antet ve mamul kimliği kontrol edildi</small></p></div><div class="pass"><span>✓</span><p><b>Teknik karakteristikler</b><small id="gateCharacteristicCount">Numaralı karakteristikler doğrulanıyor</small></p></div><div class="pass"><span>✓</span><p><b>Proses omurgası</b><small id="gateProcessText">Rota ve BOM girdileri eşleştiriliyor</small></p></div><div class="warning"><span>!</span><p><b>Müşteri özel isteği</b><small>CSR kontrolü PPAP onayından önce tamamlanmalı</small></p></div></div>
               </div>
-              <div class="standards-strip"><span>AIAG &amp; VDA FMEA 1. Baskı</span><span>AIAG APQP 3. Baskı</span><span>AIAG Control Plan 1. Baskı</span><span>PPAP 4. Baskı</span><span>IATF 16949:2016 gerekliliklerini destekler</span></div>
-              <p class="compliance-note">Bu yazılım sertifika vermez; kuruluş QMS’si, güncel IATF SI/FAQ ve seçilen müşteri özel şartları ayrıca doğrulanmalıdır.</p>
+              <div class="standards-strip"><span>AIAG &amp; VDA FMEA destek profili</span><span>AIAG APQP / Control Plan destek profili</span><span>PPAP 4. Baskı temel unsur omurgası</span><span>IATF 16949:2016 gerekliliklerini destekler</span></div>
+              <p class="compliance-note">Bu yazılım sertifika veya otomatik uygunluk beyanı vermez; kuruluşun lisanslı güncel standardı, IATF SI/FAQ, müşteri özel şartları ve yetkili mühendislik kararları ayrıca doğrulanmalıdır.</p>
               <div class="wizard-actions"><button class="secondary-button" data-prev-step="4">← Geri</button><button class="primary-button" data-action="save-product">Kaydet, Omurgayı Oluştur ve Prosese Geç →</button></div>
             </article>
           </div>
 
-          <aside class="panel summary-card live-summary"><p class="eyebrow">CANLI PROJE ÖZETİ</p><h3 id="summaryProject">TY-2026-0042</h3><div class="part-visual">◈<span id="summaryPartName">ROT KOLU KOMPLE</span></div><div class="summary-product"><span id="summaryGroup">Direksiyon Sistemleri</span><small id="summaryPartNo">RK-5101-001 • Rev. C</small></div><dl><div><dt>Alt kalem</dt><dd id="summaryComponentCount">7</dd></div><div><dt>Karakteristik</dt><dd id="summaryCharacteristicCount">3</dd></div><div><dt>Özel karakteristik</dt><dd id="summarySpecialCount" class="warning-text">2</dd></div><div><dt>Önerilen proses</dt><dd id="summaryProcessCount">15</dd></div><div><dt>PPAP seviyesi</dt><dd id="summaryPpapLevel">3</dd></div></dl><div class="completion-label"><span>Veri tamlığı</span><b id="summaryCompletionText">75%</b></div><div class="completion-bar"><i id="summaryCompletionBar" style="width:75%"></i></div><small class="summary-note">Tüm çıktılar bu doğrulanmış veri omurgasından üretilecek.</small></aside>
+          <aside class="panel summary-card live-summary"><p class="eyebrow">CANLI PROJE ÖZETİ</p><h3 id="summaryProject">TY-2026-YENİ</h3><div class="part-visual">◇<span id="summaryPartName">MAMUL ADI BEKLENİYOR</span></div><div class="summary-product"><span id="summaryGroup">Yeni ürün grubu</span><small id="summaryProductType">Kullanıcı tanımlı mamul</small><small id="summaryPartNo">OEM: — • Rev. A</small><small id="summaryInternalCode">Kuruluş kodu: —</small></div><dl><div><dt>Alt kalem</dt><dd id="summaryComponentCount">0</dd></div><div><dt>Karakteristik</dt><dd id="summaryCharacteristicCount">1</dd></div><div><dt>Özel karakteristik</dt><dd id="summarySpecialCount" class="warning-text">0</dd></div><div><dt>Seçilen proses</dt><dd id="summaryProcessCount">0</dd></div><div><dt>PPAP seviyesi</dt><dd id="summaryPpapLevel">3</dd></div></dl><div class="completion-label"><span>Veri tamlığı</span><b id="summaryCompletionText">0%</b></div><div class="completion-bar"><i id="summaryCompletionBar" style="width:0%"></i></div><small class="summary-note">Ürün kimliği, BOM, rota ve ölçüler kullanıcı seçimiyle oluşturulacak.</small></aside>
         </div>
       </section>
 
@@ -235,19 +393,67 @@
         <article id="flowPreview" class="panel flow-preview hidden"><div class="panel-header"><div><p class="eyebrow">OTOMATİK ÇIKTI</p><h2>Proses Akış Diyagramı</h2><p>AIAG sembol mantığıyla ürün, kontrol ve dış kaynak adımları</p></div><div class="flow-legend"><span><i class="operation"></i>Operasyon</span><span><i class="control"></i>Kontrol</span><span><i class="outsource"></i>Dış kaynak</span></div></div><div id="flowCanvas" class="flow-canvas"></div></article>
       </section>
 
-      <section id="pfmea" class="view document-view">
-        <div class="page-heading"><div><p class="eyebrow" id="pfmeaEyebrow">TY-2026-0042 • AIAG-VDA 7 ADIM</p><h1>Proses FMEA</h1><p>Proses risklerini Action Priority ile analiz edin; açık yüksek öncelik kalite kapısını bloke eder.</p></div><div class="heading-actions"><span class="page-status warning">● 3 açık aksiyon</span><button class="secondary-button" data-action="export-pfmea-pdf">PDF Kaydet</button><button class="primary-button" data-action="complete-pfmea">✓ PFMEA Kalite Kapısını Kontrol Et</button></div></div>
-        <div class="risk-strip"><div><span>Toplam hata türü</span><b>16</b></div><div><span>Yüksek öncelik</span><b class="red-text">3</b></div><div><span>Orta öncelik</span><b class="amber-text">5</b></div><div><span>Düşük öncelik</span><b class="green-text">8</b></div><div class="risk-progress"><span>Tamamlanma</span><i><b style="width:68%"></b></i><strong>68%</strong></div></div>
-        <article class="panel document-table"><div class="doc-toolbar"><div class="tabs"><button class="active">Risk Analizi</button><button>Aksiyonlar <span>3</span></button><button>Yapı Analizi</button></div><button class="secondary-button">＋ Hata Türü Ekle</button></div><div class="fmea-grid table-scroll"><div class="fmea-row fmea-head"><span>OP.</span><span>PROSES FONKSİYONU</span><span>HATA TÜRÜ / ETKİSİ</span><span>Ş</span><span>OLUŞMA NEDENİ</span><span>O</span><span>MEVCUT KONTROL</span><span>T</span><span>AP</span></div><div class="fmea-row"><span><b>OP 40</b></span><span>CNC tornalama<br><small>Çap ve diş işleme</small></span><span><b>Çap tolerans dışı</b><small>Montajda boşluk, fonksiyon kaybı</small></span><span class="score high">8</span><span>Takım aşınması / yanlış ofset</span><span class="score medium">4</span><span>İlk parça kontrolü, takım ömrü takibi</span><span class="score medium">4</span><span><mark class="ap high-ap">H</mark></span></div><div class="fmea-row"><span><b>OP 60</b></span><span>İndüksiyon sertleştirme<br><small>Küresel pim</small></span><span><b>Sertlik yetersiz</b><small>Erken aşınma, güvenlik riski</small></span><span class="score high">9</span><span>Güç/süre parametre sapması</span><span class="score low">2</span><span>Parametre kilidi, vardiya sertlik kontrolü</span><span class="score medium">5</span><span><mark class="ap high-ap">H</mark></span></div><div class="fmea-row"><span><b>OP 90</b></span><span>Montaj<br><small>Pim-gövde birleştirme</small></span><span><b>Tork yetersiz</b><small>Bağlantıda gevşeme</small></span><span class="score high">8</span><span>Hatalı sıkma programı</span><span class="score low">2</span><span>Program doğrulama ve tork izleme</span><span class="score low">3</span><span><mark class="ap medium-ap">M</mark></span></div></div></article>
+      <section id="dfmea" class="view document-view fmea-governance-view">
+        <div class="page-heading">
+          <div><p class="eyebrow">TASARIM RİSK YÖNETİMİ • AIAG-VDA 7 ADIM DESTEK PROFİLİ</p><h1>DFMEA Mühendislik Stüdyosu</h1><p>Ürün sistemi, alt sistem, bileşen, fonksiyon, gereksinim ve arıza zincirini tasarım doğrulama kanıtlarıyla birlikte yönetin.</p></div>
+          <div class="heading-actions"><button class="secondary-button" type="button" data-action="export-dfmea-pdf">PDF Kaydet</button><button class="secondary-button" type="button" data-fmea-action="add-dfmea-row">＋ Analiz Satırı</button><button class="primary-button" type="button" data-fmea-action="audit-dfmea">✓ Denetçi Kontrolü</button></div>
+        </div>
+        <div id="dfmeaGovernanceStudio" class="fmea-governance-studio"></div>
+        <article class="panel fmea-analysis-panel">
+          <header><div><span>YAPI → FONKSİYON → HATA → RİSK → OPTİMİZASYON</span><h2>DFMEA Analiz Satırları</h2><p>Üst seviye etki, odak eleman hata modu ve alt seviye neden aynı satırda izlenir; DVP&amp;R ve özel karakteristik bağlantısı kaybolmaz.</p></div><mark id="dfmeaRowCount">0 SATIR</mark></header>
+          <div id="dfmeaAnalysisRows" class="fmea-analysis-rows"></div>
+        </article>
+      </section>
+
+      <section id="pfmea" class="view document-view pfmea-ultra-view">
+        <div class="page-heading pfmea-page-heading">
+          <div><p class="eyebrow" id="pfmeaEyebrow">TY-2026-0042 • AIAG-VDA 7 ADIM</p><h1>PFMEA Risk Kokpiti</h1><p>Operasyon seçin, kütüphane risklerini kartlardan ekleyin ve S-O-D/AP kararlarını görsel çalışma alanında tamamlayın.</p></div>
+          <div class="heading-actions"><span class="page-status warning">● Risk analizi bekliyor</span><button class="secondary-button" data-action="export-pfmea-xlsx">Excel Kaydet</button><button class="secondary-button" data-action="export-pfmea-pdf">PDF Kaydet</button><button class="primary-button" data-action="complete-pfmea">✓ PFMEA Kalite Kapısı</button></div>
+        </div>
+
+        <div id="pfmeaGovernanceStudio" class="fmea-governance-studio"></div>
+
+        <div class="risk-strip pfmea-kpi-strip">
+          <div class="pfmea-kpi total"><span>Toplam risk</span><b data-pfmea-metric="total">0</b><small>Aktif PFMEA satırı</small></div>
+          <div class="pfmea-kpi high"><span>Yüksek AP açık</span><b class="red-text" data-pfmea-metric="high">0</b><small>Aksiyonla kapatılmalı</small></div>
+          <div class="pfmea-kpi medium"><span>Orta AP</span><b class="amber-text" data-pfmea-metric="medium">0</b><small>İyileştirme adayı</small></div>
+          <div class="pfmea-kpi low"><span>Düşük AP</span><b class="green-text" data-pfmea-metric="low">0</b><small>Kontrolleri sürdür</small></div>
+          <div class="risk-progress"><span>Değerlendirme tamlığı</span><i><b style="width:0%"></b></i><strong>0%</strong><small>S-O-D ve AP tamamlanma oranı</small></div>
+        </div>
+
+        <article class="panel pfmea-quick-studio" aria-labelledby="pfmeaQuickTitle">
+          <header class="pfmea-studio-head">
+            <div><span class="engine-kicker">ULTRA HIZLI HAZIRLAMA</span><h2 id="pfmeaQuickTitle">Operasyon → risk şablonu → değerlendirme</h2><p>Mevcut kullanıcı satırlarını silmeden eksik riskleri tamamlar; kütüphane S-O-D değerleri yalnız taslak başlangıçtır.</p></div>
+            <div class="pfmea-quick-actions"><label>Hazırlama profili<select id="pfmeaQuickProfile"><option value="core">Çekirdek • operasyon başına 1 risk</option><option value="balanced" selected>Dengeli • kritik + ilk 2 risk</option><option value="full">Tam • tüm proses riskleri</option></select></label><button class="primary-button" type="button" data-action="pfmea-quick-generate">⚡ Tüm Rotayı Hızlı Hazırla</button></div>
+          </header>
+          <div class="pfmea-studio-grid">
+            <aside class="pfmea-operation-panel"><div class="pfmea-mini-head"><div><b>1. Operasyon seç</b><small>Rota omurgası</small></div><span id="pfmeaOperationProgress">0 / 0</span></div><div id="pfmeaOperationRail" class="pfmea-operation-rail"><div class="pfmea-loading-card">Proses rotası bekleniyor…</div></div></aside>
+            <section class="pfmea-risk-catalog"><div class="pfmea-mini-head"><div><b>2. Risk şablonlarını seç</b><small>Fonksiyon, etki, neden ve kontroller hazır gelir</small></div><label class="pfmea-catalog-search">⌕<input id="pfmeaRiskSearch" type="search" placeholder="Hata türü, neden veya kontrol ara…"></label></div><div id="pfmeaRiskGallery" class="pfmea-risk-gallery"><div class="pfmea-loading-card">Önce bir operasyon seçin.</div></div></section>
+            <aside class="pfmea-quick-summary"><span class="engine-kicker">SEÇİM ÖZETİ</span><div class="pfmea-selection-count"><b id="pfmeaPickedCount">0</b><span>risk seçildi</span></div><dl><div><dt>Operasyon</dt><dd id="pfmeaPickedOperation">—</dd></div><div><dt>Kütüphane</dt><dd id="pfmeaAvailableRiskCount">0 risk</dd></div><div><dt>Mevcut</dt><dd id="pfmeaExistingRiskCount">0 satır</dd></div></dl><button class="primary-button full" type="button" data-action="pfmea-add-picked" disabled>Seçili Riskleri Ekle</button><button class="ghost-button full" type="button" data-action="pfmea-clear-picked">Seçimi Temizle</button><p>AP otomatik atanmaz; lisanslı AIAG &amp; VDA tablosuyla ekip kararı gerekir.</p></aside>
+          </div>
+          <details class="pfmea-advanced-picker"><summary>Gelişmiş tek risk seçiciyi aç</summary><div class="pfmea-library-toolbar"><div><span class="engine-kicker">TEK RİSK EKLEME</span><b>Operasyon bağlamından düzenlenebilir satır</b></div><label>Operasyon<select id="pfmeaLibraryOperation"></select></label><label>Hata türü / risk şablonu<select id="pfmeaLibraryRisk"><option value="">Önce operasyon seçin</option></select></label><button class="secondary-button" type="button" data-action="add-pfmea-library-risk">Seçili Riski Ekle</button><button class="primary-small" type="button" data-action="add-pfmea-process-risks">Proses Risk Setini Ekle</button></div><div id="pfmeaLibraryHint" class="pfmea-library-hint">Fonksiyon, hata etkisi, neden, önleme/tespit kontrolü, önerilen aksiyon ve reaksiyon planı kütüphaneden gelir; her alan kullanıcı tarafından değiştirilebilir.</div></details>
+        </article>
+
+        <div id="pfmeaBulkBar" class="pfmea-bulk-bar hidden"><div><b><span id="pfmeaBulkCount">0</span> risk seçildi</b><small>Seçili satırlara aksiyon bilgisi uygula</small></div><input id="pfmeaBulkOwner" placeholder="Sorumlu / ekip"><input id="pfmeaBulkDue" type="date"><select id="pfmeaBulkStatus"><option value="">Durumu değiştirme</option><option>Açık</option><option>Karar Bekleniyor</option><option>Uygulama Bekleniyor</option><option>Tamamlandı</option><option>Uygulanmadı</option></select><button class="primary-small" type="button" data-action="pfmea-bulk-apply">Toplu Uygula</button><button class="ghost-button" type="button" data-action="pfmea-bulk-clear">Seçimi Kaldır</button></div>
+
+        <article class="panel document-table pfmea-workbench">
+          <div class="doc-toolbar"><div class="tabs pfmea-filter-tabs"><button class="active" data-pfmea-filter="all">Tüm Riskler</button><button data-pfmea-filter="high">Yüksek AP <span data-pfmea-filter-count="high">0</span></button><button data-pfmea-filter="incomplete">Eksik Değerlendirme</button><button data-pfmea-filter="actions">Aksiyon Bekleyen</button></div><button class="secondary-button" type="button" data-action="add-pfmea-manual">＋ Manuel Hata Türü</button></div>
+          <div class="pfmea-workbench-tools"><label class="pfmea-workbench-search">⌕<input id="pfmeaWorkbenchSearch" type="search" placeholder="Operasyon, hata türü, etki, neden veya sorumlu ara…"></label><label>Sırala<select id="pfmeaSort"><option value="route">Operasyon sırası</option><option value="ap">AP önceliği</option><option value="rpn">S×O×T göstergesi</option><option value="completion">Eksikler önce</option></select></label><button class="ghost-button" type="button" data-action="pfmea-expand-all">Tüm Detayları Aç</button><span id="pfmeaVisibleCount" class="pfmea-visible-count">0 risk gösteriliyor</span></div>
+          <div class="fmea-grid pfmea-card-grid"><div class="pfmea-loading-card">PFMEA riskleri hazırlanıyor…</div></div>
+        </article>
       </section>
 
       <section id="control" class="view document-view">
         <div class="page-heading"><div><p class="eyebrow" id="controlEyebrow">TY-2026-0042 • SERİ ÜRETİM</p><h1>Kontrol Planı</h1><p>Teknik resim → proses akışı → PFMEA → kontrol → talimat zincirinin kontrollü çıktısı.</p></div><div class="heading-actions"><button class="secondary-button" data-action="generate-control">↻ Yeniden Üret</button><button class="primary-button" data-action="generate-control">▦ Antetli Kontrol Planı Oluştur</button></div></div>
+        <article id="sourceControlStudio" class="source-document-studio" aria-labelledby="sourceControlStudioTitle">
+          <header><div><span class="studio-overline">KONTROLLÜ ÖRNEK DOKÜMAN OMURGASI</span><h2 id="sourceControlStudioTitle">Kaynak planı seç, doğrula ve projeye uygula</h2><p>Örnek planlardaki operasyon, karakteristik, ölçüm, sıklık, kayıt ve reaksiyon bağlarını düzenlenebilir taslağa dönüştürür.</p></div><div class="studio-health"><i></i><span><b id="sourceControlHealth">Kütüphane yükleniyor</b><small>Kaynak değerler ürün revizyonunda yeniden doğrulanır</small></span></div></header>
+          <div class="source-studio-grid"><aside class="source-selector"><label>Kontrollü kaynak planı<select id="sourceControlPlanSelect"><option value="">Kütüphane yükleniyor…</option></select></label><div id="sourceControlPlanMeta" class="source-meta"><span>Kaynak bekleniyor</span></div><button class="tenant-primary-button full" type="button" data-action="apply-source-control-template">Seçili Omurgayı Projeye Uygula</button></aside><section><div class="studio-section-title"><b>Operasyon rotası</b><small>Kodlu ve sürüklenebilir proses örnekleri</small></div><div id="sourceOperationChips" class="source-operation-chips"><span class="studio-placeholder">Kaynak planı seçin.</span></div><div class="studio-section-title studio-gap"><b>Karakteristik ve kontrol paketi</b><small>Sayısal değer, tolerans, ölçüm cihazı ve örnekleme birlikte gelir</small></div><div id="sourceCharacteristicPreview" class="source-characteristic-preview"><span class="studio-placeholder">Kontrol noktaları yükleniyor…</span></div></section><aside class="source-validation-rail"><div class="studio-section-title"><b>Teknik doğrulama</b><small>Yayın öncesi kırmızı bayraklar</small></div><div id="sourceValidationPreview"><span class="studio-placeholder">Kural seti yükleniyor…</span></div></aside></div>
+        </article>
         <div id="controlEmpty" class="panel generation-state"><div class="generation-icon">▦</div><h2>Kontrol planınız oluşturulmaya hazır</h2><p id="controlSourceSummary">Seçilen prosesler, numaralı karakteristikler ve PFMEA kontrolleri tek veri omurgasında eşleştirilecek.</p><div class="source-pills"><span>✓ Proses Akışı</span><span>✓ Teknik Resim</span><span>✓ PFMEA</span></div><button class="primary-button" data-action="generate-control">Otomatik Kontrol Planı Oluştur →</button></div>
         <article id="controlResult" class="panel document-table hidden">
           <div class="generated-banner"><span>✓</span><div><b>Kontrol planı tek doğrulanmış veri anlık görüntüsünden üretildi</b><small id="controlGeneratedMeta">CP-5101-234-001 / Rev. C</small></div><div class="export-actions"><button class="secondary-button" data-action="export-control-xlsx">Excel .xlsx</button><button class="secondary-button" data-action="export-control-pdf">PDF</button><button class="secondary-button" data-action="export-control-dxf">CAD .dxf</button><button class="secondary-button dwg-bridge" data-action="dwg-info">DWG köprüsü</button></div></div>
           <div id="controlPlanSheet" class="cp-sheet">
-            <div class="cp-document-title"><span class="qflow-print-mark">TYANA OTOMOTİV<br>Q-FLOW</span><h2>KONTROL PLANI / CONTROL PLAN</h2><span id="cpDocumentState">TASLAK</span></div>
+            <div class="cp-document-title"><span id="cpOrganizationMark" class="qflow-print-mark">TYANA Q-FLOW<br><small>Kullanıcı Tanımlı Kuruluş</small></span><h2>KONTROL PLANI / CONTROL PLAN</h2><span id="cpDocumentState">TASLAK</span></div>
             <div class="cp-phase-row"><b>Faz:</b><span id="phasePrototype">□ Prototip</span><span id="phasePrelaunch">□ Ön Seri / Safe Launch</span><span id="phaseProduction">☒ Seri</span><span class="cp-confidentiality">KONTROLLÜ KOPYA</span></div>
             <div id="controlPlanHeader" class="cp-title-grid"></div>
             <div class="cp-table-wrap">
@@ -264,6 +470,10 @@
 
       <section id="instruction" class="view document-view">
         <div class="page-heading"><div><p class="eyebrow" id="instructionEyebrow">TY-2026-0042 • 15 OPERASYON</p><h1>Operatör Talimatları</h1><p>Her operasyon için PPE, işlem adımları, kontrol noktaları ve reaksiyon planı düzenlenebilir olarak üretilir.</p></div><div class="heading-actions"><button class="secondary-button" data-action="export-all-instructions">Tümünü PDF</button><button class="primary-button" data-action="generate-instruction">▤ Talimatları Oluştur</button></div></div>
+        <article id="sourceInstructionStudio" class="source-document-studio instruction-preset-studio" aria-labelledby="sourceInstructionStudioTitle">
+          <header><div><span class="studio-overline">ULTRA HIZLI TALİMAT HAZIRLAMA</span><h2 id="sourceInstructionStudioTitle">Operasyon kodu → sistem taslağı → kalite kontrol matrisi</h2><p>Kaynak talimat numarası, revizyonu, makinesi ve kontrol noktaları referans olarak bağlanır; sıralı iş adımları TYANA Q-FLOW taslağıdır ve mühendislik onayı olmadan yayımlanmaz.</p></div><label class="studio-search">⌕<input id="sourceInstructionSearch" type="search" placeholder="Talimat no, operasyon veya proses ara…"></label></header>
+          <div class="instruction-studio-layout"><aside class="instruction-profile-rail"><span class="studio-overline">1. HAZIRLAMA PROFİLİ</span><label><input type="radio" name="instructionProfile" value="route" checked><b>Aktif rotaya göre</b><small>Yalnız mevcut operasyonlarla eşleşen presetler</small></label><label><input type="radio" name="instructionProfile" value="all"><b>Tüm kaynak presetleri</b><small>Kütüphanedeki bütün kontrollü örnekler</small></label><div class="instruction-picked"><b id="sourceInstructionPickedCount">0</b><span>preset seçildi</span></div><button class="tenant-primary-button full" type="button" data-action="apply-source-instruction-presets">Seçilenleri Bağla ve Oluştur</button></aside><section><div class="studio-section-title"><b>2. Talimat presetlerini seç</b><small>PPE, İSG, sayısal parametre, kayıt ve reaksiyon bilgisi birlikte gelir</small></div><div id="sourceInstructionGallery" class="source-instruction-gallery"><span class="studio-placeholder">Preset kütüphanesi yükleniyor…</span></div></section><aside class="instruction-readiness"><span class="studio-overline">3. YAYIN HAZIRLIĞI</span><div id="sourceInstructionReadiness"><span class="studio-placeholder">Seçim bekleniyor…</span></div><p>Kaynak örnekler doğrudan “onaylı” sayılmaz. Teknik resim, proses parametresi, risk analizi ve saha onayı tamamlanmadan kontrollü yayına geçmez.</p></aside></div>
+        </article>
         <div id="instructionEmpty" class="panel generation-state"><div class="generation-icon purple-bg">▤</div><h2>Operatör talimatları üretime hazır</h2><p id="instructionSourceSummary">Seçilen operasyonlar kontrol yöntemi, sıklık, sayısal limit, PPE ve reaksiyon planıyla ayrı talimatlara dönüştürülecek.</p><button class="primary-button" data-action="generate-instruction">Tüm Talimatları Oluştur →</button></div>
         <div id="instructionResult" class="instruction-grid professional-instructions hidden"></div>
       </section>
@@ -271,26 +481,41 @@
       <section id="documents" class="view ppap-view">
         <div class="page-heading"><div><p class="eyebrow">PPAP SEVİYE 3 • KONTROLLÜ YAYIN</p><h1>PPAP ve Çıktı Merkezi</h1><p>18 PPAP unsurunu, doküman durumunu ve kontrollü çıktı formatlarını tek kalite kapısında yönetin.</p></div><button class="primary-button" data-action="ppap-package">□ PPAP Paketini Doğrula</button></div>
         <div class="ppap-summary"><article class="panel ppap-readiness"><div class="readiness-ring"><span>78%</span></div><div><p class="eyebrow">PAKET HAZIRLIĞI</p><h2>Müşteri sunumuna yaklaşıyor</h2><p>14 unsur hazır, 3 unsur işlemde, 1 unsur bekliyor.</p></div></article><article class="panel ppap-kpi"><span class="green-text">14</span><b>Hazır</b><small>Onaylı ve güncel</small></article><article class="panel ppap-kpi"><span class="amber-text">3</span><b>İşlemde</b><small>Sorumlu atanmış</small></article><article class="panel ppap-kpi"><span class="red-text">1</span><b>Bloke</b><small>MSA sonucu gerekli</small></article></div>
+        <article id="documentationAuditPanel" class="panel documentation-audit-panel">
+          <header><div><span class="audit-kicker">IATF DENETİM KANITI • DOKÜMAN TUTARLILIK KAPISI</span><h2>Ürün → BOM → İş Planı → FMEA → Kontrol Planı → Talimat</h2><p>Her dokümanı ayrı ayrı değil, ortak kimlik ve revizyon zinciri üzerinden sınar. Bloke bulgu varken kontrollü yayın yapılamaz.</p></div><div class="documentation-audit-actions"><button class="secondary-button" type="button" data-action="refresh-document-audit">↻ Yeniden Denetle</button><button class="primary-button" type="button" data-action="export-audit-pdf">Denetim Kanıt PDF</button></div></header>
+          <div class="documentation-audit-summary"><div class="audit-score"><b id="documentationAuditScore">0%</b><span>zincir uygunluğu</span></div><div><b id="documentationAuditPass">0</b><span>uygun kapı</span></div><div><b id="documentationAuditBlock">0</b><span>bloke bulgu</span></div><div><b id="documentationAuditEvidence">0</b><span>FMEA kanıtı</span></div><mark id="documentationAuditState">DENETİM BEKLİYOR</mark></div>
+          <div id="documentationAuditList" class="documentation-audit-list"><span class="studio-placeholder">Doküman zinciri denetleniyor…</span></div>
+        </article>
         <article class="panel export-center"><div class="panel-header"><div><h2>Kontrollü Doküman Üretimi</h2><p>Aynı doğrulanmış anlık görüntüden antetli Excel, PDF ve CAD çıktıları</p></div><mark class="snapshot-badge">SHA-256 SNAPSHOT</mark></div><div class="save-assurance"><span>↓</span><div><b>Windows kayıt penceresi etkin</b><small>PDF, Excel ve DXF için dosya adını ve kayıt konumunu siz seçersiniz. Desteklenmeyen tarayıcıda güvenli indirme yedeği kullanılır.</small></div><button class="secondary-button" data-action="test-pdf-save">PDF Kaydını Test Et</button></div><div class="export-matrix">
           <div><span class="export-icon excel">X</span><p><b>Kontrol Planı</b><small>Birleşik antet, A3 yatay, tekrar eden başlık</small></p><button data-action="export-control-xlsx">.xlsx</button></div>
           <div><span class="export-icon pdf">P</span><p><b>Kontrol Planı PDF</b><small>Çerçeveli antet ve kontrollü kopya bilgisi</small></p><button data-action="export-control-pdf">.pdf</button></div>
+          <div><span class="export-icon pdf">D</span><p><b>DFMEA PDF</b><small>Yapı, hata zinciri, risk ve aksiyon sonrası değerlendirme</small></p><button data-action="export-dfmea-pdf">.pdf</button></div>
+          <div><span class="export-icon pdf">F</span><p><b>PFMEA PDF</b><small>Proses riski, AP, aksiyon ve kanıt zinciri</small></p><button data-action="export-pfmea-pdf">.pdf</button></div>
+          <div><span class="export-icon xls">X</span><p><b>PFMEA Excel</b><small>7 adımlı yapı, risk analizi, optimizasyon ve kanıt eki</small></p><button data-action="export-pfmea-xlsx">.xlsx</button></div>
+          <div><span class="export-icon pdf">A</span><p><b>Denetim Kanıt Raporu</b><small>Çapraz doküman tutarlılığı ve açık bulgular</small></p><button data-action="export-audit-pdf">.pdf</button></div>
           <div><span class="export-icon cad">D</span><p><b>Proses Akışı CAD</b><small>Milimetre, katmanlı, antetli ASCII DXF</small></p><button data-action="export-control-dxf">.dxf</button></div>
           <div class="planned"><span class="export-icon dwg">W</span><p><b>DWG Dönüşüm Köprüsü</b><small>Masaüstünde lisanslı ODA / RealDWG motoru</small></p><button data-action="dwg-info">MASAÜSTÜ</button></div>
         </div><div id="recentExports" class="recent-exports"><b>Bu oturumdaki çıktılar</b><span>Henüz çıktı oluşturulmadı.</span></div></article>
-        <article class="panel ppap-panel"><div class="panel-header"><div><h2>PPAP Unsurları</h2><p>AIAG PPAP 4. baskı temel sunum listesi</p></div><div class="header-tools"><button class="chip active" data-ppap-filter="all">Tümü <span>18</span></button><button class="chip" data-ppap-filter="open">Açık <span>4</span></button><button class="filter-button">☷ Sorumlu</button></div></div><div id="ppapChecklist" class="ppap-checklist"></div></article>
+        <article class="panel ppap-panel"><div class="panel-header"><div><h2>PPAP Unsurları</h2><p>AIAG PPAP 4. baskı temel sunum listesi</p></div><div class="header-tools"><button class="chip active" data-ppap-filter="all">Tümü <span>18</span></button><button class="chip" data-ppap-filter="open">Açık <span>18</span></button><button class="chip" data-ppap-filter="unassigned">Sorumlusuz <span>18</span></button></div></div><div id="ppapChecklist" class="ppap-checklist"></div></article>
       </section>
 
       <section id="library" class="view library-view">
         <div class="page-heading"><div><p class="eyebrow">MERKEZİ PROSES BİLGİ BANKASI • REVİZYON KONTROLLÜ</p><h1>Proses Kütüphanesi</h1><p>Proses, ekipman, karakteristik, PFMEA riski ve kontrol metodunu tek onaylı kayıtta yönetin.</p></div><div class="heading-actions"><button class="secondary-button" data-action="export-library">⇩ Dışa Aktar</button><button class="primary-button" data-action="new-process">＋ Yeni Standart Proses</button></div></div>
 
-        <div class="library-kpis professional-kpis">
+        <div class="library-mode-tabs" role="tablist" aria-label="Proses kütüphanesi görünümü">
+          <button class="active" type="button" role="tab" aria-selected="true" data-library-mode-button="process"><span class="library-tab-icon">▦</span><span><b>Standart Proses Kartları</b><small>Ekipman, kontrol, PFMEA ve talimat omurgası</small></span><mark id="processMasterTabCount">0</mark></button>
+          <button type="button" role="tab" aria-selected="false" data-library-mode-button="operation"><span class="library-tab-icon">⇄</span><span><b>TR / EN Operasyon Kodları</b><small>Rota ve makine operasyonlarında aktif kurumsal sözlük</small></span><mark id="operationCatalogTabCount">380</mark></button>
+          <button type="button" role="tab" aria-selected="false" data-library-mode-button="machine"><span class="library-tab-icon">⚙</span><span><b>Makine &amp; Uygunluk</b><small>77 başlangıç kodu ve operasyon–makine matrisi</small></span><mark id="machineCatalogTabCount">77</mark></button>
+        </div>
+
+        <div class="library-kpis professional-kpis" data-library-mode-panel="process">
           <article class="panel"><span>Aktif proses</span><b id="libraryActiveCount">18</b><small id="libraryFamilyCount">8 proses ailesi</small><i class="kpi-accent blue-accent"></i></article>
           <article class="panel"><span>Özel proses</span><b id="librarySpecialCount">4</b><small>CQI değerlendirmeli</small><i class="kpi-accent amber-accent"></i></article>
           <article class="panel"><span>Onaylı kayıt</span><b id="libraryApprovedCount">16</b><small id="libraryApprovalRate">%89 yayın oranı</small><i class="kpi-accent green-accent"></i></article>
           <article class="panel"><span>Dış kaynak</span><b id="libraryOutsourceCount">1</b><small>Tedarikçi kontrollü</small><i class="kpi-accent purple-accent"></i></article>
         </div>
 
-        <div class="library-workspace">
+        <div class="library-workspace" data-library-mode-panel="process">
           <article class="panel library-register">
             <div class="library-toolbar">
               <label class="register-search"><span>⌕</span><input id="librarySearch" placeholder="Kod, proses, ekipman veya kontrol metodu ara..."></label>
@@ -314,10 +539,71 @@
             <div class="library-rule"><span>⛓</span><p><b>Tek kaynak kuralı</b><small>Proses düzenlendiğinde bağlı dokümanlar revizyon incelemesine düşer.</small></p></div>
           </aside>
         </div>
+
+        <div id="operationCodeCatalog" class="operation-code-catalog hidden" data-library-mode-panel="operation">
+          <div class="library-kpis professional-kpis operation-code-kpis">
+            <article class="panel"><span>Aktif operasyon kodu</span><b id="operationCatalogCount">380</b><small>Kaynak sırası ve kod kimliği korunur</small><i class="kpi-accent blue-accent"></i></article>
+            <article class="panel"><span>Dil kapsamı</span><b>TR / EN</b><small>Türkçe ve İngilizce karşılık birlikte</small><i class="kpi-accent green-accent"></i></article>
+            <article class="panel"><span>Mühendislik incelemesi</span><b id="operationReviewCount">55</b><small>Yayın öncesi anlam / çeviri doğrulaması</small><i class="kpi-accent amber-accent"></i></article>
+            <article class="panel"><span>Eşleme belirsizliği</span><b id="operationAmbiguityCount">16</b><small>Kaynak korunur, otomatik birleştirilmez</small><i class="kpi-accent purple-accent"></i></article>
+          </div>
+          <div class="library-workspace operation-workspace">
+            <article class="panel operation-register">
+              <div class="operation-catalog-toolbar">
+                <label class="register-search"><span>⌕</span><input id="operationCatalogSearch" placeholder="Kod, Türkçe veya İngilizce operasyon ara..."></label>
+                <select id="operationCatalogFamilyFilter" aria-label="Proses ailesi"><option value="all">Tüm proses aileleri</option></select>
+                <select id="operationCatalogReviewFilter" aria-label="İnceleme durumu"><option value="all">Tüm kayıtlar</option><option value="ready">Doğrudan kullanılabilir</option><option value="review">İnceleme gerekli</option><option value="used">Rotada kullanılanlar</option></select>
+                <button class="secondary-button" type="button" data-action="export-operation-codes">⇩ 380 Proses Kartını Excel'e Aktar</button>
+              </div>
+              <div class="register-meta"><div><b id="operationCatalogResultCount">380 standart proses kartı</b><span>Her kart aile, makine sınıfı, ekipman, kontrol, PFMEA, reaksiyon ve talimat bağlarını taşır; tesis makinesi rotada seçilir.</span></div><div class="quality-key"><span><i class="approved-dot"></i>Seçilebilir kart</span><span><i class="draft-dot"></i>Mühendislik incelemesi</span></div></div>
+              <div class="operation-register-scroll">
+                <div class="operation-register-head"><span>KOD</span><span>TÜRKÇE OPERASYON</span><span>ENGLISH OPERATION</span><span>DURUM / KULLANIM</span><span></span></div>
+                <div id="operationCodeRows" class="operation-code-rows"><div class="library-loading">Operasyon kodları yükleniyor…</div></div>
+              </div>
+            </article>
+            <aside class="panel operation-catalog-guide">
+              <span class="catalog-guide-kicker">SAP MANTIĞINDA TEK KAYNAK</span>
+              <h3>Kod → Rota → Makine → Talimat</h3>
+              <p>Operasyon kodu yalnız isim değildir. Rotaya eklendiğinde iş merkezi, makine, takım, program, BOM girdisi, kontrol karakteristiği ve operatör talimatı aynı operasyon örneğine bağlanır.</p>
+              <ol><li><b>Kodu seçin</b><small>TR/EN tanımıyla doğru operasyonu bulun.</small></li><li><b>Rotaya ekleyin</b><small>Seçili mamulün operasyon sırasına yeni örnek oluşur.</small></li><li><b>Üretim bağlamını tamamlayın</b><small>Makine ve tüketilen BOM kalemlerini seçin.</small></li><li><b>Kalite kapısını kapatın</b><small>İnceleme işaretli kodlarda teknik onay verin.</small></li></ol>
+              <button class="primary-button full" type="button" data-action="open-process-flow">Proses Akışına Git →</button>
+            </aside>
+          </div>
+        </div>
+
+        <div id="machineLibraryCatalog" class="machine-library-catalog hidden" data-library-mode-panel="machine">
+          <div class="library-kpis professional-kpis machine-library-kpis">
+            <article class="panel"><span>Etkin makine / kaynak</span><b id="machineActiveCount">77</b><small>Dinamik tesis sicili</small><i class="kpi-accent blue-accent"></i></article>
+            <article class="panel"><span>Makine türü</span><b id="machineTypeCount">5</b><small>CNC, kalıp, ölçüm, montaj, NDT</small><i class="kpi-accent green-accent"></i></article>
+            <article class="panel"><span>Bağlı operasyon</span><b id="machineLinkedOperationCount">0</b><small>Öğrenen uygunluk matrisi</small><i class="kpi-accent amber-accent"></i></article>
+            <article class="panel"><span>Pasif kayıt</span><b id="machineInactiveCount">0</b><small>Yeni rotalarda gösterilmez</small><i class="kpi-accent purple-accent"></i></article>
+          </div>
+          <div class="library-workspace machine-library-workspace">
+            <article class="panel machine-register">
+              <div class="operation-catalog-toolbar">
+                <label class="register-search"><span>⌕</span><input id="machineLibrarySearch" placeholder="Makine kodu veya açıklama ara..."></label>
+                <select id="machineTypeFilter" aria-label="Makine türü"><option value="all">Tüm makine türleri</option><option value="cnc_tool">CNC / işlem tezgâhı</option><option value="die_fixture">Kalıp / fikstür</option><option value="gauge_instrument">Ölçüm aleti / mastar</option><option value="assembly_station">Montaj makinesi / istasyonu</option><option value="ndt_gauge">Çatlak kontrol / NDT</option></select>
+                <select id="machineStatusFilter" aria-label="Makine durumu"><option value="active">Etkin kayıtlar</option><option value="inactive">Pasif kayıtlar</option><option value="all">Tüm durumlar</option></select>
+                <button class="primary-button" type="button" data-action="new-machine">＋ Yeni Makine / Kaynak</button>
+              </div>
+              <div class="machine-register-head"><span>KOD</span><span>TÜR / AÇIKLAMA</span><span>UYGUN OPERASYONLAR</span><span>DURUM / REVİZYON</span><span></span></div>
+              <div id="machineLibraryRows" class="machine-register-body"><div class="library-loading">Makine sicili yükleniyor…</div></div>
+            </article>
+            <aside class="panel machine-eligibility-panel">
+              <span class="catalog-guide-kicker">OPERASYON ↔ MAKİNE MATRİSİ</span>
+              <h3>Uygun makine listesini yönetin</h3>
+              <p>Operasyon seçildiğinde ürün iş planında yalnız bu matristeki etkin makineler gösterilir. Eşleme yoksa bütün etkin sicil açılır; ilk kullanıcı seçimi matrise kaydedilir.</p>
+              <label>380 karttan operasyon seçin<input id="machineEligibilityOperation" list="operationCodeLibraryOptions" placeholder="Kod veya operasyon ara"></label>
+              <div id="machineEligibilityChoices" class="machine-eligibility-choices"><p>Önce operasyon kodu seçin.</p></div>
+              <button class="primary-button full" type="button" data-action="save-machine-eligibility">Uygunluk Matrisini Kaydet</button>
+              <div class="library-rule"><span>⛓</span><p><b>Öğrenen liste</b><small>Boş bir operasyonda ürün rotası için seçilen makineler otomatik olarak kullanıcı doğrulamalı uygunluk kaydı olur.</small></p></div>
+            </aside>
+          </div>
+        </div>
       </section>
 
       <section id="users" class="view users-view">
-        <div class="page-heading"><div><p class="eyebrow">TYANA OTOMOTİV • KULLANICI VE SORUMLULUK DİZİNİ</p><h1>Kullanıcı ve Sorumluluk Profilleri</h1><p>Hazırlayan, kontrol eden ve onaylayan kişi/rol bilgilerini doküman iş akışında kullanmak üzere kaydedin.</p></div><div class="heading-actions"><button class="secondary-button" data-action="refresh-users">↻ Yenile</button><button class="primary-button" data-action="new-user">＋ Kullanıcı Profili Oluştur</button></div></div>
+        <div class="page-heading"><div><p class="eyebrow">TYANA Q-FLOW • KULLANICI VE SORUMLULUK DİZİNİ</p><h1>Kullanıcı ve Sorumluluk Profilleri</h1><p>Hazırlayan, kontrol eden ve onaylayan kişi/rol bilgilerini doküman iş akışında kullanmak üzere kaydedin.</p></div><div class="heading-actions"><button class="secondary-button" data-action="refresh-users">↻ Yenile</button><button class="primary-button" data-action="new-user">＋ Kullanıcı Profili Oluştur</button></div></div>
         <div class="user-kpis professional-kpis">
           <article class="panel"><span>Aktif kullanıcı</span><b id="userActiveCount">1</b><small>TYANA çalışma alanı</small><i class="kpi-accent blue-accent"></i></article>
           <article class="panel"><span>Onay rol etiketi</span><b id="userApproverCount">1</b><small>İş akışı sorumluluk profili</small><i class="kpi-accent green-accent"></i></article>
@@ -330,6 +616,21 @@
           <div id="userRows" class="user-register-body"><div class="library-loading">Kullanıcı profilleri yükleniyor…</div></div>
           <div class="auth-boundary"><span>!</span><p><b>Yerel sürüm güvenlik sınırı</b><small id="userAuthBoundaryText">Oturum sahibi Windows profilidir. Bu dizindeki roller iş akışı etiketidir; parola tabanlı oturum açma, e-imza veya komut seviyesinde çok kullanıcılı RBAC değildir.</small></p></div>
         </article>
+      </section>
+
+      <section id="admin" class="view admin-view">
+        <div class="page-heading"><div><p class="eyebrow">TYANA Q-FLOW • YÖNETİM KONTROL MERKEZİ</p><h1>Admin Merkezi</h1><p>Lisans, çalışma alanı, veri sağlığı ve yayın güvenliği tek ekranda. Her işlem kayıt altına alınır ve kullanıcıyı bir sonraki doğru adıma yönlendirir.</p></div><div class="heading-actions"><button class="secondary-button" type="button" data-admin-action="refresh">↻ Durumu Yenile</button><button class="primary-button" type="button" data-admin-action="open-users">Kullanıcı ve Yetki →</button></div></div>
+        <div class="admin-kpi-grid professional-kpis">
+          <article class="panel"><span>Lisans durumu</span><b id="adminLicenseState">DOĞRULANIYOR</b><small id="adminLicenseDetail">Cihaz lisansı okunuyor</small><i class="kpi-accent green-accent"></i></article>
+          <article class="panel"><span>Hazırlık skoru</span><b id="adminReadinessScore">0%</b><small>Dokümantasyon zinciri</small><i class="kpi-accent blue-accent"></i></article>
+          <article class="panel"><span>Veri omurgası</span><b id="adminDataHealth">KONTROL</b><small id="adminDataHealthDetail">Kütüphaneler bekleniyor</small><i class="kpi-accent purple-accent"></i></article>
+          <article class="panel"><span>Çalışma alanı</span><b id="adminTenantName">TYANA Q-FLOW</b><small id="adminTenantPlant">Tesis doğrulanıyor</small><i class="kpi-accent amber-accent"></i></article>
+        </div>
+        <div class="admin-grid">
+          <article class="panel admin-license-panel"><div class="panel-header"><div><h2>Kalıcı lisans aktivasyonu</h2><p>Aktivasyon cihaz kimliğine bağlanır; anahtar yerel kayıt içinde saklanmaz.</p></div><mark id="adminLicenseBadge" class="admin-license-badge">DENEME</mark></div><div class="admin-license-status"><span class="admin-license-icon">30</span><div><b id="adminLicenseTitle">30 günlük tam sürüm denemesi</b><small id="adminLicenseMessage">Kalıcı lisans anahtarınız varsa aşağıdaki alandan etkinleştirin.</small></div></div><form id="adminLicenseForm" class="admin-license-form" novalidate><label>Kalıcı lisans anahtarı<input id="adminLicenseKey" type="password" autocomplete="off" placeholder="TYANA-QFLOW-PERM-…" required></label><button class="primary-button" type="submit">Kalıcı Lisansı Etkinleştir</button></form><div class="admin-license-meta"><span><b>Cihaz kimliği</b><small id="adminLicenseDevice">—</small></span><span><b>Bitiş</b><small id="adminLicenseExpiry">30 gün içinde</small></span><span><b>Koruma</b><small>Dosya + kayıt defteri</small></span></div><div id="adminLicenseFeedback" class="admin-feedback" role="status" aria-live="polite">Aktivasyon işlemi yalnızca yetkili yönetici tarafından yapılmalıdır.</div></article>
+          <article class="panel admin-actions-panel"><div class="panel-header"><div><h2>Yönetim işlemleri</h2><p>En sık kullanılan yönetim görevleri için kısayollar</p></div></div><div class="admin-action-list"><button type="button" data-admin-action="health"><span>✓</span><div><b>Kalite zincirini denetle</b><small>Ürün, BOM, rota, PFMEA, kontrol planı ve PPAP kapıları</small></div><em>Çalıştır →</em></button><button type="button" data-admin-action="open-library"><span>▦</span><div><b>Proses kütüphanesini yönet</b><small>Standart proses, operasyon ve makine kartları</small></div><em>Aç →</em></button><button type="button" data-admin-action="open-guide"><span>→</span><div><b>Akıllı rehberi aç</b><small>Sıradaki doğru işi ve eksik kanıtı gösterir</small></div><em>Yol haritası →</em></button><button type="button" data-admin-action="export-audit"><span>↗</span><div><b>Denetim kanıt raporu</b><small>Mevcut doküman zincirini PDF olarak dışa aktar</small></div><em>PDF →</em></button></div></article>
+        </div>
+        <article class="panel admin-governance-panel"><div class="panel-header"><div><h2>Yayın ve güvenlik kapıları</h2><p>Bir alan eksikse sistem hangi nedenle beklediğini açıklar; kalite kapısı atlanamaz.</p></div><mark class="snapshot-badge">KONTROLLÜ ÇALIŞMA</mark></div><div class="admin-governance-grid"><div><span>01</span><b>Yetki ayrılığı</b><small>Hazırlayan, kontrol eden ve onaylayan profilleri ayrı tutulur.</small></div><div><span>02</span><b>Değişiklik izi</b><small>Revizyon, sürüm ve hash bağlı kayıtlar korunur.</small></div><div><span>03</span><b>Çıktı doğrulama</b><small>PDF, Excel ve DXF imzası yazılmadan önce kontrol edilir.</small></div><div><span>04</span><b>Denetçi görünümü</b><small>Eksik kanıt, sorumlu ve sonraki adım tek raporda gösterilir.</small></div></div></article>
       </section>
     </main>
   </div>
@@ -359,7 +660,7 @@
           <label>Proses ailesi *<input id="processFamily" list="processFamilyOptions" required placeholder="Mevcut aileyi seçin veya yenisini yazın"><datalist id="processFamilyOptions"><option>Talaşlı İmalat</option><option>Şekillendirme</option><option>Isıl İşlem</option><option>Yüzey Kaplama</option><option>Yüzey Hazırlama</option><option>Birleştirme</option><option>Montaj</option><option>Kalite Kontrol</option><option>Fonksiyon Testi</option><option>İzlenebilirlik</option><option>Lojistik</option><option>Ön Şekillendirme</option></datalist></label>
           <label>Kategori *<select id="processCategory" required><option>Üretim</option><option>Kontrol</option><option>Özel Proses</option><option>Lojistik</option></select></label>
           <label>Kayıt sahibi<input id="processOwner" value="Kalite Mühendisliği"></label><label>Revizyon<select id="processRevision"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></label>
-          <label>Onay durumu<select id="processApproval"><option value="draft">Taslak</option><option value="approved">Onaylı</option></select></label><label>Doküman referansı<input id="processDocumentRef" placeholder="WI-PR-140"></label>
+          <label>Onay durumu<select id="processApproval"><option value="draft">Taslak</option><option value="approved" disabled>Onaylı — kimlikli onay modülü gerekir</option></select><small>Düzenlenen her proses yeni bir taslak revizyon olur.</small></label><label>Doküman referansı<input id="processDocumentRef" placeholder="WI-PR-140"></label>
           <label class="span-2">Proses açıklaması<textarea id="processDescription" rows="3" placeholder="Prosesin kapsamı ve amacı"></textarea></label>
         </div></section>
 
@@ -385,12 +686,82 @@
     </aside>
   </div>
 
+  <dialog id="bomComponentDialog" class="bom-dialog">
+    <form method="dialog">
+      <div class="bom-dialog-head"><div><span class="engine-kicker">ÇOK SEVİYELİ BOM</span><h2 id="bomDialogTitle">Bileşen türünü seçin</h2><p id="bomDialogContext">Seçilen mamul seviyesine yeni bir kalem eklenecek.</p></div><button value="cancel" aria-label="Kapat">×</button></div>
+      <div id="bomTypeChoices" class="bom-type-choices">
+        <button type="button" data-bom-type="Hammadde"><span>HM</span><b>Hammadde</b><small>Çubuk, boru, sac veya taslak</small></button>
+        <button type="button" data-bom-type="Satın alınan parça"><span>SP</span><b>Satın alınan parça</b><small>Tedarikçi ve sertifika zorunlu</small></button>
+        <button type="button" data-bom-type="İç üretim parçası"><span>İÜ</span><b>İç üretim parçası</b><small>Üretim prosesiyle bağlanır</small></button>
+        <button type="button" data-bom-type="Yarı mamul"><span>YM</span><b>Yarı mamul</b><small>Bağımsız revizyonlanabilir</small></button>
+        <button type="button" data-bom-type="Alt montaj"><span>AM</span><b>Alt montaj</b><small>Kendi alt BOM seviyesini açar</small></button>
+        <button type="button" data-bom-type="Mamul"><span>MM</span><b>Mamul</b><small>Satılabilir veya üst üründe kullanılabilir</small></button>
+        <button type="button" data-bom-type="Sarf malzeme"><span>SR</span><b>Sarf malzeme</b><small>Gres, kimyasal veya yardımcı malzeme</small></button>
+        <button type="button" data-bom-type="Ambalaj malzemesi"><span>PK</span><b>Ambalaj malzemesi</b><small>Kutu, seperatör ve etiket</small></button>
+        <button type="button" data-bom-type="Dış proses girdisi"><span>DP</span><b>Dış proses girdisi</b><small>Fason işlem veya tedarik dönüşü</small></button>
+      </div>
+      <div class="bom-library-picker"><label>Mevcut kütüphaneden bileşen / alt montaj<select id="bomLibrarySelect"><option value="">Kütüphane yükleniyor…</option></select></label><button type="button" class="secondary-button" data-action="insert-bom-reference">Referans Kullan</button><button type="button" class="ghost-button" data-action="insert-bom-copy">Kontrollü Kopya</button></div>
+      <div class="bom-dialog-footer"><button value="cancel" class="secondary-button">İptal</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="machineEditorDialog" class="machine-dialog">
+    <form id="machineEditorForm" method="dialog">
+      <div class="bom-dialog-head"><div><span class="engine-kicker">DİNAMİK MAKİNE SİCİLİ</span><h2 id="machineDialogTitle">Yeni Makine / Kaynak</h2><p>Kod, tür, açıklama ve etkinlik durumu tesis ana verisinde saklanır.</p></div><button value="cancel" aria-label="Kapat">×</button></div>
+      <input id="machineOriginalCode" type="hidden">
+      <div class="machine-dialog-form">
+        <label>Makine / kaynak kodu *<input id="machineCode" maxlength="40" placeholder="Örn. T206" required><small>Harf, rakam, nokta, tire veya alt çizgi.</small></label>
+        <label>Tür *<select id="machineType" required><option value="cnc_tool">CNC / işlem tezgâhı</option><option value="die_fixture">Kalıp / fikstür</option><option value="gauge_instrument">Ölçüm aleti / mastar</option><option value="assembly_station">Montaj makinesi / istasyonu</option><option value="ndt_gauge">Çatlak kontrol / NDT</option></select></label>
+        <label class="span-2">Açıklama<input id="machineDescription" maxlength="500" placeholder="Makine, hat, istasyon veya kontrol ekipmanı açıklaması"></label>
+        <label class="machine-active-toggle"><input id="machineActive" type="checkbox" checked><span>Etkin — yeni iş planlarında seçilebilir</span></label>
+      </div>
+      <div class="bom-dialog-footer"><button value="cancel" class="secondary-button">İptal</button><button id="machineDeleteButton" type="button" class="danger-button hidden">Sil</button><button type="submit" class="primary-button">Kaydet</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="routeMachineDialog" class="machine-dialog route-machine-dialog">
+    <form method="dialog">
+      <div class="bom-dialog-head"><div><span class="engine-kicker">İŞ PLANI MAKİNE SEÇİMİ</span><h2 id="routeMachineDialogTitle">Operasyon makineleri</h2><p id="routeMachineDialogHint">Uygun makine/istasyonları işaretleyin.</p></div><button value="cancel" aria-label="Kapat">×</button></div>
+      <div class="route-machine-toolbar"><label>⌕<input id="routeMachineSearch" type="search" placeholder="Makine kodu veya açıklama ara"></label><button id="routeMachineSelectAll" type="button" class="secondary-button">Görünenleri Seç</button><button id="routeMachineClear" type="button" class="secondary-button">Temizle</button><span id="routeMachineSelectionCount">0 seçili</span></div>
+      <div id="routeMachineChoices" class="machine-eligibility-choices route-machine-choices"></div>
+      <div class="bom-dialog-footer"><button value="cancel" class="secondary-button">İptal</button><button id="routeMachineConfirm" type="button" class="primary-button">Seçimi Uygula</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="bulkItemMasterDialog" class="machine-dialog bulk-item-dialog">
+    <form method="dialog">
+      <div class="bom-dialog-head"><div><span class="engine-kicker">TOPLU ANA VERİ OLUŞTURUCU</span><h2>Malzeme / ürün kartlarını tek seferde aç</h2><p>Excel'den sekmeli olarak yapıştırabilir veya noktalı virgül kullanabilirsiniz. Her satır kaydedilmeden önce doğrulanır.</p></div><button value="cancel" aria-label="Kapat">×</button></div>
+      <div class="bulk-item-format"><b>Sütun sırası</b><span>Kart tipi</span><span>Kuruluş kodu</span><span>Kart adı</span><span>OEM no</span><span>Birim</span><span>Üret / satın al</span></div>
+      <textarea id="bulkItemMasterInput" rows="11" spellcheck="false" placeholder="Yarı mamul;YM-1001;İşlenmiş gövde;A3-8976;adet;Üret&#10;Hammadde;HM-2001;ST52 boru;;kg;Satın Al"></textarea>
+      <div id="bulkItemMasterValidation" class="bulk-item-validation"><span>i</span><p>Satırlar henüz doğrulanmadı.</p></div>
+      <div class="bom-dialog-footer"><button value="cancel" class="secondary-button">İptal</button><button id="bulkItemMasterPreview" type="button" class="secondary-button" data-action="preview-bulk-item-masters">Ön Kontrol</button><button id="bulkItemMasterApply" type="button" class="primary-button" data-action="apply-bulk-item-masters">Doğrula ve Kartları Oluştur</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="pfmeaRatingGuideDialog" class="machine-dialog pfmea-rating-guide-dialog">
+    <form method="dialog">
+      <div class="bom-dialog-head"><div><span class="engine-kicker">KONTROLLÜ S-O-D PUANLAMA REHBERİ</span><h2 id="pfmeaRatingGuideTitle">Puan kriterini seçin</h2><p id="pfmeaRatingGuideContext">Puan; etki, proses verisi ve mevcut kontrol kanıtına göre ekip tarafından doğrulanır.</p></div><button value="cancel" aria-label="Kapat">×</button></div>
+      <div class="pfmea-rating-guide-policy"><span>!</span><p><b>Otomatik hüküm verilmez.</b> Sistem kaynak kriterini ve AP önerisini gösterir; seçimi, gerekçeyi ve kontrollü tablo referansını FMEA ekibi kaydeder.</p></div>
+      <div id="pfmeaRatingGuideList" class="pfmea-rating-guide-list"></div>
+      <div class="pfmea-rating-guide-evidence">
+        <label>Nesnel gerekçe / kullanılan veri *<textarea id="pfmeaRatingGuideRationale" rows="3" placeholder="Örn. 12 aylık proses verisi, PPM, Cpk, MSA sonucu, kontrol yeri ve kaçış riski…"></textarea></label>
+        <label>Kontrollü tablo referansı *<input id="pfmeaRatingGuideSource" placeholder="Doküman no / revizyon"></label>
+        <label id="pfmeaRatingGuideApConfirm" class="pfmea-rating-ap-confirm hidden"><input id="pfmeaRatingGuideApplyAp" type="checkbox"><span><b id="pfmeaRatingGuideApValue">AP önerisi —</b><small>Kaynak matrisi önerisini ekip kararı olarak uygula</small></span></label>
+      </div>
+      <div class="bom-dialog-footer"><span id="pfmeaRatingGuideSelection">Henüz kriter seçilmedi</span><button value="cancel" class="secondary-button">İptal</button><button id="pfmeaRatingGuideApply" type="button" class="primary-button" disabled>Puanı ve Gerekçeyi Uygula</button></div>
+    </form>
+  </dialog>
+
+  <section id="trialLockOverlay" class="trial-lock-overlay hidden" role="alertdialog" aria-modal="true" aria-labelledby="trialLockTitle">
+    <article><span class="trial-lock-icon">30</span><p class="engine-kicker">TYANA Q-FLOW CİHAZ LİSANSI</p><h1 id="trialLockTitle">Kullanım süresi sona erdi</h1><p id="trialLockMessage">30 günlük tam özellikli kullanım süresi dolduğu için veri ve çıktı işlemleri güvenli biçimde kilitlendi.</p><dl><div><dt>Cihaz kimliği</dt><dd id="trialLockDevice">—</dd></div><div><dt>Bitiş tarihi</dt><dd id="trialLockExpiry">—</dd></div></dl><form id="trialActivationForm" class="trial-activation-form"><label>Kalıcı lisans anahtarı<input type="password" autocomplete="off" placeholder="TYANA-QFLOW-PERM-…" required></label><button type="submit">Kalıcı Lisansı Etkinleştir</button><p id="trialActivationFeedback" role="status"></p></form><small>Yerel veriler silinmez; lisans olmadan açılamaz, değiştirilemez veya dışa aktarılamaz.</small><button type="button" data-action="close-application">Uygulamayı Kapat</button></article>
+  </section>
+
   <div id="toast" class="toast"><span>✓</span><div><b>İşlem tamamlandı</b><small>Doküman başarıyla oluşturuldu.</small></div></div>
   <datalist id="materialFamilyOptions"><option>Yapı çeliği</option><option>Alaşımlı çelik</option><option>Karbon çeliği</option><option>Paslanmaz çelik</option><option>Dökme demir</option><option>Alüminyum alaşımı</option><option>Elastomer</option><option>Polimer</option><option>Çoklu malzeme</option></datalist>
   <datalist id="customerOptions"><option>OEM Müşteri A</option><option>OEM Müşteri B</option><option>Tier-1 Müşteri</option><option>Yenileme Pazarı</option><option>İç Proje / Müşterisiz</option></datalist>
   <datalist id="materialGradeOptions"><option>ST52 — onaylı eşdeğerlik kontrolü gerekli</option><option>41Cr4</option><option>C45</option><option>42CrMo4</option><option>16MnCr5</option><option>S355</option><option>Kullanıcı seçimi gerekli</option><option>Teknik resme göre</option></datalist>
   <datalist id="materialStandardOptions"><option>Teknik resim / satın alma şartı</option><option>EN 10083-3</option><option>EN 10025-2</option><option>EN 10204</option><option>Müşteri malzeme şartnamesi</option></datalist>
-  <datalist id="supplierOptions"><option>TYANA OTOMOTİV</option><option>Onaylı tedarikçi seçilecek</option><option>Müşteri tedariki</option><option>Fason proses tedarikçisi</option></datalist>
+  <datalist id="supplierOptions"><option>Kullanıcı Tanımlı Kuruluş</option><option>Onaylı tedarikçi seçilecek</option><option>Müşteri tedariki</option><option>Fason proses tedarikçisi</option></datalist>
   <datalist id="certificateOptions"><option>EN 10204 3.1</option><option>EN 10204 2.2</option><option>CoC / uygunluk sertifikası</option><option>Müşteri sertifikası</option><option>Teknik şartnameye göre</option><option>Uygulanamaz — gerekçe gerekli</option></datalist>
   <datalist id="traceabilityOptions"><option>Parça + lot + vardiya</option><option>Seri numara</option><option>Lot + ısı / döküm no</option><option>Tedarikçi lotu + TYANA lotu</option><option>Malzeme sertifikası + lot</option></datalist>
   <datalist id="measurementMethodOptions"><option>Değişken ölçüm</option><option>Atribut kontrol</option><option>%100 otomatik izleme</option><option>Laboratuvar testi</option><option>SPC</option><option>İlk parça + periyodik kontrol</option><option>Poka-yoke doğrulama</option></datalist>
@@ -398,7 +769,14 @@
   <script src="/vendor/pdfmake.min.js"></script>
   <script src="/vendor/vfs_fonts.js"></script>
   <script src="/vendor/exceljs.min.js"></script>
+  <script src="/bom-domain.js"></script>
+  <script src="/master-template-domain.js"></script>
   <script src="/platform-adapter.js"></script>
   <script src="app.js"></script>
+  <script src="/product-definition-workspace.js"></script>
+  <script src="/apqp-traceability.js"></script>
+  <script src="/fmea-governance.js"></script>
+  <script src="/master-template-ui.js"></script>
+  <script src="/guided-experience.js"></script>
 </body>
 </html>

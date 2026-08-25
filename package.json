@@ -1,6 +1,6 @@
 {
   "name": "tyana-qflow-desktop",
-  "version": "1.0.0",
+  "version": "1.16.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,20 +8,37 @@
     "build": "node build.mjs",
     "desktop:assets": "node desktop-build.mjs",
     "desktop:icon": "tauri icon qflow-icon.svg --output src-tauri/icons",
-    "desktop:release:x64": "tauri build --ci --bundles nsis --target x86_64-pc-windows-msvc",
+    "desktop:release:x64": "node desktop-release.mjs",
     "desktop:package:x64": "node release-package.mjs",
-    "test:worker": "node tests/worker-smoke.mjs",
-    "test:exports": "node tests/export-smoke.mjs"
+    "test:worker": "npm run build && node tests/worker-smoke.mjs",
+    "test:exports": "node tests/export-smoke.mjs",
+    "test:platform": "node tests/platform-adapter-smoke.mjs",
+    "test:ppap": "node tests/ppap-level-smoke.mjs",
+    "test:product-identity": "node tests/product-identity-ux-smoke.mjs",
+    "test:product-definition": "node tests/product-definition-simple-ux-smoke.mjs && node tests/product-routing-machine-library-smoke.mjs && node tests/product-universe-rules-smoke.mjs",
+    "test:operation-catalog": "node tests/operation-catalog-ui-smoke.mjs",
+    "test:guided": "node tests/guided-experience-smoke.mjs",
+    "test:admin": "node tests/admin-license-smoke.mjs",
+    "test:guided:browser": "node tests/guided-experience-browser.mjs",
+    "test:apqp-traceability": "node tests/apqp-traceability-smoke.mjs",
+    "test:independent-fmea": "node tests/independent-product-fmea-smoke.mjs",
+    "test:upgrade-license": "npm run desktop:assets && node tests/product-upgrade-license-smoke.mjs",
+    "test:master-templates": "node tests/master-template-domain-smoke.mjs && node tests/master-template-runtime-smoke.mjs",
+    "test:release-guards": "node tests/generic-branding-smoke.mjs && node tests/responsive-bom-layout-smoke.mjs",
+    "test:bom": "node tests/bom-domain-smoke.mjs && node tests/bom-item-master-smoke.mjs && node tests/bom-library-smoke.mjs && node tests/bom-two-stage-acceptance-smoke.mjs && node tests/bom-runtime-chain-smoke.mjs && node tests/item-master-production-state-smoke.mjs",
+    "test:libraries": "node tests/product-engineering-library-smoke.mjs && node tests/pfmea-library-smoke.mjs && node tests/bom-library-smoke.mjs && node tests/quality-document-library-smoke.mjs && node tests/operation-code-library-smoke.mjs",
+    "test:all": "npm run test:platform && npm run test:ppap && npm run test:product-identity && npm run test:product-definition && npm run test:operation-catalog && npm run test:guided && npm run test:admin && npm run test:apqp-traceability && npm run test:independent-fmea && npm run test:upgrade-license && npm run test:master-templates && npm run test:bom && npm run test:libraries && npm run test:exports && npm run test:worker && npm run test:release-guards"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.2",
-    "exceljs": "4.4.0",
-    "pdfmake": "0.2.20"
+    "drizzle-orm": "^0.45.2"
   },
   "overrides": {
     "uuid": "11.1.1"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "2.11.4"
+    "@tauri-apps/cli": "2.11.4",
+    "esbuild": "^0.25.12",
+    "exceljs": "4.4.0",
+    "pdfmake": "0.2.20"
   }
 }

@@ -1,0 +1,1093 @@
+{
+  "schemaVersion": "1.2.0",
+  "library": {
+    "id": "tyana-pfmea-engineering-library",
+    "publisher": "TYANA OTOMOTİV",
+    "titleTR": "TYANA Q-Flow Seçilebilir Proses PFMEA Mühendislik Kütüphanesi",
+    "titleKey": "library.pfmea.title",
+    "revision": "B",
+    "status": "controlled-draft",
+    "intendedUseTR": "Ürün ailesi, alt komponent, proses rotası ve iş elemanına göre düzenlenebilir PFMEA başlangıç satırları üretmek.",
+    "intendedUseKey": "library.pfmea.intended_use",
+    "sourceBasisTR": "Kuruluş tarafından sağlanan 2026 tarihli 7-adımlı FMEA eğitimi, DFMEA/PFMEA çalışma formları, S-O-D/AP değerlendirme referansları ve P-Diyagramı örnekleri esas alınarak yöntem alanları gözden geçirilmiştir.",
+    "sourceControlTR": "Kaynak eğitim ve tablolar uygulamaya marka veya telif kontrollü içerik olarak kopyalanmaz; kuruluş doküman numarası ve revizyonuyla referanslanır. Güncellik ve kullanım yetkisi doküman sahibi tarafından yönetilir.",
+    "standardAlignment": [
+      "IATF 16949:2016 dokümantasyon ve risk temelli düşünme desteği",
+      "AIAG & VDA FMEA yaklaşımındaki yapı analizi, fonksiyon analizi, hata analizi, risk analizi, optimizasyon ve sonuçların dokümantasyonu mantığı",
+      "Müşteri özel şartları ve kuruluş içi proses standartları"
+    ],
+    "complianceNoticeTR": "Bu kütüphane sertifikasyon veya müşteri onayı garantisi değildir. Ürün güvenliği, yasal şartlar, müşteri özel şartları, S/O/D puanları ve Action Priority kararı yetkin ekip tarafından proje bazında doğrulanmalıdır.",
+    "complianceNoticeKey": "library.pfmea.compliance_notice"
+  },
+  "i18n": {
+    "defaultLocale": "tr-TR",
+    "supportedLocales": ["tr-TR"],
+    "plannedLocales": ["en-US"],
+    "localizedValueShape": { "textField": "tr", "translationKeyField": "key" },
+    "fallbackPolicy": "translation-key-missing-use-tr"
+  },
+  "selectionModel": {
+    "routeDrivenRowGeneration": true,
+    "allowAdd": true,
+    "allowDelete": true,
+    "allowDuplicate": true,
+    "allowReorder": true,
+    "allowCustomValue": true,
+    "preserveUserOverridesOnLibraryRefresh": true,
+    "editableFields": [
+      "workElementId",
+      "processItem",
+      "processStep",
+      "workElementType",
+      "workElement",
+      "processItemFunction",
+      "function",
+      "workElementFunction",
+      "failureMode",
+      "effect",
+      "effectOwnPlant",
+      "effectShipToPlant",
+      "effectEndUser",
+      "cause",
+      "preventionControl",
+      "detectionControl",
+      "severity",
+      "occurrence",
+      "detection",
+      "actionPriority",
+      "specialCharacteristicType",
+      "recommendedAction",
+      "preventionAction",
+      "detectionAction",
+      "ownerRole",
+      "dueDate",
+      "actionCompletionDate",
+      "actionEvidence",
+      "resultSeverity",
+      "resultOccurrence",
+      "resultDetection",
+      "resultActionPriority",
+      "resultRationale",
+      "evidence",
+      "reactionPlan",
+      "status"
+    ],
+    "multiSelectFields": ["effects", "causes", "preventionControls", "detectionControls", "recommendedActions", "ownerRoles", "evidenceTypeIds"],
+    "requiredBeforeRelease": [
+      "processItem",
+      "processStep",
+      "workElementType",
+      "workElement",
+      "processItemFunction",
+      "function",
+      "workElementFunction",
+      "failureMode",
+      "effectOwnPlant",
+      "effectShipToPlant",
+      "effectEndUser",
+      "severity",
+      "cause",
+      "preventionControl",
+      "occurrence",
+      "detectionControl",
+      "detection",
+      "actionPriority",
+      "ratingTableRef",
+      "ratingsRationale",
+      "reactionPlan"
+    ],
+    "deletionPolicy": "soft-delete-with-audit-record"
+  },
+  "ratingPolicy": {
+    "scaleMin": 1,
+    "scaleMax": 10,
+    "defaultsAreDraft": true,
+    "actionPriorityRequiresUserSelection": true,
+    "automaticActionPriority": false,
+    "approvalRuleTR": "S/O/D ve AP; güncel, kuruluşça kontrollü değerlendirme tabloları kullanılarak çapraz fonksiyonlu ekip tarafından seçilir. Kütüphane varsayılanları yalnızca inceleme başlangıcıdır.",
+    "approvalRuleKey": "library.pfmea.rating.approval_rule"
+  },
+  "ratingGuides": {
+    "profile": "PFMEA_PROCESS_10_POINT",
+    "revision": "TYANA-PFMEA-RATING-01",
+    "selectionRuleTR": "Her puan kontrollü tablodaki en uygun kriter ve nesnel proses kanıtı birlikte değerlendirilerek çapraz fonksiyonlu ekip tarafından seçilir. Şiddette üç etki katmanının en yükseği esas alınır. Yazılım yalnız karar desteği ve AP önerisi verir.",
+    "sourceRefs": [
+      "AIAG-VDA DFMEA 2026 eğitim PDF — kuruluş kontrollü eğitim referansı",
+      "PFMEA/DFMEA ŞİDDET.docx — ürün etki şiddeti referansı",
+      "PFMEA/DFMEA-OLASILIK.xlsx — olasılık bandı referansı",
+      "PFMEA/DFMEA-TESPİT EDİLEBİLİRLİK.xlsx — tespit yöntemi olgunluğu referansı",
+      "PFMEA/PFMEA DFMEA AP TABLOSU.xlsx — S/O/D → AP matrisi"
+    ],
+    "severity": [
+      { "score": 10, "labelTR": "Emniyet / sağlık etkisi", "criterionTR": "Araç veya ürünün emniyetli çalışması; sürücü, yolcu, kullanıcı ya da yaya sağlığı etkilenebilir.", "evidencePromptTR": "Son kullanıcı güvenlik fonksiyonu, özel karakteristik ve ürün güvenliği sorumluluğu nedir?" },
+      { "score": 9, "labelTR": "Yasal uygunsuzluk", "criterionTR": "Yasal, düzenleyici veya zorunlu güvenlik şartına uygunsuzluk doğurabilir.", "evidencePromptTR": "Hangi mevzuat, homologasyon veya müşteri güvenlik şartı etkileniyor?" },
+      { "score": 8, "labelTR": "Temel fonksiyon kaybı", "criterionTR": "Beklenen hizmet ömründe normal kullanım için gerekli temel fonksiyon tamamen kaybolur.", "evidencePromptTR": "Ana ürün fonksiyonu ve müşteri üzerindeki çalışamazlık etkisi nedir?" },
+      { "score": 7, "labelTR": "Temel fonksiyon bozulması", "criterionTR": "Normal kullanım için gerekli temel fonksiyon belirgin biçimde azalır veya bozulur.", "evidencePromptTR": "Fonksiyon kaybının sınırı, performans sapması ve müşteri belirtisi nedir?" },
+      { "score": 6, "labelTR": "İkincil fonksiyon kaybı", "criterionTR": "Konfor veya ikincil ürün fonksiyonlarından biri tamamen kaybolur.", "evidencePromptTR": "Kaybolan ikincil fonksiyon ve kullanım üzerindeki etkisi nedir?" },
+      { "score": 5, "labelTR": "İkincil fonksiyon bozulması", "criterionTR": "İkincil fonksiyon azalır; ürün çalışır ancak müşteri performans düşüşünü algılar.", "evidencePromptTR": "Performans düşüşü hangi şartta ve hangi kabul sınırının dışında?" },
+      { "score": 4, "labelTR": "Ciddi görünüş / NVH itirazı", "criterionTR": "Görünüş, ses, titreşim, sertlik veya yüzey yapısı ciddi biçimde itiraz edilebilirdir.", "evidencePromptTR": "Görsel standart, sınır numune veya NVH kabul kriteri nedir?" },
+      { "score": 3, "labelTR": "Belirgin görünüş / NVH itirazı", "criterionTR": "Görünüş, ses, titreşim, sertlik veya yüzey yapısı kısmen itiraz edilebilirdir.", "evidencePromptTR": "Müşteri tarafından algılanabilir sapma ve kabul standardı nedir?" },
+      { "score": 2, "labelTR": "Hafif rahatsızlık", "criterionTR": "Görünüş veya kullanım algısında düşük seviyeli, az oranda itiraz edilebilir etki vardır.", "evidencePromptTR": "Etkinin sınırlı olduğunu hangi karşılaştırma veya sınır numune gösteriyor?" },
+      { "score": 1, "labelTR": "Fark edilebilir etki yok", "criterionTR": "Kuruluş, sevk edilen saha ve son kullanıcı açısından fark edilebilir etki bulunmaz.", "evidencePromptTR": "Üç etki katmanında U/A kararını veya etkisizliği hangi kanıt destekliyor?" }
+    ],
+    "occurrence": [
+      { "score": 10, "labelTR": "Aşırı yüksek", "criterionTR": "≥100/1000 (yaklaşık ≥1/10); yeni veya kontrolsüz proses, güvenilir önleme kanıtı yok.", "evidencePromptTR": "Yeni teknoloji, benzer proses geçmişi ve gerçek hata oranı nedir?" },
+      { "score": 9, "labelTR": "Çok yüksek", "criterionTR": "Yaklaşık 50/1000 (1/20); önemli yenilik veya kuruluşta ilk uygulama, önleme sınırlı.", "evidencePromptTR": "Kuruluş içi ilk uygulama mı; hangi önleme standardı eksik?" },
+      { "score": 8, "labelTR": "Çok yüksek", "criterionTR": "Yaklaşık 20/1000 (1/50); yeni uygulama, doğrulama deneyimi ve önleme etkinliği yetersiz.", "evidencePromptTR": "Pilot üretim, doğrulama ve benzer hat verileri ne gösteriyor?" },
+      { "score": 7, "labelTR": "Yüksek", "criterionTR": "Yaklaşık 10/1000 (1/100); benzer teknoloji var ancak değişiklik ve proses deneyimi sınırlı.", "evidencePromptTR": "Değişiklik noktaları ve benzer proses karşılaştırması nedir?" },
+      { "score": 6, "labelTR": "Yüksek", "criterionTR": "Yaklaşık 2/1000 (1/500); standartlar mevcut fakat nedeni önlemede tam güvence sağlamıyor.", "evidencePromptTR": "PPM, hurda, yeniden işleme ve önleme kontrolü etkinliği nedir?" },
+      { "score": 5, "labelTR": "Orta", "criterionTR": "Yaklaşık 0,5/1000 (1/2.000); onaylı teknoloji ve benzer proses verisi mevcut, bazı açıklar sürüyor.", "evidencePromptTR": "Son 12 aylık veri, Cpk/Ppk ve öğrenilmiş ders sonucu nedir?" },
+      { "score": 4, "labelTR": "Orta", "criterionTR": "Yaklaşık 0,1/1000 (1/10.000); neredeyse özdeş ve kararlı proses, uygulanmış önleme kontrolleri var.", "evidencePromptTR": "Kararlılık süresi, proses yeterliliği ve değişiklik yönetimi kanıtı nedir?" },
+      { "score": 3, "labelTR": "Düşük", "criterionTR": "Yaklaşık 0,01/1000 (1/100.000); bilinen ve başarılı proses, güçlü standart ve saha deneyimi.", "evidencePromptTR": "Uzun dönem trendi ve aynı koşullardaki doğrulanmış proses verisi nedir?" },
+      { "score": 2, "labelTR": "Çok düşük", "criterionTR": "≤0,001/1000 (≤1/1.000.000); olgun, neredeyse özdeş proses ve uzun dönem olumlu deneyim.", "evidencePromptTR": "Milyon parça seviyesindeki gerçek kanıt, süre ve kapsam nedir?" },
+      { "score": 1, "labelTR": "Neden önlenmiş", "criterionTR": "Hata nedeni proses tasarımı veya doğrulanmış önleyici kontrol ile oluşamayacak şekilde elimine edilmiştir.", "evidencePromptTR": "Nedeni fiziksel olarak engelleyen tasarım/poka-yoke ve doğrulama kaydı nedir?" }
+    ],
+    "detection": [
+      { "score": 10, "labelTR": "Tespit yöntemi yok", "criterionTR": "Kontrol veya tespit fırsatı tanımlı değildir; hata nedeni ya da hata türü kaçabilir.", "evidencePromptTR": "Kontrol nerede, kim tarafından ve hangi kayıtla yapılacak?" },
+      { "score": 9, "labelTR": "Çok düşük tespit", "criterionTR": "Dolaylı, rastlantısal veya hata türüne özel tasarlanmamış kontrol vardır.", "evidencePromptTR": "Kontrol hata türünü doğrudan mı, yalnız genel sonucu mu görüyor?" },
+      { "score": 8, "labelTR": "Düşük - doğrulanmamış", "criterionTR": "Yeni veya henüz yeterliliği doğrulanmamış görsel/öznitelik kontrolü kullanılır.", "evidencePromptTR": "Kontrol yöntemi doğrulaması, nitelik MSA ve hata örneği sonucu nedir?" },
+      { "score": 7, "labelTR": "Düşük - proses sonrası", "criterionTR": "Proses tamamlandıktan sonra operatör kontrollü geçti-kaldı veya örnekleme kontrolü vardır.", "evidencePromptTR": "Kontrol yeri, örnek büyüklüğü, frekans ve kaçış penceresi nedir?" },
+      { "score": 6, "labelTR": "Orta - değişken ölçüm", "criterionTR": "Proses sonrası değişken ölçüm veya doğrulanmış test vardır; %100 ve kaynakta değildir.", "evidencePromptTR": "MSA, çözünürlük, örnekleme planı ve ölçüm kayıtları nedir?" },
+      { "score": 5, "labelTR": "Orta - istasyon kontrolü", "criterionTR": "İstasyonda tanımlı kontrol, ölçüm veya fonksiyon testi uygulanır; insan müdahalesine bağlıdır.", "evidencePromptTR": "Kontrol reaksiyonu, hat durdurma yetkisi ve yanlış kabul riski nedir?" },
+      { "score": 4, "labelTR": "Yüksek - otomatik ayırma", "criterionTR": "Proses sonrası otomatik tespit ve uygunsuz ürünü ayırma/kilitleme fonksiyonu vardır.", "evidencePromptTR": "Sensör testi, master parça, alarm ve otomatik ayırma doğrulaması nedir?" },
+      { "score": 3, "labelTR": "Yüksek - kaynakta tespit", "criterionTR": "İşlem sırasında veya kaynakta otomatik tespit; uygunsuzluk ilerlemeden proses bloke edilir.", "evidencePromptTR": "İnterlock, hata enjeksiyonu ve yeniden başlatma yetkisi kanıtı nedir?" },
+      { "score": 2, "labelTR": "Çok yüksek - neden tespiti", "criterionTR": "Hata nedeni otomatik izlenir; sapma oluştuğunda parça üretilmesi veya aktarılması engellenir.", "evidencePromptTR": "Parametre limiti, otomatik durdurma ve bypass kontrolü nasıl doğrulandı?" },
+      { "score": 1, "labelTR": "Hata oluşamaz / daima tespit", "criterionTR": "Proses tasarımı nedeni ortadan kaldırır veya doğrulanmış kontrol hatayı her durumda yakalar.", "evidencePromptTR": "Fiziksel önleme, %100 doğrulama ve periyodik meydan okuma testi kaydı nedir?" }
+    ],
+    "actionPriorityBands": [
+      { "sMin": 9, "sMax": 10, "rows": [
+        { "oMin": 8, "oMax": 10, "d": [[1, 10, "H"]] },
+        { "oMin": 6, "oMax": 7, "d": [[1, 10, "H"]] },
+        { "oMin": 4, "oMax": 5, "d": [[1, 1, "M"], [2, 10, "H"]] },
+        { "oMin": 2, "oMax": 3, "d": [[1, 4, "L"], [5, 6, "M"], [7, 10, "H"]] },
+        { "oMin": 1, "oMax": 1, "d": [[1, 10, "L"]] }
+      ] },
+      { "sMin": 7, "sMax": 8, "rows": [
+        { "oMin": 8, "oMax": 10, "d": [[1, 10, "H"]] },
+        { "oMin": 6, "oMax": 7, "d": [[1, 1, "M"], [2, 10, "H"]] },
+        { "oMin": 4, "oMax": 5, "d": [[1, 6, "M"], [7, 10, "H"]] },
+        { "oMin": 2, "oMax": 3, "d": [[1, 4, "L"], [5, 10, "M"]] },
+        { "oMin": 1, "oMax": 1, "d": [[1, 10, "L"]] }
+      ] },
+      { "sMin": 4, "sMax": 6, "rows": [
+        { "oMin": 8, "oMax": 10, "d": [[1, 4, "M"], [5, 10, "H"]] },
+        { "oMin": 6, "oMax": 7, "d": [[1, 1, "L"], [2, 10, "M"]] },
+        { "oMin": 4, "oMax": 5, "d": [[1, 6, "L"], [7, 10, "M"]] },
+        { "oMin": 1, "oMax": 3, "d": [[1, 10, "L"]] }
+      ] },
+      { "sMin": 2, "sMax": 3, "rows": [
+        { "oMin": 8, "oMax": 10, "d": [[1, 4, "L"], [5, 10, "M"]] },
+        { "oMin": 1, "oMax": 7, "d": [[1, 10, "L"]] }
+      ] },
+      { "sMin": 1, "sMax": 1, "rows": [
+        { "oMin": 1, "oMax": 10, "d": [[1, 10, "L"]] }
+      ] }
+    ]
+  },
+  "methodFramework": {
+    "planning": {
+      "required5T": ["intent", "timing", "team", "task", "tool"],
+      "controlledHeaderFields": ["organization", "site", "customer", "subject", "fmeaId", "startDate", "revisionDate", "keyDate", "processResponsibility", "confidentiality"]
+    },
+    "structureLevels": [
+      { "id": "process-item", "nameTR": "Proses parçası / sistem" },
+      { "id": "process-step", "nameTR": "Proses adımı / istasyon" },
+      { "id": "work-element", "nameTR": "Proses çalışma öğesi" }
+    ],
+    "workElementTypes": [
+      { "id": "MAN", "nameTR": "İnsan" },
+      { "id": "MACHINE", "nameTR": "Makine" },
+      { "id": "METHOD", "nameTR": "Metot" },
+      { "id": "MATERIAL", "nameTR": "Malzeme" }
+    ],
+    "effectLevels": [
+      { "id": "own-plant", "nameTR": "Kuruluş sahasındaki etki" },
+      { "id": "ship-to-plant", "nameTR": "Sevk edilen sahadaki etki" },
+      { "id": "end-user", "nameTR": "Son kullanıcı / araç etkisi" }
+    ],
+    "optimizationStatuses": ["Açık", "Karar Bekleniyor", "Uygulama Bekleniyor", "Tamamlandı", "Uygulanmadı"],
+    "completionRuleTR": "Tamamlandı durumu; fiili tamamlanma tarihi, kanıtlarıyla alınan aksiyon, aksiyon sonrası S/O/D/AP ve etkinlik gerekçesi olmadan yayımlanamaz. Uygulanmadı kararı yetkili risk kabul kaydı gerektirir.",
+    "resultDocumentation": ["5T hedef karşılaştırması", "kapsam özeti", "fonksiyon geliştirme özeti", "yüksek risk özeti", "aksiyon durumu", "seri üretim gözden geçirme taahhüdü"]
+  },
+  "specialCharacteristicTypes": [
+    { "id": "NONE", "code": "—", "nameTR": "Özel karakteristik değil", "nameKey": "special_characteristic.none" },
+    { "id": "SC", "code": "SC", "nameTR": "Önemli karakteristik", "nameKey": "special_characteristic.significant" },
+    { "id": "CC", "code": "CC", "nameTR": "Kritik / emniyet karakteristiği", "nameKey": "special_characteristic.critical" },
+    { "id": "REG", "code": "REG", "nameTR": "Yasal / mevzuat karakteristiği", "nameKey": "special_characteristic.regulatory" },
+    { "id": "HI", "code": "HI", "nameTR": "Yüksek etkili proses karakteristiği", "nameKey": "special_characteristic.high_impact" }
+  ],
+  "ownerRoles": [
+    { "id": "quality-engineering", "nameTR": "Kalite Mühendisliği", "nameKey": "role.quality_engineering" },
+    { "id": "process-engineering", "nameTR": "Proses Mühendisliği", "nameKey": "role.process_engineering" },
+    { "id": "production", "nameTR": "Üretim", "nameKey": "role.production" },
+    { "id": "maintenance", "nameTR": "Bakım", "nameKey": "role.maintenance" },
+    { "id": "tooling", "nameTR": "Takım / Kalıp Mühendisliği", "nameKey": "role.tooling" },
+    { "id": "laboratory", "nameTR": "Laboratuvar", "nameKey": "role.laboratory" },
+    { "id": "supplier-quality", "nameTR": "Tedarikçi Kalite", "nameKey": "role.supplier_quality" },
+    { "id": "logistics", "nameTR": "Lojistik", "nameKey": "role.logistics" },
+    { "id": "product-engineering", "nameTR": "Ürün / Ar-Ge Mühendisliği", "nameKey": "role.product_engineering" },
+    { "id": "ehs", "nameTR": "İSG ve Çevre", "nameKey": "role.ehs" }
+  ],
+  "evidenceTypes": [
+    { "id": "setup-approval", "nameTR": "Ayar / ilk parça onay kaydı", "nameKey": "evidence.setup_approval" },
+    { "id": "spc-record", "nameTR": "SPC / proses izleme kaydı", "nameKey": "evidence.spc_record" },
+    { "id": "measurement-record", "nameTR": "Ölçüm ve kontrol kaydı", "nameKey": "evidence.measurement_record" },
+    { "id": "parameter-log", "nameTR": "Makine parametre ve reçete kaydı", "nameKey": "evidence.parameter_log" },
+    { "id": "traceability-log", "nameTR": "Lot / seri izlenebilirlik kaydı", "nameKey": "evidence.traceability_log" },
+    { "id": "maintenance-record", "nameTR": "Bakım ve doğrulama kaydı", "nameKey": "evidence.maintenance_record" },
+    { "id": "laboratory-report", "nameTR": "Laboratuvar / kesit raporu", "nameKey": "evidence.laboratory_report" },
+    { "id": "supplier-certificate", "nameTR": "Tedarikçi sertifikası ve uygunluk kaydı", "nameKey": "evidence.supplier_certificate" },
+    { "id": "error-proof-verification", "nameTR": "Poka-yoke doğrulama kaydı", "nameKey": "evidence.error_proof_verification" },
+    { "id": "audit-trail", "nameTR": "Elektronik denetim izi", "nameKey": "evidence.audit_trail" }
+  ],
+  "processBackbone": [
+    { "id": "P01", "order": 10, "nameTR": "Girdi ve doğrulama", "nameKey": "phase.incoming", "inclusion": "always", "processTemplateIds": ["incoming-material", "incoming-component"] },
+    { "id": "P02", "order": 20, "nameTR": "Depolama ve malzeme hazırlama", "nameKey": "phase.material_preparation", "inclusion": "always", "processTemplateIds": ["storage-traceability", "material-cutting", "billet-heating"] },
+    { "id": "P03", "order": 30, "nameTR": "Birincil şekillendirme", "nameKey": "phase.primary_forming", "inclusion": "product-conditional", "processTemplateIds": ["hot-forging", "trim-shotblast", "rubber-molding", "plastic-injection"] },
+    { "id": "P04", "order": 40, "nameTR": "Talaşlı imalat", "nameKey": "phase.machining", "inclusion": "product-conditional", "processTemplateIds": ["cnc-turning", "cnc-milling", "drilling-reaming", "threading", "grinding", "industrial-washing"] },
+    { "id": "P05", "order": 50, "nameTR": "Özel prosesler ve yüzey", "nameKey": "phase.special_processes", "inclusion": "product-conditional", "processTemplateIds": ["furnace-heat-treatment", "induction-hardening", "surface-coating", "painting", "robotic-welding"] },
+    { "id": "P06", "order": 60, "nameTR": "Montaj", "nameKey": "phase.assembly", "inclusion": "product-conditional", "processTemplateIds": ["press-assembly", "integrated-plant-assembly", "post-paint-assembly", "torque-tightening"] },
+    { "id": "P07", "order": 70, "nameTR": "Fonksiyon ve final doğrulama", "nameKey": "phase.verification", "inclusion": "always", "processTemplateIds": ["leak-functional-test", "final-inspection"] },
+    { "id": "P08", "order": 80, "nameTR": "İzlenebilirlik ve sevkiyat", "nameKey": "phase.logistics", "inclusion": "always", "processTemplateIds": ["marking", "packaging-shipping"] }
+  ],
+  "processFamilies": [
+    { "id": "incoming", "order": 10, "nameTR": "Girdi Kontrol", "nameKey": "process_family.incoming" },
+    { "id": "logistics", "order": 20, "nameTR": "İç Lojistik ve Sevkiyat", "nameKey": "process_family.logistics" },
+    { "id": "preparation", "order": 30, "nameTR": "Malzeme Hazırlama", "nameKey": "process_family.preparation" },
+    { "id": "forming", "order": 40, "nameTR": "Şekillendirme", "nameKey": "process_family.forming" },
+    { "id": "surface-preparation", "order": 50, "nameTR": "Yüzey Hazırlama", "nameKey": "process_family.surface_preparation" },
+    { "id": "machining", "order": 60, "nameTR": "Talaşlı İmalat", "nameKey": "process_family.machining" },
+    { "id": "cleaning", "order": 70, "nameTR": "Teknik Temizlik", "nameKey": "process_family.cleaning" },
+    { "id": "heat-treatment", "order": 80, "nameTR": "Isıl İşlem", "nameKey": "process_family.heat_treatment" },
+    { "id": "surface-treatment", "order": 90, "nameTR": "Kaplama ve Boya", "nameKey": "process_family.surface_treatment" },
+    { "id": "joining", "order": 100, "nameTR": "Kaynak ve Birleştirme", "nameKey": "process_family.joining" },
+    { "id": "elastomer", "order": 110, "nameTR": "Kauçuk / Elastomer", "nameKey": "process_family.elastomer" },
+    { "id": "polymer", "order": 120, "nameTR": "Plastik / Polimer", "nameKey": "process_family.polymer" },
+    { "id": "assembly", "order": 130, "nameTR": "Montaj", "nameKey": "process_family.assembly" },
+    { "id": "verification", "order": 140, "nameTR": "Kontrol ve Fonksiyon Testi", "nameKey": "process_family.verification" },
+    { "id": "traceability", "order": 150, "nameTR": "Markalama ve İzlenebilirlik", "nameKey": "process_family.traceability" }
+  ],
+  "processTemplates": [
+    {
+      "id": "incoming-material", "code": "PF-LIB-010", "phaseId": "P01", "familyId": "incoming", "nameTR": "Hammadde Girdi Kontrol", "nameKey": "process.incoming_material", "specialProcess": false,
+      "inputTR": "Çelik, alüminyum, polimer, kauçuk veya diğer tanımlı hammadde", "inputKey": "process.incoming_material.input", "outputTR": "Kimliği, sertifikası ve durumu doğrulanmış hammadde", "outputKey": "process.incoming_material.output",
+      "defaultOwnerRole": "quality-engineering", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "incoming-material-document", "code": "WE-010-01", "nameTR": "Belge ve kimlik doğrulama", "nameKey": "work.incoming_material.document", "functionTR": "Doğru malzeme kalite sınıfı, döküm/lot ve sertifika eşleşmesini doğrulamak", "functionKey": "function.incoming_material.document" },
+        { "id": "incoming-material-inspection", "code": "WE-010-02", "nameTR": "Fiziksel ve boyutsal kontrol", "nameKey": "work.incoming_material.inspection", "functionTR": "Girdinin tanımlı görünüş ve ölçü şartlarını karşıladığını doğrulamak", "functionKey": "function.incoming_material.inspection" }
+      ],
+      "selectableCharacteristics": ["Malzeme sınıfı", "Kimyasal bileşim", "Mekanik özellik", "Kesit / çap", "Yüzey kusuru", "Lot izlenebilirliği"]
+    },
+    {
+      "id": "incoming-component", "code": "PF-LIB-015", "phaseId": "P01", "familyId": "incoming", "nameTR": "Satın Alınan Komponent Girdi Kontrol", "nameKey": "process.incoming_component", "specialProcess": false,
+      "inputTR": "Alt komponent, bağlantı elemanı veya dış prosesli parça", "inputKey": "process.incoming_component.input", "outputTR": "Revizyonu ve uygunluğu doğrulanmış komponent", "outputKey": "process.incoming_component.output",
+      "defaultOwnerRole": "supplier-quality", "productApplicability": ["assembly", "all"],
+      "workElements": [
+        { "id": "incoming-component-verify", "code": "WE-015-01", "nameTR": "Parça ve revizyon doğrulama", "nameKey": "work.incoming_component.verify", "functionTR": "Doğru parça numarası, revizyon, miktar ve özel proses durumunu doğrulamak", "functionKey": "function.incoming_component.verify" }
+      ],
+      "selectableCharacteristics": ["Parça numarası", "Revizyon", "Kritik ölçü", "Kaplama", "Sertlik", "Tedarikçi lotu"]
+    },
+    {
+      "id": "storage-traceability", "code": "PF-LIB-020", "phaseId": "P02", "familyId": "logistics", "nameTR": "Depolama, FIFO ve Malzeme İzlenebilirliği", "nameKey": "process.storage_traceability", "specialProcess": false,
+      "inputTR": "Kabul edilmiş malzeme ve komponent", "inputKey": "process.storage_traceability.input", "outputTR": "Korunmuş, statüsü ve lokasyonu izlenebilir malzeme", "outputKey": "process.storage_traceability.output",
+      "defaultOwnerRole": "logistics", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "storage-status", "code": "WE-020-01", "nameTR": "Statü, lot ve FIFO yönetimi", "nameKey": "work.storage.status", "functionTR": "Karışmayı, bozulmayı ve izlenebilirlik kaybını önlemek", "functionKey": "function.storage.status" }
+      ],
+      "selectableCharacteristics": ["Lot", "FIFO tarihi", "Raf ömrü", "Koruma koşulu", "Lokasyon", "Kalite statüsü"]
+    },
+    {
+      "id": "material-cutting", "code": "PF-LIB-030", "phaseId": "P02", "familyId": "preparation", "nameTR": "Malzeme Kesme / Taslak Hazırlama", "nameKey": "process.material_cutting", "specialProcess": false,
+      "inputTR": "Çubuk, boru, profil, levha veya rulo", "inputKey": "process.material_cutting.input", "outputTR": "Tanımlı boy ve geometride kesilmiş taslak", "outputKey": "process.material_cutting.output",
+      "defaultOwnerRole": "production", "productApplicability": ["metal", "rubber", "plastic"],
+      "workElements": [
+        { "id": "material-cutting-setup", "code": "WE-030-01", "nameTR": "Malzeme ve boy ayarı", "nameKey": "work.material_cutting.setup", "functionTR": "Doğru malzemeyi tanımlı kesim boyu, diklik ve çapak sınırında hazırlamak", "functionKey": "function.material_cutting.setup" }
+      ],
+      "selectableCharacteristics": ["Kesim boyu", "Ağırlık", "Diklik", "Çapak", "Malzeme kimliği"]
+    },
+    {
+      "id": "billet-heating", "code": "PF-LIB-035", "phaseId": "P02", "familyId": "forming", "nameTR": "Taslak Isıtma", "nameKey": "process.billet_heating", "specialProcess": true,
+      "inputTR": "Kesilmiş metal taslak", "inputKey": "process.billet_heating.input", "outputTR": "Dövme için homojen sıcaklığa ulaşmış taslak", "outputKey": "process.billet_heating.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["forged-metal"],
+      "workElements": [
+        { "id": "billet-heating-control", "code": "WE-035-01", "nameTR": "Sıcaklık ve süre kontrolü", "nameKey": "work.billet_heating.control", "functionTR": "Taslağı yanma, dekarbürizasyon veya soğuk kalma olmadan uygun dövme aralığına getirmek", "functionKey": "function.billet_heating.control" }
+      ],
+      "selectableCharacteristics": ["Taslak sıcaklığı", "Fırın çıkış sıcaklığı", "Bekleme süresi", "Isıtma reçetesi", "Dekarbürizasyon"]
+    },
+    {
+      "id": "hot-forging", "code": "PF-LIB-040", "phaseId": "P03", "familyId": "forming", "nameTR": "Sıcak Dövme", "nameKey": "process.hot_forging", "specialProcess": true,
+      "inputTR": "Isıtılmış metal taslak", "inputKey": "process.hot_forging.input", "outputTR": "Kalıpta şekillendirilmiş dövme yarı mamul", "outputKey": "process.hot_forging.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["forged-body", "forged-joint", "custom-forging"],
+      "workElements": [
+        { "id": "hot-forging-form", "code": "WE-040-01", "nameTR": "Kalıpta şekillendirme", "nameKey": "work.hot_forging.form", "functionTR": "Lif akışı ve mekanik dayanımı koruyarak taslağı tanımlı geometriye dönüştürmek", "functionKey": "function.hot_forging.form" },
+        { "id": "hot-forging-die", "code": "WE-040-02", "nameTR": "Kalıp ve yağlama yönetimi", "nameKey": "work.hot_forging.die", "functionTR": "Kalıp durumunu ve yağlamayı kararlı şekillendirme için kontrol etmek", "functionKey": "function.hot_forging.die" }
+      ],
+      "selectableCharacteristics": ["Kalıp doluluğu", "Katmer / çatlak", "Dövme sıcaklığı", "Çapak hattı", "Parça ağırlığı", "Lif akışı"]
+    },
+    {
+      "id": "trim-shotblast", "code": "PF-LIB-045", "phaseId": "P03", "familyId": "surface-preparation", "nameTR": "Çapak Kesme ve Kumlama", "nameKey": "process.trim_shotblast", "specialProcess": false,
+      "inputTR": "Dövülmüş yarı mamul", "inputKey": "process.trim_shotblast.input", "outputTR": "Çapağı alınmış ve temizlenmiş dövme", "outputKey": "process.trim_shotblast.output",
+      "defaultOwnerRole": "production", "productApplicability": ["forged-metal"],
+      "workElements": [
+        { "id": "trim-shotblast-finish", "code": "WE-045-01", "nameTR": "Çapak alma ve yüzey temizleme", "nameKey": "work.trim_shotblast.finish", "functionTR": "Sonraki işlemler için keskin çapaksız ve görsel kontrole uygun yüzey hazırlamak", "functionKey": "function.trim_shotblast.finish" }
+      ],
+      "selectableCharacteristics": ["Çapak yüksekliği", "Kesme izi", "Yüzey temizliği", "Bilya karışımı", "Çevrim süresi"]
+    },
+    {
+      "id": "cnc-turning", "code": "PF-LIB-050", "phaseId": "P04", "familyId": "machining", "nameTR": "CNC Tornalama", "nameKey": "process.cnc_turning", "specialProcess": false,
+      "inputTR": "Dövme, döküm, boru veya çubuk yarı mamul", "inputKey": "process.cnc_turning.input", "outputTR": "Fonksiyonel çap ve yüzeyleri işlenmiş parça", "outputKey": "process.cnc_turning.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["machined-body", "machined-joint", "machined-tube", "custom-machined"],
+      "workElements": [
+        { "id": "cnc-turning-setup", "code": "WE-050-01", "nameTR": "Bağlama, program ve ofset ayarı", "nameKey": "work.cnc_turning.setup", "functionTR": "Doğru program, fikstür, takım ve ofset ile parçayı güvenli bağlamak", "functionKey": "function.cnc_turning.setup" },
+        { "id": "cnc-turning-cut", "code": "WE-050-02", "nameTR": "Tornalama operasyonu", "nameKey": "work.cnc_turning.cut", "functionTR": "Çap, boy, salınım ve yüzey pürüzlülüğü şartlarını üretmek", "functionKey": "function.cnc_turning.cut" }
+      ],
+      "selectableCharacteristics": ["Çap", "Boy", "Salınım", "Eş merkezlilik", "Yüzey pürüzlülüğü", "Pah / radyüs", "Takım ömrü"]
+    },
+    {
+      "id": "cnc-milling", "code": "PF-LIB-055", "phaseId": "P04", "familyId": "machining", "nameTR": "CNC Frezeleme", "nameKey": "process.cnc_milling", "specialProcess": false,
+      "inputTR": "Bağlamaya hazır metal yarı mamul", "inputKey": "process.cnc_milling.input", "outputTR": "Düzlem, kanal ve konum geometrileri işlenmiş parça", "outputKey": "process.cnc_milling.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["machined-metal", "custom-machined"],
+      "workElements": [
+        { "id": "cnc-milling-fixture", "code": "WE-055-01", "nameTR": "Referanslama ve fikstürleme", "nameKey": "work.cnc_milling.fixture", "functionTR": "Parçayı doğru datum ve sıkma kuvvetiyle konumlandırmak", "functionKey": "function.cnc_milling.fixture" },
+        { "id": "cnc-milling-cut", "code": "WE-055-02", "nameTR": "Frezeleme operasyonu", "nameKey": "work.cnc_milling.cut", "functionTR": "Düzlem, kanal, cep ve geometrik toleransları üretmek", "functionKey": "function.cnc_milling.cut" }
+      ],
+      "selectableCharacteristics": ["Düzlemsellik", "Paralellik", "Konum", "Kanal genişliği", "Yüzey pürüzlülüğü", "Datum ilişkisi"]
+    },
+    {
+      "id": "drilling-reaming", "code": "PF-LIB-060", "phaseId": "P04", "familyId": "machining", "nameTR": "Delik Delme / Raybalama", "nameKey": "process.drilling_reaming", "specialProcess": false,
+      "inputTR": "İşlenebilir yarı mamul", "inputKey": "process.drilling_reaming.input", "outputTR": "Delik ve yatak geometrileri tamamlanmış parça", "outputKey": "process.drilling_reaming.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["machined-metal", "custom-machined"],
+      "workElements": [
+        { "id": "drilling-reaming-hole", "code": "WE-060-01", "nameTR": "Delik oluşturma ve bitirme", "nameKey": "work.drilling_reaming.hole", "functionTR": "Delik çapı, konumu, dikliği ve yüzey kalitesini sağlamak", "functionKey": "function.drilling_reaming.hole" }
+      ],
+      "selectableCharacteristics": ["Delik çapı", "Konum", "Diklik", "Silindiriklik", "Yüzey pürüzlülüğü", "Çapak"]
+    },
+    {
+      "id": "threading", "code": "PF-LIB-065", "phaseId": "P04", "familyId": "machining", "nameTR": "Diş Açma / Ovalama", "nameKey": "process.threading", "specialProcess": false,
+      "inputTR": "Diş işleme öncesi yarı mamul", "inputKey": "process.threading.input", "outputTR": "Bağlantı dişi tamamlanmış parça", "outputKey": "process.threading.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["threaded-component", "all"],
+      "workElements": [
+        { "id": "threading-form", "code": "WE-065-01", "nameTR": "Diş geometrisi oluşturma", "nameKey": "work.threading.form", "functionTR": "Tanımlı diş ölçüsü, profil, boy ve başlangıç geometrisini sağlamak", "functionKey": "function.threading.form" }
+      ],
+      "selectableCharacteristics": ["Diş ölçüsü", "Adım", "Diş boyu", "Profil", "GO/NO-GO", "Çapak"]
+    },
+    {
+      "id": "grinding", "code": "PF-LIB-070", "phaseId": "P04", "familyId": "machining", "nameTR": "Taşlama / Süperfinisaj", "nameKey": "process.grinding", "specialProcess": false,
+      "inputTR": "Isıl işlemli veya hassas işleme hazır parça", "inputKey": "process.grinding.input", "outputTR": "Hassas ölçü ve yüzey kalitesine ulaşmış parça", "outputKey": "process.grinding.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["precision-metal"],
+      "workElements": [
+        { "id": "grinding-finish", "code": "WE-070-01", "nameTR": "Hassas yüzey bitirme", "nameKey": "work.grinding.finish", "functionTR": "Ölçü, form ve pürüzlülüğü taşlama yanığı oluşturmadan sağlamak", "functionKey": "function.grinding.finish" }
+      ],
+      "selectableCharacteristics": ["Çap", "Yuvarlaklık", "Silindiriklik", "Pürüzlülük", "Taşlama yanığı", "Taş kondisyonu"]
+    },
+    {
+      "id": "industrial-washing", "code": "PF-LIB-075", "phaseId": "P04", "familyId": "cleaning", "nameTR": "Endüstriyel Yıkama ve Teknik Temizlik", "nameKey": "process.industrial_washing", "specialProcess": false,
+      "inputTR": "Talaşlı veya yüzey işlem öncesi parça", "inputKey": "process.industrial_washing.input", "outputTR": "Partikül, yağ ve kimyasal kalıntısı kontrol edilmiş parça", "outputKey": "process.industrial_washing.output",
+      "defaultOwnerRole": "production", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "industrial-washing-clean", "code": "WE-075-01", "nameTR": "Yıkama, durulama ve kurutma", "nameKey": "work.industrial_washing.clean", "functionTR": "Parçayı sonraki prosesin temizlik ve korozyon şartlarına hazırlamak", "functionKey": "function.industrial_washing.clean" }
+      ],
+      "selectableCharacteristics": ["Partikül kütlesi", "Maksimum partikül", "Banyo konsantrasyonu", "Sıcaklık", "Kurutma", "Korozyon"]
+    },
+    {
+      "id": "furnace-heat-treatment", "code": "PF-LIB-080", "phaseId": "P05", "familyId": "heat-treatment", "nameTR": "Fırın Isıl İşlem", "nameKey": "process.furnace_heat_treatment", "specialProcess": true,
+      "inputTR": "Isıl işlem reçetesi tanımlı metal parça", "inputKey": "process.furnace_heat_treatment.input", "outputTR": "Mikroyapı ve mekanik özellikleri sağlanmış parça", "outputKey": "process.furnace_heat_treatment.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["heat-treated-metal"],
+      "workElements": [
+        { "id": "furnace-heat-treatment-cycle", "code": "WE-080-01", "nameTR": "Reçete, atmosfer ve söndürme çevrimi", "nameKey": "work.furnace_heat_treatment.cycle", "functionTR": "Tanımlı sertlik, mikroyapı ve mekanik özelliği deformasyon veya çatlak oluşturmadan sağlamak", "functionKey": "function.furnace_heat_treatment.cycle" }
+      ],
+      "selectableCharacteristics": ["Fırın sıcaklığı", "Bekleme süresi", "Atmosfer", "Söndürme sıcaklığı", "Sertlik", "Mikroyapı", "Deformasyon"]
+    },
+    {
+      "id": "induction-hardening", "code": "PF-LIB-085", "phaseId": "P05", "familyId": "heat-treatment", "nameTR": "İndüksiyon Sertleştirme", "nameKey": "process.induction_hardening", "specialProcess": true,
+      "inputTR": "Lokal sertleştirme alanı tanımlı çelik parça", "inputKey": "process.induction_hardening.input", "outputTR": "Yüzey sertliği ve etkin sertlik derinliği sağlanmış parça", "outputKey": "process.induction_hardening.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["induction-hardened-metal"],
+      "workElements": [
+        { "id": "induction-hardening-cycle", "code": "WE-085-01", "nameTR": "İndüksiyon ve söndürme çevrimi", "nameKey": "work.induction_hardening.cycle", "functionTR": "Doğru bölgede sertlik profili ve derinlik oluşturmak", "functionKey": "function.induction_hardening.cycle" }
+      ],
+      "selectableCharacteristics": ["Güç", "Frekans", "Çevrim süresi", "Sertlik", "Etkin sertlik derinliği", "Sertlik deseni", "Çatlak"]
+    },
+    {
+      "id": "surface-coating", "code": "PF-LIB-090", "phaseId": "P05", "familyId": "surface-treatment", "nameTR": "Metal Kaplama / Dönüşüm Kaplaması", "nameKey": "process.surface_coating", "specialProcess": true,
+      "inputTR": "Kaplama öncesi temizlenmiş parça", "inputKey": "process.surface_coating.input", "outputTR": "Korozyon ve yüzey şartları sağlanmış parça", "outputKey": "process.surface_coating.output",
+      "defaultOwnerRole": "supplier-quality", "productApplicability": ["coated-metal"],
+      "workElements": [
+        { "id": "surface-coating-apply", "code": "WE-090-01", "nameTR": "Yüzey hazırlama, kaplama ve son işlem", "nameKey": "work.surface_coating.apply", "functionTR": "Kaplama kalınlığı, yapışma, görünüş ve korozyon dayanımını sağlamak", "functionKey": "function.surface_coating.apply" }
+      ],
+      "selectableCharacteristics": ["Kaplama türü", "Kalınlık", "Yapışma", "Görünüş", "Korozyon dayanımı", "Hidrojen giderme kaydı"]
+    },
+    {
+      "id": "painting", "code": "PF-LIB-095", "phaseId": "P05", "familyId": "surface-treatment", "nameTR": "Yaş Boya / Toz Boya", "nameKey": "process.painting", "specialProcess": true,
+      "inputTR": "Boya öncesi hazırlanmış parça veya montaj", "inputKey": "process.painting.input", "outputTR": "Renk, film ve dayanım şartları sağlanmış ürün", "outputKey": "process.painting.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["painted-product"],
+      "workElements": [
+        { "id": "painting-apply", "code": "WE-095-01", "nameTR": "Boya uygulama ve kürleme", "nameKey": "work.painting.apply", "functionTR": "Doğru renk, film kalınlığı, yapışma ve kürlenmeyi sağlamak", "functionKey": "function.painting.apply" }
+      ],
+      "selectableCharacteristics": ["Renk", "Film kalınlığı", "Yapışma", "Kürleme sıcaklığı", "Kürleme süresi", "Görünüş"]
+    },
+    {
+      "id": "post-paint-assembly", "code": "PF-LIB-098", "phaseId": "P06", "familyId": "assembly", "nameTR": "Boya Sonrası Montaj", "nameKey": "process.post_paint_assembly", "specialProcess": false,
+      "inputTR": "Boyası ve kür kontrolü tamamlanmış alt montaj ile doğrulanmış ısıya hassas komponentler", "inputKey": "process.post_paint_assembly.input", "outputTR": "Toz lastiği, halka ve ring montajı tamamlanmış ürün", "outputKey": "process.post_paint_assembly.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["painted-assembly", "steering-linkage"],
+      "workElements": [
+        { "id": "post-paint-component-verify", "code": "WE-098-01", "nameTR": "Boya tamamlama ve komponent doğrulama", "nameKey": "work.post_paint.verify", "functionTR": "Boya küründen sonra doğru komponent ve lotun kullanılmasını sağlamak", "functionKey": "function.post_paint.verify" },
+        { "id": "post-paint-boot-install", "code": "WE-098-02", "nameTR": "Toz lastiği, halka ve ring montajı", "nameKey": "work.post_paint.install", "functionTR": "Elastomer komponenti hasarsız, tam oturmuş ve doğru sıkılıkta monte etmek", "functionKey": "function.post_paint.install" }
+      ],
+      "selectableCharacteristics": ["Boya tamamlandı kilidi", "Komponent varyantı", "Toz lastiği yırtık/deformasyon", "Doğru oturma", "Halka/ring varlığı", "Sıkılık"]
+    },
+    {
+      "id": "robotic-welding", "code": "PF-LIB-100", "phaseId": "P05", "familyId": "joining", "nameTR": "Robotik / Manuel Ark Kaynağı", "nameKey": "process.robotic_welding", "specialProcess": true,
+      "inputTR": "Kaynaklanabilir alt komponentler", "inputKey": "process.robotic_welding.input", "outputTR": "Geometri ve birleşim şartları sağlanmış kaynaklı montaj", "outputKey": "process.robotic_welding.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["welded-assembly"],
+      "workElements": [
+        { "id": "robotic-welding-fixture", "code": "WE-100-01", "nameTR": "Fikstürleme ve parça doğrulama", "nameKey": "work.robotic_welding.fixture", "functionTR": "Doğru komponentleri tanımlı konum ve boşlukta sabitlemek", "functionKey": "function.robotic_welding.fixture" },
+        { "id": "robotic-welding-join", "code": "WE-100-02", "nameTR": "Kaynak çevrimi", "nameKey": "work.robotic_welding.join", "functionTR": "Yük aktarımını sağlayan nüfuziyet, dikiş ve dayanımı oluşturmak", "functionKey": "function.robotic_welding.join" }
+      ],
+      "selectableCharacteristics": ["Akım", "Gerilim", "Tel hızı", "Gaz debisi", "Nüfuziyet", "Dikiş boyu", "Porozite", "Konum"]
+    },
+    {
+      "id": "rubber-molding", "code": "PF-LIB-110", "phaseId": "P03", "familyId": "elastomer", "nameTR": "Kauçuk Karışım / Kalıplama / Vulkanizasyon", "nameKey": "process.rubber_molding", "specialProcess": true,
+      "inputTR": "Onaylı kauçuk hamuru ve varsa metal insert", "inputKey": "process.rubber_molding.input", "outputTR": "Geometri ve vulkanizasyon şartları sağlanmış elastomer komponent", "outputKey": "process.rubber_molding.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["rubber-component", "rubber-metal"],
+      "workElements": [
+        { "id": "rubber-molding-cure", "code": "WE-110-01", "nameTR": "Karışım, kalıplama ve kür çevrimi", "nameKey": "work.rubber_molding.cure", "functionTR": "Doğru hamur, dolum, bağlanma ve vulkanizasyon ile elastomer özelliğini sağlamak", "functionKey": "function.rubber_molding.cure" }
+      ],
+      "selectableCharacteristics": ["Karışım lotu", "Kalıp sıcaklığı", "Basınç", "Kür süresi", "Sertlik", "Yapışma", "Çapak", "Porozite"]
+    },
+    {
+      "id": "plastic-injection", "code": "PF-LIB-115", "phaseId": "P03", "familyId": "polymer", "nameTR": "Plastik Enjeksiyon", "nameKey": "process.plastic_injection", "specialProcess": true,
+      "inputTR": "Onaylı granül ve varsa insert", "inputKey": "process.plastic_injection.input", "outputTR": "Geometri ve malzeme şartları sağlanmış plastik komponent", "outputKey": "process.plastic_injection.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["plastic-component", "insert-molded"],
+      "workElements": [
+        { "id": "plastic-injection-mold", "code": "WE-115-01", "nameTR": "Malzeme hazırlama ve enjeksiyon çevrimi", "nameKey": "work.plastic_injection.mold", "functionTR": "Doğru malzeme, dolum, boyut ve görünüş özelliklerini üretmek", "functionKey": "function.plastic_injection.mold" }
+      ],
+      "selectableCharacteristics": ["Malzeme sınıfı", "Nem", "Ergiyik sıcaklığı", "Kalıp sıcaklığı", "Basınç", "Çevrim süresi", "Çöküntü", "Kaynak izi"]
+    },
+    {
+      "id": "press-assembly", "code": "PF-LIB-120", "phaseId": "P06", "familyId": "assembly", "nameTR": "Pres Montaj", "nameKey": "process.press_assembly", "specialProcess": false,
+      "inputTR": "Doğrulanmış gövde, burç, pim, yatak veya diğer alt komponentler", "inputKey": "process.press_assembly.input", "outputTR": "Kuvvet-yol ve montaj derinliği doğrulanmış alt montaj", "outputKey": "process.press_assembly.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["assembly"],
+      "workElements": [
+        { "id": "press-assembly-join", "code": "WE-120-01", "nameTR": "Komponent doğrulama ve presleme", "nameKey": "work.press_assembly.join", "functionTR": "Doğru komponenti, yönü, kuvvet-yol penceresi ve derinlikle birleştirmek", "functionKey": "function.press_assembly.join" }
+      ],
+      "selectableCharacteristics": ["Komponent kimliği", "Montaj yönü", "Pres kuvveti", "Yol", "Montaj derinliği", "Poka-yoke sonucu"]
+    },
+    {
+      "id": "integrated-plant-assembly", "code": "PF-LIB-125", "phaseId": "P06", "familyId": "assembly", "nameTR": "Entegre Tesis Montaj Prosesi", "nameKey": "process.integrated_plant_assembly", "specialProcess": false,
+      "inputTR": "Farklı malzeme ve üretim yöntemlerine sahip doğrulanmış alt komponentler", "inputKey": "process.integrated_plant_assembly.input", "outputTR": "Varyantı, fonksiyonu ve izlenebilirliği doğrulanmış mamul", "outputKey": "process.integrated_plant_assembly.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["multi-component-finished-good", "custom-product"],
+      "workElements": [
+        { "id": "integrated-assembly-kitting", "code": "WE-125-01", "nameTR": "Reçete ve alt komponent doğrulama", "nameKey": "work.integrated_assembly.kitting", "functionTR": "Doğru ürün varyantı için tüm alt komponentlerin numara, revizyon, lot ve durumunu doğrulamak", "functionKey": "function.integrated_assembly.kitting" },
+        { "id": "integrated-assembly-build", "code": "WE-125-02", "nameTR": "Sıralı entegre montaj", "nameKey": "work.integrated_assembly.build", "functionTR": "Alt montajları doğru sıra, yön, kuvvet, tork, dozaj ve izlenebilirlikle mamule dönüştürmek", "functionKey": "function.integrated_assembly.build" }
+      ],
+      "selectableCharacteristics": ["Ürün reçetesi", "Komponent varlığı", "Komponent yönü", "Pres kuvvet-yol", "Tork-açı", "Dozaj miktarı", "Fonksiyonel boşluk", "Seri izlenebilirliği"]
+    },
+    {
+      "id": "torque-tightening", "code": "PF-LIB-130", "phaseId": "P06", "familyId": "assembly", "nameTR": "Tork / Açı Kontrollü Sıkma", "nameKey": "process.torque_tightening", "specialProcess": false,
+      "inputTR": "Bağlantı elemanı yerleştirilmiş montaj", "inputKey": "process.torque_tightening.input", "outputTR": "Tork-açı sonucu ve seri bağlantısı kaydedilmiş montaj", "outputKey": "process.torque_tightening.output",
+      "defaultOwnerRole": "process-engineering", "productApplicability": ["bolted-assembly"],
+      "workElements": [
+        { "id": "torque-tightening-cycle", "code": "WE-130-01", "nameTR": "Program seçimi ve sıkma çevrimi", "nameKey": "work.torque_tightening.cycle", "functionTR": "Bağlantıyı doğru program, tork, açı ve sıra ile güvence altına almak", "functionKey": "function.torque_tightening.cycle" }
+      ],
+      "selectableCharacteristics": ["Program numarası", "Tork", "Açı", "Sıkma sırası", "Soket varlığı", "Sonuç kodu"]
+    },
+    {
+      "id": "leak-functional-test", "code": "PF-LIB-140", "phaseId": "P07", "familyId": "verification", "nameTR": "Sızdırmazlık / Fonksiyon Testi", "nameKey": "process.leak_functional_test", "specialProcess": false,
+      "inputTR": "Test koşulları tanımlı montaj veya mamul", "inputKey": "process.leak_functional_test.input", "outputTR": "Test sonucu ve izlenebilirliği kaydedilmiş ürün", "outputKey": "process.leak_functional_test.output",
+      "defaultOwnerRole": "quality-engineering", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "leak-functional-test-run", "code": "WE-140-01", "nameTR": "Test reçetesi ve ölçüm çevrimi", "nameKey": "work.leak_functional_test.run", "functionTR": "Ürünün sızdırmazlık, hareket, yük, boşluk veya diğer tanımlı fonksiyonlarını doğrulamak", "functionKey": "function.leak_functional_test.run" }
+      ],
+      "selectableCharacteristics": ["Test programı", "Test basıncı", "Kaçak debisi", "Stabilizasyon süresi", "Yük / strok", "Boşluk", "Geçti-kaldı sonucu"]
+    },
+    {
+      "id": "final-inspection", "code": "PF-LIB-145", "phaseId": "P07", "familyId": "verification", "nameTR": "Final Kontrol ve Ürün Serbest Bırakma", "nameKey": "process.final_inspection", "specialProcess": false,
+      "inputTR": "Tüm üretim adımları tamamlanmış mamul", "inputKey": "process.final_inspection.input", "outputTR": "Sevke uygunluğu yetkili kişi tarafından serbest bırakılmış mamul", "outputKey": "process.final_inspection.output",
+      "defaultOwnerRole": "quality-engineering", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "final-inspection-release", "code": "WE-145-01", "nameTR": "Doküman, görünüş, ölçü ve fonksiyon serbest bırakma", "nameKey": "work.final_inspection.release", "functionTR": "Yalnızca eksiksiz, uygun ve izlenebilir ürünün sevke bırakılmasını sağlamak", "functionKey": "function.final_inspection.release" }
+      ],
+      "selectableCharacteristics": ["Görünüş", "Kritik ölçüler", "Fonksiyon", "Komponent varlığı", "Doküman tamlığı", "Kalite statüsü"]
+    },
+    {
+      "id": "marking", "code": "PF-LIB-150", "phaseId": "P08", "familyId": "traceability", "nameTR": "Markalama ve Seri İzlenebilirliği", "nameKey": "process.marking", "specialProcess": false,
+      "inputTR": "Kimliği tanımlı ürün", "inputKey": "process.marking.input", "outputTR": "Okunabilir ve doğrulanmış işaret taşıyan ürün", "outputKey": "process.marking.output",
+      "defaultOwnerRole": "production", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "marking-verify", "code": "WE-150-01", "nameTR": "Kod oluşturma, işaretleme ve doğrulama", "nameKey": "work.marking.verify", "functionTR": "Doğru içerik, konum ve okunabilirlikle ürün/lot izlenebilirliği sağlamak", "functionKey": "function.marking.verify" }
+      ],
+      "selectableCharacteristics": ["Kod içeriği", "Seri / lot", "Konum", "Okunabilirlik", "Doğrulama sonucu"]
+    },
+    {
+      "id": "packaging-shipping", "code": "PF-LIB-160", "phaseId": "P08", "familyId": "logistics", "nameTR": "Paketleme, Etiketleme ve Sevkiyat", "nameKey": "process.packaging_shipping", "specialProcess": false,
+      "inputTR": "Serbest bırakılmış ve işaretlenmiş mamul", "inputKey": "process.packaging_shipping.input", "outputTR": "Müşteri şartına göre korunmuş, etiketlenmiş ve sevke doğrulanmış paket", "outputKey": "process.packaging_shipping.output",
+      "defaultOwnerRole": "logistics", "productApplicability": ["all"],
+      "workElements": [
+        { "id": "packaging-shipping-pack", "code": "WE-160-01", "nameTR": "Koruma, paket miktarı ve etiket doğrulama", "nameKey": "work.packaging_shipping.pack", "functionTR": "Ürünü karışma, korozyon ve taşıma hasarından koruyarak doğru müşteriye göndermek", "functionKey": "function.packaging_shipping.pack" }
+      ],
+      "selectableCharacteristics": ["Paketleme standardı", "Paket adedi", "Seperatör", "Korozyon koruma", "Etiket", "Müşteri / sevk adresi"]
+    }
+  ],
+  "riskTemplates": [
+    {
+      "id": "R-INM-001", "processTemplateId": "incoming-material", "workElementId": "incoming-material-document",
+      "function": { "tr": "Doğru malzeme kalite sınıfı, lot ve sertifika eşleşmesini doğrulamak", "key": "risk.inm001.function" },
+      "failureMode": { "tr": "Yanlış veya sertifikasız hammadde kabul edilir", "key": "risk.inm001.failure" },
+      "effects": [{ "tr": "Ürün dayanımı veya fonksiyonu şartı karşılamaz", "key": "risk.inm001.effect.1" }, { "tr": "Ürün güvenliği ve izlenebilirlik riski oluşur", "key": "risk.inm001.effect.2" }],
+      "causes": [{ "tr": "Malzeme etiketi ile sertifika eşleştirilmez", "key": "risk.inm001.cause.1" }, { "tr": "Karışmış lot veya yanlış tedarikçi sevki", "key": "risk.inm001.cause.2" }],
+      "preventionControls": [{ "tr": "Onaylı tedarikçi ve satın alma şartı kontrolü", "key": "risk.inm001.prevention.1" }, { "tr": "Barkodlu lot ve sertifika zorunluluğu", "key": "risk.inm001.prevention.2" }],
+      "detectionControls": [{ "tr": "Sertifika/etiket/parça numarası üçlü doğrulaması", "key": "risk.inm001.detection.1" }, { "tr": "Risk bazlı PMI, spektral veya mekanik doğrulama", "key": "risk.inm001.detection.2" }],
+      "defaultRatings": { "severity": 9, "occurrence": 3, "detection": 4, "status": "draft", "rationale": { "tr": "Nihai puan ürün güvenliği, tedarikçi performansı ve doğrulama etkinliğine göre ekipçe belirlenir.", "key": "risk.inm001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["NONE", "SC", "CC", "REG"] },
+      "recommendedActions": [{ "tr": "Malzeme sınıfı ve lot için elektronik blokaj kuralı kur", "key": "risk.inm001.action.1" }, { "tr": "Yüksek riskli malzemelerde bağımsız kimlik doğrulama planla", "key": "risk.inm001.action.2" }],
+      "ownerRoles": ["supplier-quality", "quality-engineering"], "evidenceTypeIds": ["supplier-certificate", "traceability-log", "measurement-record"],
+      "reactionPlan": { "tr": "Partiyi bloke et; stok, WIP ve sevkiyat yayılımını lot üzerinden belirle; doğrulama ve yetkili kalite serbest bırakması olmadan kullanma.", "key": "risk.inm001.reaction" }
+    },
+    {
+      "id": "R-INC-001", "processTemplateId": "incoming-component", "workElementId": "incoming-component-verify",
+      "function": { "tr": "Satın alınan komponentin numara, revizyon ve özel proses durumunu doğrulamak", "key": "risk.inc001.function" },
+      "failureMode": { "tr": "Yanlış revizyonlu veya tolerans dışı komponent kabul edilir", "key": "risk.inc001.failure" },
+      "effects": [{ "tr": "Montaj uyumsuzluğu veya erken fonksiyon kaybı oluşur", "key": "risk.inc001.effect.1" }],
+      "causes": [{ "tr": "Değişiklik bildirimi ve kontrol planı güncellenmemiştir", "key": "risk.inc001.cause.1" }, { "tr": "Numune planı riski temsil etmez", "key": "risk.inc001.cause.2" }],
+      "preventionControls": [{ "tr": "Onaylı tedarikçi, revizyon ve PPAP durum kilidi", "key": "risk.inc001.prevention.1" }],
+      "detectionControls": [{ "tr": "Barkod/revizyon doğrulaması ve risk bazlı boyutsal kontrol", "key": "risk.inc001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 5, "status": "draft", "rationale": { "tr": "Komponent fonksiyonuna ve tedarikçi performansına göre doğrulanır.", "key": "risk.inc001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Revizyon değişikliğinde otomatik kabul blokajı ve yeniden yeterlilik akışı kur", "key": "risk.inc001.action.1" }],
+      "ownerRoles": ["supplier-quality", "quality-engineering"], "evidenceTypeIds": ["supplier-certificate", "measurement-record", "audit-trail"],
+      "reactionPlan": { "tr": "Lotu karantinaya al, tedarikçiyi bilgilendir, montaj hattındaki yayılımı kontrol et ve sapma/onay olmadan kullanma.", "key": "risk.inc001.reaction" }
+    },
+    {
+      "id": "R-STO-001", "processTemplateId": "storage-traceability", "workElementId": "storage-status",
+      "function": { "tr": "Malzemeyi statüsü, lotu ve koruma koşulu ile yönetmek", "key": "risk.sto001.function" },
+      "failureMode": { "tr": "Lotlar karışır, raf ömrü aşılır veya kalite statüsü kaybolur", "key": "risk.sto001.failure" },
+      "effects": [{ "tr": "Uygun olmayan veya izlenemeyen malzeme üretime girer", "key": "risk.sto001.effect.1" }],
+      "causes": [{ "tr": "Fiziksel alan ayrımı ve sistem statüsü uyumsuzdur", "key": "risk.sto001.cause.1" }, { "tr": "FIFO/FEFO kontrolü uygulanmaz", "key": "risk.sto001.cause.2" }],
+      "preventionControls": [{ "tr": "Barkodlu lokasyon, statü kilidi ve FIFO/FEFO kuralı", "key": "risk.sto001.prevention.1" }],
+      "detectionControls": [{ "tr": "Çevrim sayımı, raf ömrü alarmı ve katmanlı proses denetimi", "key": "risk.sto001.detection.1" }],
+      "defaultRatings": { "severity": 7, "occurrence": 4, "detection": 5, "status": "draft", "rationale": { "tr": "Malzeme hassasiyeti ve dijital statü kontrolüne göre doğrulanır.", "key": "risk.sto001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Karantina ve serbest stok için fiziksel-dijital çift doğrulama uygula", "key": "risk.sto001.action.1" }],
+      "ownerRoles": ["logistics", "quality-engineering"], "evidenceTypeIds": ["traceability-log", "audit-trail"],
+      "reactionPlan": { "tr": "Şüpheli lokasyonu ve lotları bloke et; stok-WIP eşleşmesini yap; kimliği doğrulanamayan malzemeyi kullanımdan çıkar.", "key": "risk.sto001.reaction" }
+    },
+    {
+      "id": "R-CUT-001", "processTemplateId": "material-cutting", "workElementId": "material-cutting-setup",
+      "function": { "tr": "Doğru malzemeyi tanımlı boy ve ağırlıkta kesmek", "key": "risk.cut001.function" },
+      "failureMode": { "tr": "Kesim boyu/ağırlığı tolerans dışı veya malzeme kimliği yanlıştır", "key": "risk.cut001.failure" },
+      "effects": [{ "tr": "Dövme dolmaz, işleme payı yetersiz kalır veya hurda oluşur", "key": "risk.cut001.effect.1" }],
+      "causes": [{ "tr": "Dayama/ofset ayarı veya testere bıçağı hatalıdır", "key": "risk.cut001.cause.1" }, { "tr": "İş emri ve malzeme lotu doğrulanmamıştır", "key": "risk.cut001.cause.2" }],
+      "preventionControls": [{ "tr": "Reçete kilidi, malzeme barkodu ve ayar kontrol listesi", "key": "risk.cut001.prevention.1" }],
+      "detectionControls": [{ "tr": "İlk parça ve periyodik boy/ağırlık ölçümü", "key": "risk.cut001.detection.1" }],
+      "defaultRatings": { "severity": 7, "occurrence": 4, "detection": 3, "status": "draft", "rationale": { "tr": "Sonraki prosesin işleme payı ve kontrol sıklığına göre doğrulanır.", "key": "risk.cut001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC"] },
+      "recommendedActions": [{ "tr": "Boy dayamasını ve malzeme reçetesini ürün koduna kilitle", "key": "risk.cut001.action.1" }],
+      "ownerRoles": ["production", "process-engineering"], "evidenceTypeIds": ["setup-approval", "measurement-record", "traceability-log"],
+      "reactionPlan": { "tr": "Kesimi durdur; son uygun kontrolden sonraki parçaları ayır; malzeme, dayama ve bıçak durumunu doğrula.", "key": "risk.cut001.reaction" }
+    },
+    {
+      "id": "R-HEA-001", "processTemplateId": "billet-heating", "workElementId": "billet-heating-control",
+      "function": { "tr": "Taslağı uygun ve homojen dövme sıcaklığına getirmek", "key": "risk.hea001.function" },
+      "failureMode": { "tr": "Taslak düşük, yüksek veya homojen olmayan sıcaklıkta dövülür", "key": "risk.hea001.failure" },
+      "effects": [{ "tr": "Katmer, çatlak, eksik dolum veya uygunsuz mikroyapı oluşur", "key": "risk.hea001.effect.1" }],
+      "causes": [{ "tr": "Fırın/indüksiyon reçetesi veya hat hızı yanlıştır", "key": "risk.hea001.cause.1" }, { "tr": "Sıcaklık sensörü sürüklenmiştir", "key": "risk.hea001.cause.2" }],
+      "preventionControls": [{ "tr": "Ürün bazlı reçete kilidi ve kalibre sensör", "key": "risk.hea001.prevention.1" }],
+      "detectionControls": [{ "tr": "Çıkış sıcaklığı pirometre izlemesi ve alarm penceresi", "key": "risk.hea001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Malzeme ve kusurun sonraki kontrolde yakalanabilirliğine göre doğrulanır.", "key": "risk.hea001.rating" } },
+      "specialCharacteristic": { "defaultType": "HI", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Sıcaklık-hat hızı etkileşimi için otomatik durdurma ve veri kaydı ekle", "key": "risk.hea001.action.1" }],
+      "ownerRoles": ["process-engineering", "maintenance"], "evidenceTypeIds": ["parameter-log", "maintenance-record"],
+      "reactionPlan": { "tr": "Isıtmayı ve pres beslemeyi durdur; şüpheli sıcaklık aralığındaki taslakları bloke et; sensör ve reçeteyi doğrula.", "key": "risk.hea001.reaction" }
+    },
+    {
+      "id": "R-FOR-001", "processTemplateId": "hot-forging", "workElementId": "hot-forging-form",
+      "function": { "tr": "Taslağı tanımlı dövme geometrisi ve lif akışında şekillendirmek", "key": "risk.for001.function" },
+      "failureMode": { "tr": "Eksik kalıp dolumu, katmer veya dövme çatlağı oluşur", "key": "risk.for001.failure" },
+      "effects": [{ "tr": "Kesit zayıflar ve yorulma dayanımı düşer", "key": "risk.for001.effect.1" }, { "tr": "İşleme sonrası gizli kusur açığa çıkar", "key": "risk.for001.effect.2" }],
+      "causes": [{ "tr": "Taslak hacmi/sıcaklığı veya kalıp kapanması uygun değildir", "key": "risk.for001.cause.1" }, { "tr": "Kalıp aşınması ya da hatalı transfer vardır", "key": "risk.for001.cause.2" }],
+      "preventionControls": [{ "tr": "Taslak ağırlığı, sıcaklık penceresi ve kalıp ömrü yönetimi", "key": "risk.for001.prevention.1" }],
+      "detectionControls": [{ "tr": "İlk parça ölçümü, görsel kusur standardı ve risk bazlı tahribatsız muayene", "key": "risk.for001.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 4, "detection": 6, "status": "draft", "rationale": { "tr": "Yük taşıyan ürün, kusur tipi ve doğrulama yöntemine göre ekipçe belirlenir.", "key": "risk.for001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Kalıp ömrü ve proses parametrelerini seri/lot ile ilişkilendir", "key": "risk.for001.action.1" }, { "tr": "Kritik bölgeler için kusur numunesi ve otomatik görsel kontrol geliştir", "key": "risk.for001.action.2" }],
+      "ownerRoles": ["process-engineering", "tooling", "quality-engineering"], "evidenceTypeIds": ["parameter-log", "setup-approval", "measurement-record"],
+      "reactionPlan": { "tr": "Presi durdur; kalıp, sıcaklık ve taslak hacmini doğrula; son uygun kontrolden sonraki parçaları karantinaya al ve kusur yayılımını incele.", "key": "risk.for001.reaction" }
+    },
+    {
+      "id": "R-FOR-002", "processTemplateId": "hot-forging", "workElementId": "hot-forging-die",
+      "function": { "tr": "Kalıp yüzeyi, hizası ve yağlamayı kararlı tutmak", "key": "risk.for002.function" },
+      "failureMode": { "tr": "Kalıp aşınması, kaçıklık veya yetersiz yağlama nedeniyle geometri bozulur", "key": "risk.for002.failure" },
+      "effects": [{ "tr": "İşleme referansları ve et kalınlığı tolerans dışı kalır", "key": "risk.for002.effect.1" }],
+      "causes": [{ "tr": "Kalıp ömrü limiti izlenmez", "key": "risk.for002.cause.1" }, { "tr": "Yağlama konsantrasyonu/konumu uygunsuzdur", "key": "risk.for002.cause.2" }],
+      "preventionControls": [{ "tr": "Kalıp vuruş sayacı, periyodik bakım ve standart yağlama", "key": "risk.for002.prevention.1" }],
+      "detectionControls": [{ "tr": "Kalıp kontrol mastarı ve trendli ürün ölçümü", "key": "risk.for002.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 5, "detection": 5, "status": "draft", "rationale": { "tr": "Kalıp ömrü verisi ve ölçüm trendine göre doğrulanır.", "key": "risk.for002.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "HI"] },
+      "recommendedActions": [{ "tr": "Kalıp durumunu koşul bazlı bakım ve ürün ölçüm trendi ile ilişkilendir", "key": "risk.for002.action.1" }],
+      "ownerRoles": ["tooling", "maintenance", "process-engineering"], "evidenceTypeIds": ["maintenance-record", "spc-record"],
+      "reactionPlan": { "tr": "Prosesi durdur, kalıbı bloke et, son uygun ölçümden sonraki ürünleri ayır ve kalıp onayı sonrası yeniden başlat.", "key": "risk.for002.reaction" }
+    },
+    {
+      "id": "R-TRM-001", "processTemplateId": "trim-shotblast", "workElementId": "trim-shotblast-finish",
+      "function": { "tr": "Dövme çapağını güvenli sınırda almak ve yüzeyi temizlemek", "key": "risk.trm001.function" },
+      "failureMode": { "tr": "Aşırı/eksik çapak kesme veya yetersiz yüzey temizliği oluşur", "key": "risk.trm001.failure" },
+      "effects": [{ "tr": "Kesit zayıflar, keskin kenar kalır veya yüzey kusuru gizlenir", "key": "risk.trm001.effect.1" }],
+      "causes": [{ "tr": "Kesme kalıbı aşınmış ya da parça yanlış konumlanmıştır", "key": "risk.trm001.cause.1" }, { "tr": "Kumlama bilya karışımı/çevrimi uygunsuzdur", "key": "risk.trm001.cause.2" }],
+      "preventionControls": [{ "tr": "Kesme kalıbı ömrü, fikstür poka-yoke ve kumlama reçetesi", "key": "risk.trm001.prevention.1" }],
+      "detectionControls": [{ "tr": "Görsel standart, çapak mastarı ve yüzey temizliği kontrolü", "key": "risk.trm001.detection.1" }],
+      "defaultRatings": { "severity": 7, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Kritik kesit ve yüzey kusuru kontrolüne göre doğrulanır.", "key": "risk.trm001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC"] },
+      "recommendedActions": [{ "tr": "Kritik kesme bölgesi için limit numune ve kalıp ömrü alarmı uygula", "key": "risk.trm001.action.1" }],
+      "ownerRoles": ["production", "tooling"], "evidenceTypeIds": ["measurement-record", "maintenance-record"],
+      "reactionPlan": { "tr": "Kesme/kumlama prosesini durdur; ekipman ve kalıbı doğrula; şüpheli ürünleri görsel ve boyutsal yeniden kontrol et.", "key": "risk.trm001.reaction" }
+    },
+    {
+      "id": "R-TRN-001", "processTemplateId": "cnc-turning", "workElementId": "cnc-turning-setup",
+      "function": { "tr": "Doğru parça, program, bağlama ve ofseti doğrulamak", "key": "risk.trn001.function" },
+      "failureMode": { "tr": "Yanlış program/ofset veya hatalı bağlama ile üretim başlar", "key": "risk.trn001.failure" },
+      "effects": [{ "tr": "Birden çok karakteristik eş zamanlı tolerans dışı kalır", "key": "risk.trn001.effect.1" }, { "tr": "Parça fırlaması ve iş güvenliği riski oluşabilir", "key": "risk.trn001.effect.2" }],
+      "causes": [{ "tr": "Program ve fikstür ürün koduna kilitli değildir", "key": "risk.trn001.cause.1" }, { "tr": "Ayar değişikliği yetkisiz veya doğrulamasız yapılır", "key": "risk.trn001.cause.2" }],
+      "preventionControls": [{ "tr": "Ürün-reçete-fikstür kilidi ve yetkili ofset limiti", "key": "risk.trn001.prevention.1" }],
+      "detectionControls": [{ "tr": "İlk parça onayı, program checksum ve bağlama basıncı izleme", "key": "risk.trn001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "Parça fonksiyonu ve reçete kilidi etkinliğine göre doğrulanır.", "key": "risk.trn001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["NONE", "SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Program, fikstür ve takım setini barkodla doğrula; ofset değişikliklerini kaydet", "key": "risk.trn001.action.1" }],
+      "ownerRoles": ["process-engineering", "production", "ehs"], "evidenceTypeIds": ["setup-approval", "parameter-log", "audit-trail"],
+      "reactionPlan": { "tr": "Tezgahı durdur; parçayı güvenli konuma al; program, fikstür, takım ve ofseti doğrula; son uygun parçadan itibaren ürünü ayır.", "key": "risk.trn001.reaction" }
+    },
+    {
+      "id": "R-TRN-002", "processTemplateId": "cnc-turning", "workElementId": "cnc-turning-cut",
+      "function": { "tr": "Fonksiyonel çap, boy, form ve pürüzlülüğü üretmek", "key": "risk.trn002.function" },
+      "failureMode": { "tr": "Kritik ölçü veya yüzey pürüzlülüğü tolerans dışı oluşur", "key": "risk.trn002.failure" },
+      "effects": [{ "tr": "Montaj boşluğu, sızdırmazlık, hareket veya yorulma ömrü bozulur", "key": "risk.trn002.effect.1" }],
+      "causes": [{ "tr": "Takım aşınması/kırılması veya termal sürüklenme vardır", "key": "risk.trn002.cause.1" }, { "tr": "Ölçüm sistemi ya da telafi stratejisi yetersizdir", "key": "risk.trn002.cause.2" }],
+      "preventionControls": [{ "tr": "Takım ömrü limiti, kesme parametresi standardı ve soğutma kontrolü", "key": "risk.trn002.prevention.1" }],
+      "detectionControls": [{ "tr": "SPC, otomatik ölçüm ve takım kırılma algılama", "key": "risk.trn002.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Karakteristik sınıfı, proses yeterliliği ve ölçüm sistemi performansına göre doğrulanır.", "key": "risk.trn002.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Takım ömrünü karakteristik trendiyle ilişkilendir ve limitte otomatik durdur", "key": "risk.trn002.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering", "production"], "evidenceTypeIds": ["spc-record", "measurement-record", "parameter-log"],
+      "reactionPlan": { "tr": "Tezgahı durdur; takım/ofset ve ölçüm sistemini doğrula; son uygun kontrolden sonraki ürünleri karantinaya al ve yeniden ölç.", "key": "risk.trn002.reaction" }
+    },
+    {
+      "id": "R-MIL-001", "processTemplateId": "cnc-milling", "workElementId": "cnc-milling-fixture",
+      "function": { "tr": "Parçayı doğru datum ve sıkma koşulunda referanslamak", "key": "risk.mil001.function" },
+      "failureMode": { "tr": "Parça yanlış datumda, eksik oturmuş veya deforme olacak kuvvette bağlanır", "key": "risk.mil001.failure" },
+      "effects": [{ "tr": "Konum, paralellik ve et kalınlığı şartları bozulur", "key": "risk.mil001.effect.1" }],
+      "causes": [{ "tr": "Fikstürde talaş/kir veya aşınmış dayama vardır", "key": "risk.mil001.cause.1" }, { "tr": "Sıkma basıncı ve oturma algısı izlenmez", "key": "risk.mil001.cause.2" }],
+      "preventionControls": [{ "tr": "Fikstür temizlik standardı, dayama bakım planı ve basınç limiti", "key": "risk.mil001.prevention.1" }],
+      "detectionControls": [{ "tr": "Oturma sensörü, prob ile datum kontrolü ve ilk parça ölçümü", "key": "risk.mil001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Datum etkisi ve proses içi prob kontrolüne göre doğrulanır.", "key": "risk.mil001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Fikstür oturmasını ve sıkma basıncını çevrim ön koşulu yap", "key": "risk.mil001.action.1" }],
+      "ownerRoles": ["process-engineering", "tooling", "maintenance"], "evidenceTypeIds": ["setup-approval", "maintenance-record", "parameter-log"],
+      "reactionPlan": { "tr": "İşlemeyi durdur; fikstürü temizle ve doğrula; son uygun datum kontrolünden sonraki parçaları ayır.", "key": "risk.mil001.reaction" }
+    },
+    {
+      "id": "R-MIL-002", "processTemplateId": "cnc-milling", "workElementId": "cnc-milling-cut",
+      "function": { "tr": "Düzlem, kanal ve geometrik toleransları üretmek", "key": "risk.mil002.function" },
+      "failureMode": { "tr": "Konum, düzlemsellik, kanal ölçüsü veya yüzey kalitesi tolerans dışıdır", "key": "risk.mil002.failure" },
+      "effects": [{ "tr": "Alt komponent monte olmaz veya fonksiyonel hizalama bozulur", "key": "risk.mil002.effect.1" }],
+      "causes": [{ "tr": "Takım aşınması, yanlış takım veya program değişikliği vardır", "key": "risk.mil002.cause.1" }],
+      "preventionControls": [{ "tr": "Takım çağırma doğrulaması, program revizyon kilidi ve takım ömrü", "key": "risk.mil002.prevention.1" }],
+      "detectionControls": [{ "tr": "Prob kontrolü, SPC ve periyodik CMM doğrulaması", "key": "risk.mil002.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Geometrik tolerans işlevi ve ölçüm stratejisine göre doğrulanır.", "key": "risk.mil002.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Kritik geometrileri proses içi probla doğrula ve ofset telafisini sınırla", "key": "risk.mil002.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering"], "evidenceTypeIds": ["spc-record", "measurement-record", "parameter-log"],
+      "reactionPlan": { "tr": "Makineyi durdur; takım/program/prob durumunu doğrula; şüpheli parçaları geometrik ölçüme yönlendir.", "key": "risk.mil002.reaction" }
+    },
+    {
+      "id": "R-DRL-001", "processTemplateId": "drilling-reaming", "workElementId": "drilling-reaming-hole",
+      "function": { "tr": "Delik çapı, konumu, dikliği ve yüzeyini sağlamak", "key": "risk.drl001.function" },
+      "failureMode": { "tr": "Delik çapı/konumu tolerans dışı veya çapaklı oluşur", "key": "risk.drl001.failure" },
+      "effects": [{ "tr": "Pim/yatak montajı, boşluk veya bağlantı dayanımı bozulur", "key": "risk.drl001.effect.1" }],
+      "causes": [{ "tr": "Matkap/rayba aşınmış, kırılmış veya kaçıklıdır", "key": "risk.drl001.cause.1" }, { "tr": "Parça referansı ya da talaş tahliyesi yetersizdir", "key": "risk.drl001.cause.2" }],
+      "preventionControls": [{ "tr": "Takım ömrü, salgı kontrolü ve talaş tahliye standardı", "key": "risk.drl001.prevention.1" }],
+      "detectionControls": [{ "tr": "Havalı mastar/GO-NO GO, prob ve çapak görsel kontrolü", "key": "risk.drl001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Delik fonksiyonu ve mastar/ölçüm yeterliliğine göre doğrulanır.", "key": "risk.drl001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Takım kırılma algılama ve kritik delik için otomatik mastar ekle", "key": "risk.drl001.action.1" }],
+      "ownerRoles": ["process-engineering", "production"], "evidenceTypeIds": ["spc-record", "measurement-record"],
+      "reactionPlan": { "tr": "Makineyi durdur; takımı değiştir ve referansı doğrula; son uygun kontrolden sonraki parçaları ayır ve delikleri yeniden kontrol et.", "key": "risk.drl001.reaction" }
+    },
+    {
+      "id": "R-THR-001", "processTemplateId": "threading", "workElementId": "threading-form",
+      "function": { "tr": "Bağlantı için doğru diş ölçüsü, profil ve boyu oluşturmak", "key": "risk.thr001.function" },
+      "failureMode": { "tr": "Diş ölçüsü/profili hatalı, eksik veya çapaklıdır", "key": "risk.thr001.failure" },
+      "effects": [{ "tr": "Bağlantı kurulamaz, düşük sıkma kuvveti veya gevşeme oluşur", "key": "risk.thr001.effect.1" }],
+      "causes": [{ "tr": "Takım aşınması, yanlış adım/program veya yetersiz yağlama vardır", "key": "risk.thr001.cause.1" }],
+      "preventionControls": [{ "tr": "Takım/reçete doğrulaması ve takım ömrü", "key": "risk.thr001.prevention.1" }],
+      "detectionControls": [{ "tr": "Kalibre GO/NO-GO mastar ve periyodik profil kontrolü", "key": "risk.thr001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 3, "status": "draft", "rationale": { "tr": "Bağlantının emniyet fonksiyonu ve mastarlama etkinliğine göre doğrulanır.", "key": "risk.thr001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Mastar kullanımını ürün sonucu ve takım ömrü ile elektronik ilişkilendir", "key": "risk.thr001.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering"], "evidenceTypeIds": ["measurement-record", "setup-approval"],
+      "reactionPlan": { "tr": "Diş işlemeyi durdur; takım ve mastarı doğrula; şüpheli aralıktaki tüm dişleri yeniden kontrol et.", "key": "risk.thr001.reaction" }
+    },
+    {
+      "id": "R-GRD-001", "processTemplateId": "grinding", "workElementId": "grinding-finish",
+      "function": { "tr": "Hassas ölçü, form ve yüzeyi metalurjik hasar oluşturmadan sağlamak", "key": "risk.grd001.function" },
+      "failureMode": { "tr": "Ölçü/form tolerans dışı veya taşlama yanığı oluşur", "key": "risk.grd001.failure" },
+      "effects": [{ "tr": "Yataklama, sızdırmazlık veya yorulma ömrü bozulur", "key": "risk.grd001.effect.1" }],
+      "causes": [{ "tr": "Taş kondisyonu, paso, hız veya soğutma uygunsuzdur", "key": "risk.grd001.cause.1" }],
+      "preventionControls": [{ "tr": "Taş bileme standardı, proses parametre limiti ve soğutma izleme", "key": "risk.grd001.prevention.1" }],
+      "detectionControls": [{ "tr": "Proses içi ölçüm, SPC ve risk bazlı yanık kontrolü", "key": "risk.grd001.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 3, "detection": 6, "status": "draft", "rationale": { "tr": "Yüzeyin yük fonksiyonu ve yanık kontrol yöntemine göre doğrulanır.", "key": "risk.grd001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Taş gücü ve akustik emisyon trendini yanık riski alarmına bağla", "key": "risk.grd001.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering"], "evidenceTypeIds": ["spc-record", "laboratory-report", "parameter-log"],
+      "reactionPlan": { "tr": "Taşlamayı durdur; taş, soğutma ve parametreleri doğrula; son uygun kontrolden sonraki parçaları boyutsal ve metalurjik incelemeye al.", "key": "risk.grd001.reaction" }
+    },
+    {
+      "id": "R-WSH-001", "processTemplateId": "industrial-washing", "workElementId": "industrial-washing-clean",
+      "function": { "tr": "Parçayı partikül, yağ ve kimyasal kalıntısından arındırmak", "key": "risk.wsh001.function" },
+      "failureMode": { "tr": "Parçada aşırı partikül, kimyasal kalıntı, nem veya korozyon kalır", "key": "risk.wsh001.failure" },
+      "effects": [{ "tr": "Montaj aşınması, kaplama/yapışma sorunu veya erken arıza oluşur", "key": "risk.wsh001.effect.1" }],
+      "causes": [{ "tr": "Banyo konsantrasyonu/sıcaklığı veya filtreleme uygunsuzdur", "key": "risk.wsh001.cause.1" }, { "tr": "Sepet yükleme ve kurutma yetersizdir", "key": "risk.wsh001.cause.2" }],
+      "preventionControls": [{ "tr": "Banyo yönetim planı, filtre bakımı ve yükleme standardı", "key": "risk.wsh001.prevention.1" }],
+      "detectionControls": [{ "tr": "Banyo analizi, partikül testi ve kuruluk/görsel kontrol", "key": "risk.wsh001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 5, "status": "draft", "rationale": { "tr": "Ürün temizlik sınıfı ve laboratuvar doğrulama sıklığına göre belirlenir.", "key": "risk.wsh001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "HI"] },
+      "recommendedActions": [{ "tr": "Banyo ve partikül sonuçlarını lot bazında trendle; limit dışına otomatik blokaj uygula", "key": "risk.wsh001.action.1" }],
+      "ownerRoles": ["production", "laboratory", "maintenance"], "evidenceTypeIds": ["parameter-log", "laboratory-report", "maintenance-record"],
+      "reactionPlan": { "tr": "Yıkama hattını ve şüpheli partiyi bloke et; banyo/filtre/kurutmayı doğrula; uygun yöntemle yeniden yıka ve kontrol et.", "key": "risk.wsh001.reaction" }
+    },
+    {
+      "id": "R-HTF-001", "processTemplateId": "furnace-heat-treatment", "workElementId": "furnace-heat-treatment-cycle",
+      "function": { "tr": "Tanımlı sertlik, mikroyapı ve mekanik özelliği üretmek", "key": "risk.htf001.function" },
+      "failureMode": { "tr": "Sertlik/mikroyapı yetersiz veya aşırı; parçada çatlak/deformasyon vardır", "key": "risk.htf001.failure" },
+      "effects": [{ "tr": "Aşınma, kırılma veya kalıcı deformasyon nedeniyle ürün ömrü düşer", "key": "risk.htf001.effect.1" }, { "tr": "Emniyet fonksiyonu kaybedilebilir", "key": "risk.htf001.effect.2" }],
+      "causes": [{ "tr": "Yanlış reçete, yükleme, sıcaklık-zaman veya atmosfer uygulanır", "key": "risk.htf001.cause.1" }, { "tr": "Söndürme ortamı sıcaklığı/ajitasyonu uygunsuzdur", "key": "risk.htf001.cause.2" }],
+      "preventionControls": [{ "tr": "Reçete kilidi, fırın yeterlilik/bakım planı ve yükleme standardı", "key": "risk.htf001.prevention.1" }],
+      "detectionControls": [{ "tr": "Her lot sertlik; risk bazlı mikroyapı, kesit ve deformasyon kontrolü", "key": "risk.htf001.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 3, "detection": 6, "status": "draft", "rationale": { "tr": "Ürün emniyet fonksiyonu, özel proses kontrolü ve tahribatlı doğrulama planına göre belirlenir.", "key": "risk.htf001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Reçete, fırın yükü, sıcaklık eğrisi ve test numunesini elektronik lot kaydında birleştir", "key": "risk.htf001.action.1" }],
+      "ownerRoles": ["process-engineering", "laboratory", "maintenance"], "evidenceTypeIds": ["parameter-log", "laboratory-report", "maintenance-record", "traceability-log"],
+      "reactionPlan": { "tr": "Fırını ve lotu bloke et; kayıtları, fırın sapmasını ve söndürme ortamını değerlendir; yetkili metalurji/kalite kararı olmadan lotu serbest bırakma.", "key": "risk.htf001.reaction" }
+    },
+    {
+      "id": "R-HTF-002", "processTemplateId": "furnace-heat-treatment", "workElementId": "furnace-heat-treatment-cycle",
+      "function": { "tr": "Parça geometrisini ısıl işlem boyunca kabul sınırında korumak", "key": "risk.htf002.function" },
+      "failureMode": { "tr": "Isıl işlem sonrası eğilme, ovalleşme veya boyutsal değişim aşırıdır", "key": "risk.htf002.failure" },
+      "effects": [{ "tr": "Son işleme payı yetersiz kalır veya montaj uyumsuzluğu oluşur", "key": "risk.htf002.effect.1" }],
+      "causes": [{ "tr": "Yükleme düzeni, parça yönü veya söndürme şiddeti uygunsuzdur", "key": "risk.htf002.cause.1" }],
+      "preventionControls": [{ "tr": "Doğrulanmış sepet/yükleme deseni ve yük limitleri", "key": "risk.htf002.prevention.1" }],
+      "detectionControls": [{ "tr": "Lot başlangıcı ve periyodik boyutsal deformasyon ölçümü", "key": "risk.htf002.detection.1" }],
+      "defaultRatings": { "severity": 7, "occurrence": 5, "detection": 4, "status": "draft", "rationale": { "tr": "Geometrinin telafi edilebilirliği ve ölçüm sıklığına göre doğrulanır.", "key": "risk.htf002.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "HI"] },
+      "recommendedActions": [{ "tr": "Yükleme deseni ile deformasyon trendini lot bazında ilişkilendir", "key": "risk.htf002.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering"], "evidenceTypeIds": ["measurement-record", "parameter-log"],
+      "reactionPlan": { "tr": "Lotu bloke et; yükleme ve söndürme koşullarını doğrula; boyutsal yayılımı ölç ve onaysız düzeltme/yeniden işlem yapma.", "key": "risk.htf002.reaction" }
+    },
+    {
+      "id": "R-IND-001", "processTemplateId": "induction-hardening", "workElementId": "induction-hardening-cycle",
+      "function": { "tr": "Doğru bölgede yüzey sertliği ve etkin sertlik derinliği oluşturmak", "key": "risk.ind001.function" },
+      "failureMode": { "tr": "Sertlik deseni, yüzey sertliği veya etkin derinlik şartı karşılanmaz; çatlak oluşur", "key": "risk.ind001.failure" },
+      "effects": [{ "tr": "Aşınma ömrü düşer veya gevrek kırılma riski oluşur", "key": "risk.ind001.effect.1" }],
+      "causes": [{ "tr": "İndüktör konumu/aşınması, güç, süre veya söndürme uygunsuzdur", "key": "risk.ind001.cause.1" }],
+      "preventionControls": [{ "tr": "İndüktör ömrü, konum poka-yoke, reçete kilidi ve soğutma kontrolü", "key": "risk.ind001.prevention.1" }],
+      "detectionControls": [{ "tr": "Sertlik, kesit/profil ve çatlak kontrol planı", "key": "risk.ind001.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 4, "detection": 6, "status": "draft", "rationale": { "tr": "Yük bölgesi ve tahribatlı kontrol kapsamına göre doğrulanır.", "key": "risk.ind001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "İndüktör konumu, güç eğrisi ve soğutma debisini her çevrim kaydet", "key": "risk.ind001.action.1" }],
+      "ownerRoles": ["process-engineering", "laboratory", "maintenance"], "evidenceTypeIds": ["parameter-log", "laboratory-report", "maintenance-record"],
+      "reactionPlan": { "tr": "Hattı ve lotu bloke et; indüktör/reçete/soğutmayı doğrula; laboratuvar kesiti ve çatlak kontrolü olmadan üretimi serbest bırakma.", "key": "risk.ind001.reaction" }
+    },
+    {
+      "id": "R-COT-001", "processTemplateId": "surface-coating", "workElementId": "surface-coating-apply",
+      "function": { "tr": "Kaplama kalınlığı, yapışma ve korozyon dayanımını sağlamak", "key": "risk.cot001.function" },
+      "failureMode": { "tr": "Kaplama ince/kalın, yapışması zayıf, lekeli veya korozyon dayanımı yetersizdir", "key": "risk.cot001.failure" },
+      "effects": [{ "tr": "Erken korozyon, montaj ölçüsü bozulması veya müşteri görünüş şikayeti oluşur", "key": "risk.cot001.effect.1" }],
+      "causes": [{ "tr": "Yüzey hazırlama, banyo kimyası, akım/süre veya askılama uygunsuzdur", "key": "risk.cot001.cause.1" }],
+      "preventionControls": [{ "tr": "Banyo yönetimi, reçete kilidi, askı standardı ve tedarikçi özel proses denetimi", "key": "risk.cot001.prevention.1" }],
+      "detectionControls": [{ "tr": "Kalınlık, yapışma, görünüş ve periyodik korozyon testi", "key": "risk.cot001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 6, "status": "draft", "rationale": { "tr": "Korozyon hedefi ve hızlandırılmış test sıklığına göre doğrulanır.", "key": "risk.cot001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Banyo parametreleri ve kaplama ölçümlerini lot bazında dijital bağla", "key": "risk.cot001.action.1" }],
+      "ownerRoles": ["supplier-quality", "process-engineering", "laboratory"], "evidenceTypeIds": ["supplier-certificate", "parameter-log", "laboratory-report"],
+      "reactionPlan": { "tr": "Partiyi bloke et; yüzey hazırlama ve banyo kayıtlarını incele; uygun yeniden işlem yöntemi ve doğrulama olmadan sevk etme.", "key": "risk.cot001.reaction" }
+    },
+    {
+      "id": "R-COT-002", "processTemplateId": "surface-coating", "workElementId": "surface-coating-apply",
+      "function": { "tr": "Yüksek dayanımlı parçalarda kaplama sonrası malzeme bütünlüğünü korumak", "key": "risk.cot002.function" },
+      "failureMode": { "tr": "Gerekli olduğunda hidrojen gevrekliği riski yönetilmez", "key": "risk.cot002.failure" },
+      "effects": [{ "tr": "Gecikmeli gevrek kırılma ve emniyet fonksiyon kaybı oluşabilir", "key": "risk.cot002.effect.1" }],
+      "causes": [{ "tr": "Malzeme/sertlik risk sınıfı tanınmaz veya giderme çevrimi gecikir/atlanır", "key": "risk.cot002.cause.1" }],
+      "preventionControls": [{ "tr": "Malzeme-sertlik bazlı proses rotası ve doğrulanmış giderme reçetesi", "key": "risk.cot002.prevention.1" }],
+      "detectionControls": [{ "tr": "Fırın zaman-sıcaklık kaydı, yük izlenebilirliği ve risk bazlı doğrulama testi", "key": "risk.cot002.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 3, "detection": 8, "status": "draft", "rationale": { "tr": "Yalnızca ilgili malzeme/sertlik/kaplama kombinasyonunda kullanılır; ekip risk değerlendirmesi zorunludur.", "key": "risk.cot002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Riskli parça için kaplama ve giderme fırını arasında süre kilidi ve lot izleme kur", "key": "risk.cot002.action.1" }],
+      "ownerRoles": ["supplier-quality", "laboratory", "product-engineering"], "evidenceTypeIds": ["parameter-log", "traceability-log", "laboratory-report"],
+      "reactionPlan": { "tr": "Lotu sevkiyata kapat; malzeme sertliği, kaplama ve giderme kayıtlarını yetkin ekipçe değerlendir; belirsiz lotu serbest bırakma.", "key": "risk.cot002.reaction" }
+    },
+    {
+      "id": "R-PNT-001", "processTemplateId": "painting", "workElementId": "painting-apply",
+      "function": { "tr": "Doğru renk, film kalınlığı, yapışma ve kürlenmeyi sağlamak", "key": "risk.pnt001.function" },
+      "failureMode": { "tr": "Yanlış renk, yetersiz/aşırı film, zayıf yapışma veya eksik kür oluşur", "key": "risk.pnt001.failure" },
+      "effects": [{ "tr": "Korozyon dayanımı ve görünüş şartı karşılanmaz", "key": "risk.pnt001.effect.1" }],
+      "causes": [{ "tr": "Yüzey hazırlama, boya karışımı, uygulama veya fırın çevrimi uygunsuzdur", "key": "risk.pnt001.cause.1" }],
+      "preventionControls": [{ "tr": "Boya lotu/reçetesi, viskozite, kabin ve fırın parametre standardı", "key": "risk.pnt001.prevention.1" }],
+      "detectionControls": [{ "tr": "Renk, film kalınlığı, yapışma ve kür doğrulaması", "key": "risk.pnt001.detection.1" }],
+      "defaultRatings": { "severity": 7, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Fonksiyonel korozyon ve müşteri görünüş sınıfına göre doğrulanır.", "key": "risk.pnt001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "HI"] },
+      "recommendedActions": [{ "tr": "Fırın sıcaklık profilini ürün reçetesi ve boya lotuyla kaydet", "key": "risk.pnt001.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering"], "evidenceTypeIds": ["parameter-log", "measurement-record", "supplier-certificate"],
+      "reactionPlan": { "tr": "Boya hattını ve lotu bloke et; yüzey, boya ve kürleme koşullarını doğrula; onaylı yeniden işlem olmadan devam etme.", "key": "risk.pnt001.reaction" }
+    },
+    {
+      "id": "R-PPA-001", "processTemplateId": "post-paint-assembly", "workElementId": "post-paint-component-verify",
+      "function": { "tr": "Boya tamamlandıktan sonra doğru ısıya hassas komponenti ve lotu kullanmak", "key": "risk.ppa001.function" },
+      "failureMode": { "tr": "Toz lastiği boya öncesi takılır veya yanlış varyant/lot kullanılır", "key": "risk.ppa001.failure" },
+      "effects": [{ "tr": "Elastomer ısıdan bozulur, kullanım ömrü azalır veya yanlış ürün fonksiyonu oluşur", "key": "risk.ppa001.effect.1" }],
+      "causes": [{ "tr": "Boya tamamlandı kilidi, iş emri reçetesi veya komponent barkod doğrulaması yoktur", "key": "risk.ppa001.cause.1" }],
+      "preventionControls": [{ "tr": "Boya operasyonu tamamlama ön koşulu, ürün reçetesi ve komponent barkod kilidi", "key": "risk.ppa001.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 varyant/lot kamera-barkod doğrulaması ve boya geçmişi kontrolü", "key": "risk.ppa001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "Elastomer sıcaklık dayanımı ve otomatik kilit kapsamına göre ekipçe doğrulanır.", "key": "risk.ppa001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Boya tamamlama ve komponent barkodunu çevrim başlatma ön koşulu yap", "key": "risk.ppa001.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering"], "evidenceTypeIds": ["traceability-log", "error-proof-verification"],
+      "reactionPlan": { "tr": "İstasyonu ve ürünü bloke et; boya geçmişini, reçeteyi ve komponent lotunu doğrula; etkilenmiş ürünleri %100 ayır.", "key": "risk.ppa001.reaction" }
+    },
+    {
+      "id": "R-PPA-002", "processTemplateId": "post-paint-assembly", "workElementId": "post-paint-boot-install",
+      "function": { "tr": "Toz lastiği, sıkma halkası ve ringi hasarsız ve tam oturmuş monte etmek", "key": "risk.ppa002.function" },
+      "failureMode": { "tr": "Toz lastiği yırtık/deforme, eksik oturmuş veya halka/ring eksik-gevşektir", "key": "risk.ppa002.failure" },
+      "effects": [{ "tr": "Kir/su girişi, gres kaybı, mafsal aşınması ve erken fonksiyon kaybı oluşur", "key": "risk.ppa002.effect.1" }],
+      "causes": [{ "tr": "Yanlış aparat, aşırı montaj kuvveti, komponent hasarı veya sıralama hatası vardır", "key": "risk.ppa002.cause.1" }],
+      "preventionControls": [{ "tr": "Poka-yoke aparat, tanımlı montaj sırası, master numune ve operatör yetkinliği", "key": "risk.ppa002.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 yırtık/deformasyon, çevresel oturma, halka/ring varlığı ve sıkılık kontrolü", "key": "risk.ppa002.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Sızdırmazlık fonksiyonu ve görsel/poka-yoke tespit gücüne göre ekipçe doğrulanır.", "key": "risk.ppa002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Oturma çevresini kamera ile %100 kontrol et ve halka/ring varlığını çevrim kaydına bağla", "key": "risk.ppa002.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering", "maintenance"], "evidenceTypeIds": ["error-proof-verification", "measurement-record", "traceability-log"],
+      "reactionPlan": { "tr": "İstasyonu durdur; aparat ve komponentleri doğrula; son uygun kontrolden sonraki ürünleri bloke edip %100 yeniden kontrol et.", "key": "risk.ppa002.reaction" }
+    },
+    {
+      "id": "R-WLD-001", "processTemplateId": "robotic-welding", "workElementId": "robotic-welding-fixture",
+      "function": { "tr": "Doğru komponentleri tanımlı yön ve konumda fikstürlemek", "key": "risk.wld001.function" },
+      "failureMode": { "tr": "Yanlış/eksik komponent veya konum kaçıklığı ile kaynak yapılır", "key": "risk.wld001.failure" },
+      "effects": [{ "tr": "Montaj geometrisi ve yük yolu bozulur", "key": "risk.wld001.effect.1" }],
+      "causes": [{ "tr": "Fikstür dayaması aşınmış, sensör atlanmış veya varyant karışmıştır", "key": "risk.wld001.cause.1" }],
+      "preventionControls": [{ "tr": "Komponent barkodu, fikstür poka-yoke ve sensör bypass yetki kontrolü", "key": "risk.wld001.prevention.1" }],
+      "detectionControls": [{ "tr": "Varlık/konum sensörü ve kaynak sonrası boyutsal kontrol", "key": "risk.wld001.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 3, "detection": 4, "status": "draft", "rationale": { "tr": "Kaynaklı yapının yük fonksiyonu ve poka-yoke kapsamına göre doğrulanır.", "key": "risk.wld001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Fikstür sensörlerini ürün reçetesine kilitle ve bypass kayıtlarını denetle", "key": "risk.wld001.action.1" }],
+      "ownerRoles": ["process-engineering", "tooling", "maintenance"], "evidenceTypeIds": ["error-proof-verification", "maintenance-record", "traceability-log"],
+      "reactionPlan": { "tr": "Kaynak hücresini durdur; komponent, fikstür ve sensörleri doğrula; son uygun kontrolden sonraki montajları ayır.", "key": "risk.wld001.reaction" }
+    },
+    {
+      "id": "R-WLD-002", "processTemplateId": "robotic-welding", "workElementId": "robotic-welding-join",
+      "function": { "tr": "Tanımlı nüfuziyet, dikiş geometrisi ve birleşim dayanımını oluşturmak", "key": "risk.wld002.function" },
+      "failureMode": { "tr": "Eksik nüfuziyet, porozite, yanma oluğu, çatlak veya eksik dikiş oluşur", "key": "risk.wld002.failure" },
+      "effects": [{ "tr": "Kaynak bağlantısı yük altında ayrılır veya yorulma ömrü düşer", "key": "risk.wld002.effect.1" }],
+      "causes": [{ "tr": "Akım/gerilim/tel hızı/gaz, torç konumu veya yüzey temizliği uygunsuzdur", "key": "risk.wld002.cause.1" }],
+      "preventionControls": [{ "tr": "Onaylı kaynak prosedürü, parametre penceresi, sarf ve torç bakım planı", "key": "risk.wld002.prevention.1" }],
+      "detectionControls": [{ "tr": "Çevrim parametre izleme, görsel kontrol, makro kesit ve risk bazlı NDT", "key": "risk.wld002.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 4, "detection": 7, "status": "draft", "rationale": { "tr": "Birleşimin emniyet fonksiyonu ve tahribatlı/tahribatsız kontrol kapsamına göre doğrulanır.", "key": "risk.wld002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Kaynak parametrelerini her seriyle kaydet; limit dışına otomatik hücre blokajı uygula", "key": "risk.wld002.action.1" }, { "tr": "Kritik kaynaklar için periyodik kesit ve yetkinlik planı oluştur", "key": "risk.wld002.action.2" }],
+      "ownerRoles": ["process-engineering", "quality-engineering", "maintenance"], "evidenceTypeIds": ["parameter-log", "laboratory-report", "maintenance-record"],
+      "reactionPlan": { "tr": "Hücreyi ve lotu bloke et; parametre, torç, gaz, fikstür ve sarfı doğrula; tanımlı doğrulama yapılmadan üretime dönme.", "key": "risk.wld002.reaction" }
+    },
+    {
+      "id": "R-RUB-001", "processTemplateId": "rubber-molding", "workElementId": "rubber-molding-cure",
+      "function": { "tr": "Doğru karışım, dolum ve vulkanizasyonla elastomer özelliklerini sağlamak", "key": "risk.rub001.function" },
+      "failureMode": { "tr": "Yanlış karışım, eksik dolum, porozite veya yetersiz/aşırı kür oluşur", "key": "risk.rub001.failure" },
+      "effects": [{ "tr": "Sertlik, sızdırmazlık, yorulma veya çevresel dayanım bozulur", "key": "risk.rub001.effect.1" }],
+      "causes": [{ "tr": "Karışım lotu/raf ömrü, kalıp sıcaklığı, basınç veya kür süresi uygunsuzdur", "key": "risk.rub001.cause.1" }],
+      "preventionControls": [{ "tr": "Karışım barkodu, raf ömrü kilidi, reçete ve kalıp bakım planı", "key": "risk.rub001.prevention.1" }],
+      "detectionControls": [{ "tr": "Çevrim parametre kaydı, görsel/boyutsal kontrol ve lot bazlı sertlik/fiziksel test", "key": "risk.rub001.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 4, "detection": 6, "status": "draft", "rationale": { "tr": "Elastomer fonksiyonu ve tahribatlı test sıklığına göre doğrulanır.", "key": "risk.rub001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Karışım lotu ve raf ömrünü makine reçetesinin çevrim ön koşulu yap", "key": "risk.rub001.action.1" }],
+      "ownerRoles": ["process-engineering", "laboratory", "quality-engineering"], "evidenceTypeIds": ["traceability-log", "parameter-log", "laboratory-report"],
+      "reactionPlan": { "tr": "Presi ve karışım lotunu bloke et; reçete, kalıp ve hamur durumunu doğrula; lot testleri uygun olmadan ürünü serbest bırakma.", "key": "risk.rub001.reaction" }
+    },
+    {
+      "id": "R-RUB-002", "processTemplateId": "rubber-molding", "workElementId": "rubber-molding-cure",
+      "function": { "tr": "Kauçuk-metal ara yüzünde tanımlı yapışmayı sağlamak", "key": "risk.rub002.function" },
+      "failureMode": { "tr": "Kauçuk ile metal insert arasında yetersiz yapışma veya ayrılma oluşur", "key": "risk.rub002.failure" },
+      "effects": [{ "tr": "Yük aktarımı veya sızdırmazlık kaybolur, komponent kullanımda ayrılır", "key": "risk.rub002.effect.1" }],
+      "causes": [{ "tr": "Insert yüzey hazırlığı, yapıştırıcı, bekleme süresi veya kontaminasyon uygunsuzdur", "key": "risk.rub002.cause.1" }],
+      "preventionControls": [{ "tr": "Insert yüzey prosesi, yapıştırıcı lotu ve açık süre standardı", "key": "risk.rub002.prevention.1" }],
+      "detectionControls": [{ "tr": "Görsel ara yüz kontrolü ve lot bazlı yapışma/ayırma testi", "key": "risk.rub002.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 4, "detection": 7, "status": "draft", "rationale": { "tr": "Yük fonksiyonu ve tahribatlı yapışma testinin temsil gücüne göre doğrulanır.", "key": "risk.rub002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Insert hazırlama ile kalıplama arasındaki süreyi lot bazında kilitle ve izle", "key": "risk.rub002.action.1" }],
+      "ownerRoles": ["process-engineering", "laboratory"], "evidenceTypeIds": ["traceability-log", "laboratory-report", "parameter-log"],
+      "reactionPlan": { "tr": "Lotu bloke et; insert hazırlığı, yapıştırıcı ve çevrim kayıtlarını incele; doğrulanmış yapışma sonucu olmadan serbest bırakma.", "key": "risk.rub002.reaction" }
+    },
+    {
+      "id": "R-PLS-001", "processTemplateId": "plastic-injection", "workElementId": "plastic-injection-mold",
+      "function": { "tr": "Doğru polimer, dolum, boyut ve görünüş özelliklerini üretmek", "key": "risk.pls001.function" },
+      "failureMode": { "tr": "Eksik dolum, çöküntü, kaynak izi, yanık veya boyutsal sapma oluşur", "key": "risk.pls001.failure" },
+      "effects": [{ "tr": "Komponent monte olmaz, kırılır, sızdırmazlık veya görünüş şartı bozulur", "key": "risk.pls001.effect.1" }],
+      "causes": [{ "tr": "Yanlış/nemli malzeme veya uygunsuz sıcaklık-basınç-hız-soğutma vardır", "key": "risk.pls001.cause.1" }],
+      "preventionControls": [{ "tr": "Malzeme barkodu, kurutma doğrulaması, reçete kilidi ve kalıp bakım planı", "key": "risk.pls001.prevention.1" }],
+      "detectionControls": [{ "tr": "Çevrim basınç eğrisi, görsel kontrol, boyutsal kontrol ve lot testi", "key": "risk.pls001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 5, "detection": 5, "status": "draft", "rationale": { "tr": "Fonksiyon, kalıp gözü ve otomatik proses izleme kapsamına göre doğrulanır.", "key": "risk.pls001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Her kalıp gözü için kavite izlenebilirliği ve basınç eğrisi limitleri uygula", "key": "risk.pls001.action.1" }],
+      "ownerRoles": ["process-engineering", "quality-engineering", "maintenance"], "evidenceTypeIds": ["parameter-log", "traceability-log", "measurement-record"],
+      "reactionPlan": { "tr": "Makineyi ve lotu bloke et; malzeme, kurutma, reçete ve kalıp gözünü doğrula; şüpheli kavite ürünlerini ayır.", "key": "risk.pls001.reaction" }
+    },
+    {
+      "id": "R-PLS-002", "processTemplateId": "plastic-injection", "workElementId": "plastic-injection-mold",
+      "function": { "tr": "Insertli üründe insert kimliği, konumu ve tutunmasını sağlamak", "key": "risk.pls002.function" },
+      "failureMode": { "tr": "Insert eksik, yanlış, ters, yerinden oynamış veya zayıf tutunmuştur", "key": "risk.pls002.failure" },
+      "effects": [{ "tr": "Bağlantı ve yük aktarımı kaybolur veya montaj hatası oluşur", "key": "risk.pls002.effect.1" }],
+      "causes": [{ "tr": "Insert besleme/varlık sensörü, fikstür veya tutma yöntemi yetersizdir", "key": "risk.pls002.cause.1" }],
+      "preventionControls": [{ "tr": "Insert barkodu, yön poka-yoke ve kalıp kapanma ön koşulu", "key": "risk.pls002.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 varlık/konum sensörü ve ürün sonrası kamera/çekme doğrulaması", "key": "risk.pls002.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "Insert fonksiyonu ve hata önleme kapsamına göre doğrulanır.", "key": "risk.pls002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Insert kimliği, varlığı ve yönünü her çevrim elektronik kayıtla doğrula", "key": "risk.pls002.action.1" }],
+      "ownerRoles": ["process-engineering", "maintenance"], "evidenceTypeIds": ["error-proof-verification", "traceability-log"],
+      "reactionPlan": { "tr": "Kalıbı durdur; insert besleme ve sensörleri doğrula; son uygun doğrulamadan sonraki parçaları ayır ve %100 kontrol et.", "key": "risk.pls002.reaction" }
+    },
+    {
+      "id": "R-PAS-001", "processTemplateId": "press-assembly", "workElementId": "press-assembly-join",
+      "function": { "tr": "Doğru komponenti yön, kuvvet-yol ve derinlik şartında preslemek", "key": "risk.pas001.function" },
+      "failureMode": { "tr": "Yanlış/ters komponent, hatalı pres kuvvet-yol eğrisi veya montaj derinliği oluşur", "key": "risk.pas001.failure" },
+      "effects": [{ "tr": "Komponent gevşer, zarar görür veya ürün fonksiyonu bozulur", "key": "risk.pas001.effect.1" }],
+      "causes": [{ "tr": "Komponent karışması, yanlış reçete, fikstür veya sensör arızası vardır", "key": "risk.pas001.cause.1" }],
+      "preventionControls": [{ "tr": "Komponent barkodu, yön poka-yoke ve ürün reçetesi kilidi", "key": "risk.pas001.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 kuvvet-yol penceresi, derinlik ve varlık kontrolü", "key": "risk.pas001.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "Montaj fonksiyonu ve kuvvet-yol algoritmasının doğrulamasına göre belirlenir.", "key": "risk.pas001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "HI"] },
+      "recommendedActions": [{ "tr": "Komponent kimliği ile kuvvet-yol reçetesini seri bazında eşleştir", "key": "risk.pas001.action.1" }],
+      "ownerRoles": ["process-engineering", "maintenance", "quality-engineering"], "evidenceTypeIds": ["parameter-log", "error-proof-verification", "traceability-log"],
+      "reactionPlan": { "tr": "İstasyonu ve ürünü otomatik bloke et; komponent, fikstür, reçete ve sensörü doğrula; son uygun çevrimden sonraki ürünleri ayır.", "key": "risk.pas001.reaction" }
+    },
+    {
+      "id": "R-IAS-001", "processTemplateId": "integrated-plant-assembly", "workElementId": "integrated-assembly-kitting",
+      "function": { "tr": "Doğru mamul varyantı için tüm alt komponentleri doğrulamak", "key": "risk.ias001.function" },
+      "failureMode": { "tr": "Yanlış, eksik, ters veya yanlış revizyonlu alt komponent mamule girer", "key": "risk.ias001.failure" },
+      "effects": [{ "tr": "Mamul fonksiyonu, emniyeti veya değiştirilebilirliği kaybolur", "key": "risk.ias001.effect.1" }, { "tr": "İzlenebilirlik ve geri çağırma kapsamı belirsizleşir", "key": "risk.ias001.effect.2" }],
+      "causes": [{ "tr": "BOM/reçete güncel değildir veya komponent doğrulama atlanır", "key": "risk.ias001.cause.1" }, { "tr": "Benzer komponentler fiziksel olarak karışır", "key": "risk.ias001.cause.2" }],
+      "preventionControls": [{ "tr": "Onaylı BOM-revizyon kilidi, kit hazırlama ve hat kenarı ayrımı", "key": "risk.ias001.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 barkod/RFID ve kamera ile parça-yön doğrulaması", "key": "risk.ias001.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "Mamul ve komponent fonksiyonları ile hata önleme kapsamına göre doğrulanır.", "key": "risk.ias001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "BOM, iş emri, komponent kimliği ve istasyon reçetesini tek seri kaydında kilitle", "key": "risk.ias001.action.1" }],
+      "ownerRoles": ["process-engineering", "production", "quality-engineering", "logistics"], "evidenceTypeIds": ["traceability-log", "error-proof-verification", "audit-trail"],
+      "reactionPlan": { "tr": "İstasyonu ve mamulü bloke et; şüpheli seri aralığını karantinaya al; BOM, revizyon, komponent lotu ve doğrulama kayıtlarını incele.", "key": "risk.ias001.reaction" }
+    },
+    {
+      "id": "R-IAS-002", "processTemplateId": "integrated-plant-assembly", "workElementId": "integrated-assembly-build",
+      "function": { "tr": "Alt montajları doğru sıra, kuvvet, tork, dozaj ve izlenebilirlikle birleştirmek", "key": "risk.ias002.function" },
+      "failureMode": { "tr": "Montaj sırası, kuvvet, tork, dozaj veya fonksiyonel ayar tolerans dışıdır", "key": "risk.ias002.failure" },
+      "effects": [{ "tr": "Mamulde gevşeme, sıkışma, aşınma, ses veya erken arıza oluşur", "key": "risk.ias002.effect.1" }],
+      "causes": [{ "tr": "Yanlış istasyon reçetesi, aşınmış fikstür, kalibrasyon veya operatör atlaması vardır", "key": "risk.ias002.cause.1" }],
+      "preventionControls": [{ "tr": "Sıralı istasyon kilidi, yetki kontrolü, reçete ve ekipman bakım planı", "key": "risk.ias002.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 kuvvet-yol, tork-açı, dozaj ve fonksiyon sonucu seri kaydı", "key": "risk.ias002.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 4, "detection": 3, "status": "draft", "rationale": { "tr": "Nihai mamul fonksiyonu ve çevrim içi izleme kapsamına göre doğrulanır.", "key": "risk.ias002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Tüm montaj sonuçlarını seri bazında kalite kapısı ile bağla; eksik sonuçta otomatik çıkış blokajı uygula", "key": "risk.ias002.action.1" }],
+      "ownerRoles": ["process-engineering", "production", "maintenance", "quality-engineering"], "evidenceTypeIds": ["parameter-log", "traceability-log", "error-proof-verification", "audit-trail"],
+      "reactionPlan": { "tr": "İstasyonu durdur; mamul ve son doğrulanmış seriden sonraki aralığı bloke et; reçete, fikstür, cihaz ve alt komponent kayıtlarını doğrula.", "key": "risk.ias002.reaction" }
+    },
+    {
+      "id": "R-TRQ-001", "processTemplateId": "torque-tightening", "workElementId": "torque-tightening-cycle",
+      "function": { "tr": "Bağlantıyı doğru program, tork, açı ve sıra ile sıkmak", "key": "risk.trq001.function" },
+      "failureMode": { "tr": "Düşük/yüksek tork, yanlış açı/sıra/program veya eksik sıkma oluşur", "key": "risk.trq001.failure" },
+      "effects": [{ "tr": "Bağlantı gevşer, kırılır, sızdırır veya yük aktarımı kaybolur", "key": "risk.trq001.effect.1" }],
+      "causes": [{ "tr": "Yanlış reçete/soket, çapraz diş, cihaz sürüklenmesi veya yeniden sıkma vardır", "key": "risk.trq001.cause.1" }],
+      "preventionControls": [{ "tr": "Ürün-seri reçete kilidi, soket doğrulama ve kalibrasyon/bakım planı", "key": "risk.trq001.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 tork-açı eğrisi, sıkma sırası ve sonuç kodu kaydı", "key": "risk.trq001.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "Bağlantının ürün güvenliği etkisi ve eğri analizine göre doğrulanır.", "key": "risk.trq001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Sıkma eğrisi anomalisi ve yeniden sıkma girişimi için otomatik blokaj kur", "key": "risk.trq001.action.1" }],
+      "ownerRoles": ["process-engineering", "maintenance", "quality-engineering"], "evidenceTypeIds": ["parameter-log", "traceability-log", "maintenance-record"],
+      "reactionPlan": { "tr": "İstasyonu ve ürünü bloke et; program, soket, cihaz ve bağlantı elemanını doğrula; kontrolsüz yeniden sıkma yapma.", "key": "risk.trq001.reaction" }
+    },
+    {
+      "id": "R-TST-001", "processTemplateId": "leak-functional-test", "workElementId": "leak-functional-test-run",
+      "function": { "tr": "Ürünün tanımlı sızdırmazlık ve fonksiyon şartlarını doğrulamak", "key": "risk.tst001.function" },
+      "failureMode": { "tr": "Uygunsuz ürün testten geçer veya uygun ürün hatalı reddedilir", "key": "risk.tst001.failure" },
+      "effects": [{ "tr": "Müşteriye fonksiyonsuz/sızdıran ürün gider veya gereksiz hurda oluşur", "key": "risk.tst001.effect.1" }],
+      "causes": [{ "tr": "Yanlış test programı/limiti, fikstür kaçağı veya ölçüm sistemi sürüklenmesi vardır", "key": "risk.tst001.cause.1" }],
+      "preventionControls": [{ "tr": "Ürün-program kilidi, fikstür bakım planı ve yetkili limit yönetimi", "key": "risk.tst001.prevention.1" }],
+      "detectionControls": [{ "tr": "Vardiya başı master parça, sıfır kontrolü ve otomatik sonuç kaydı", "key": "risk.tst001.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 3, "detection": 4, "status": "draft", "rationale": { "tr": "Test edilen fonksiyon, master doğrulama ve ölçüm sistemi analizine göre doğrulanır.", "key": "risk.tst001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Master parça süresi dolduğunda veya program eşleşmediğinde testi otomatik kilitle", "key": "risk.tst001.action.1" }],
+      "ownerRoles": ["quality-engineering", "maintenance", "process-engineering"], "evidenceTypeIds": ["measurement-record", "parameter-log", "maintenance-record", "traceability-log"],
+      "reactionPlan": { "tr": "Test cihazını ve şüpheli ürünleri bloke et; master parça, program, limit ve fikstürü doğrula; son uygun master kontrolünden sonraki ürünleri yeniden test et.", "key": "risk.tst001.reaction" }
+    },
+    {
+      "id": "R-TST-002", "processTemplateId": "leak-functional-test", "workElementId": "leak-functional-test-run",
+      "function": { "tr": "Test sonucunu doğru ürün seri numarasıyla kaydetmek", "key": "risk.tst002.function" },
+      "failureMode": { "tr": "Test sonucu yanlış seriye bağlanır veya kayıt kaybolur", "key": "risk.tst002.failure" },
+      "effects": [{ "tr": "Uygunsuz ürün blokajı ve geri çağırma kapsamı güvenilmez olur", "key": "risk.tst002.effect.1" }],
+      "causes": [{ "tr": "Seri okutma atlanır, tekrarlanır veya çevrim-sonuç eşleştirmesi kopar", "key": "risk.tst002.cause.1" }],
+      "preventionControls": [{ "tr": "Tekil seri, sıralı çevrim ve veritabanı işlem bütünlüğü", "key": "risk.tst002.prevention.1" }],
+      "detectionControls": [{ "tr": "Eksik/çift sonuç alarmı ve son istasyon kalite kapısı", "key": "risk.tst002.detection.1" }],
+      "defaultRatings": { "severity": 9, "occurrence": 2, "detection": 3, "status": "draft", "rationale": { "tr": "Dijital veri bütünlüğü ve yedekleme kontrolüne göre doğrulanır.", "key": "risk.tst002.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "REG"] },
+      "recommendedActions": [{ "tr": "Test sonucu yazılmadan seri numarasının sonraki istasyona geçişini engelle", "key": "risk.tst002.action.1" }],
+      "ownerRoles": ["quality-engineering", "process-engineering"], "evidenceTypeIds": ["traceability-log", "audit-trail"],
+      "reactionPlan": { "tr": "Seri akışını durdur; kayıt bütünlüğünü ve yedekleri kontrol et; doğrulanamayan ürünleri yeniden teste al.", "key": "risk.tst002.reaction" }
+    },
+    {
+      "id": "R-FIN-001", "processTemplateId": "final-inspection", "workElementId": "final-inspection-release",
+      "function": { "tr": "Yalnızca uygun, eksiksiz ve izlenebilir mamulü serbest bırakmak", "key": "risk.fin001.function" },
+      "failureMode": { "tr": "Uygunsuz, eksik veya onaysız mamul sevke serbest bırakılır", "key": "risk.fin001.failure" },
+      "effects": [{ "tr": "Müşteri hattı durur, saha arızası veya ürün güvenliği olayı oluşabilir", "key": "risk.fin001.effect.1" }],
+      "causes": [{ "tr": "Kontrol planı eksik uygulanır, statü atlanır veya kayıtlar incelenmez", "key": "risk.fin001.cause.1" }],
+      "preventionControls": [{ "tr": "Elektronik kalite kapısı, yetki matrisi ve doküman revizyon kontrolü", "key": "risk.fin001.prevention.1" }],
+      "detectionControls": [{ "tr": "Serbest bırakma kontrol listesi, kayıt tamlık kontrolü ve final denetim", "key": "risk.fin001.detection.1" }],
+      "defaultRatings": { "severity": 10, "occurrence": 2, "detection": 4, "status": "draft", "rationale": { "tr": "Ürün risk sınıfı ve önceki proseslerdeki hata önleme kapsamına göre doğrulanır.", "key": "risk.fin001.rating" } },
+      "specialCharacteristic": { "defaultType": "CC", "selectableTypes": ["SC", "CC", "REG", "HI"] },
+      "recommendedActions": [{ "tr": "Eksik CP/PFMEA/test/izlenebilirlik kaydında sevk statüsünü otomatik bloke et", "key": "risk.fin001.action.1" }],
+      "ownerRoles": ["quality-engineering", "production", "logistics"], "evidenceTypeIds": ["measurement-record", "traceability-log", "audit-trail"],
+      "reactionPlan": { "tr": "Sevkiyatı durdur; mamul ve ilgili lotları bloke et; eksik kontrol/kayıtları tamamla ve yalnızca yetkili kalite onayıyla serbest bırak.", "key": "risk.fin001.reaction" }
+    },
+    {
+      "id": "R-FIN-002", "processTemplateId": "final-inspection", "workElementId": "final-inspection-release",
+      "function": { "tr": "Görünüş, işaretleme ve komponent tamlığını doğrulamak", "key": "risk.fin002.function" },
+      "failureMode": { "tr": "Görsel kusur, eksik komponent veya yanlış işaretleme tespit edilmez", "key": "risk.fin002.failure" },
+      "effects": [{ "tr": "Müşteri montajı, marka algısı veya izlenebilirlik olumsuz etkilenir", "key": "risk.fin002.effect.1" }],
+      "causes": [{ "tr": "Görsel standart belirsiz, aydınlatma yetersiz veya kontrol yorgunluğa açıktır", "key": "risk.fin002.cause.1" }],
+      "preventionControls": [{ "tr": "Onaylı limit numune, ergonomik istasyon ve standart iş", "key": "risk.fin002.prevention.1" }],
+      "detectionControls": [{ "tr": "Kamera/poka-yoke veya çift doğrulamalı final görsel kontrol", "key": "risk.fin002.detection.1" }],
+      "defaultRatings": { "severity": 7, "occurrence": 4, "detection": 5, "status": "draft", "rationale": { "tr": "Kusurun müşteri etkisi ve otomatik kontrol kapsamına göre doğrulanır.", "key": "risk.fin002.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Kritik görünüş ve komponent varlığı için kamera doğrulaması uygula", "key": "risk.fin002.action.1" }],
+      "ownerRoles": ["quality-engineering", "production"], "evidenceTypeIds": ["measurement-record", "error-proof-verification"],
+      "reactionPlan": { "tr": "Final kontrolü ve sevkiyatı durdur; limit numune/aydınlatma/kamera sistemini doğrula; şüpheli lota %100 ayıklama uygula.", "key": "risk.fin002.reaction" }
+    },
+    {
+      "id": "R-MRK-001", "processTemplateId": "marking", "workElementId": "marking-verify",
+      "function": { "tr": "Doğru ve okunabilir ürün/lot işaretlemesi oluşturmak", "key": "risk.mrk001.function" },
+      "failureMode": { "tr": "Kod içeriği, konumu veya okunabilirliği yanlıştır", "key": "risk.mrk001.failure" },
+      "effects": [{ "tr": "Ürün yanlış tanımlanır veya izlenebilirlik kaybolur", "key": "risk.mrk001.effect.1" }],
+      "causes": [{ "tr": "Yanlış veri kaynağı/reçete, odak, fikstür veya yüzey durumu vardır", "key": "risk.mrk001.cause.1" }],
+      "preventionControls": [{ "tr": "İş emri-seri verisi kilidi ve ürün fikstür poka-yoke", "key": "risk.mrk001.prevention.1" }],
+      "detectionControls": [{ "tr": "%100 kamera/OCR, kod kalite ve veri tabanı eşleşme kontrolü", "key": "risk.mrk001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 3, "detection": 3, "status": "draft", "rationale": { "tr": "İzlenebilirlik ve yasal işaretleme kapsamına göre doğrulanır.", "key": "risk.mrk001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["SC", "CC", "REG"] },
+      "recommendedActions": [{ "tr": "Kod içeriğini ana veriden üret ve kamera sonucu olmadan parça geçişini engelle", "key": "risk.mrk001.action.1" }],
+      "ownerRoles": ["production", "quality-engineering", "maintenance"], "evidenceTypeIds": ["traceability-log", "error-proof-verification", "audit-trail"],
+      "reactionPlan": { "tr": "Markalamayı ve ürün akışını durdur; veri kaynağı, reçete, odak ve kamerayı doğrula; şüpheli ürünleri ayır ve kontrollü yeniden işaretle.", "key": "risk.mrk001.reaction" }
+    },
+    {
+      "id": "R-PKG-001", "processTemplateId": "packaging-shipping", "workElementId": "packaging-shipping-pack",
+      "function": { "tr": "Ürünü müşteri şartına göre korumak, saymak ve etiketlemek", "key": "risk.pkg001.function" },
+      "failureMode": { "tr": "Yanlış ürün/miktar/etiket veya yetersiz koruma ile paketleme yapılır", "key": "risk.pkg001.failure" },
+      "effects": [{ "tr": "Müşteri hattı durur, ürün karışır, korozyon veya taşıma hasarı oluşur", "key": "risk.pkg001.effect.1" }],
+      "causes": [{ "tr": "Yanlış paketleme reçetesi, benzer ürün karışması veya eksik seperatör/koruyucu vardır", "key": "risk.pkg001.cause.1" }],
+      "preventionControls": [{ "tr": "Müşteri-ürün paketleme reçetesi, hat kenarı ayrımı ve standart malzeme", "key": "risk.pkg001.prevention.1" }],
+      "detectionControls": [{ "tr": "Barkodlu ürün-etiket-müşteri doğrulaması, tartım/sayım ve final paket kontrolü", "key": "risk.pkg001.detection.1" }],
+      "defaultRatings": { "severity": 8, "occurrence": 4, "detection": 4, "status": "draft", "rationale": { "tr": "Müşteri hattı etkisi, taşıma koşulları ve doğrulama otomasyonuna göre belirlenir.", "key": "risk.pkg001.rating" } },
+      "specialCharacteristic": { "defaultType": "SC", "selectableTypes": ["NONE", "SC", "CC"] },
+      "recommendedActions": [{ "tr": "Ürün, ambalaj, etiket ve müşteri adresini tek okutma zinciriyle doğrula", "key": "risk.pkg001.action.1" }],
+      "ownerRoles": ["logistics", "quality-engineering"], "evidenceTypeIds": ["traceability-log", "error-proof-verification", "audit-trail"],
+      "reactionPlan": { "tr": "Sevkiyatı ve şüpheli paketleri bloke et; ürün, miktar, koruma ve etiketi %100 yeniden doğrula; doğru statü olmadan yükleme yapma.", "key": "risk.pkg001.reaction" }
+    }
+  ]
+}

@@ -63,7 +63,7 @@ const userSchemaSql = `CREATE TABLE IF NOT EXISTS users (
   display_name TEXT NOT NULL,
   role TEXT NOT NULL DEFAULT 'viewer',
   status TEXT NOT NULL DEFAULT 'active',
-  plant TEXT NOT NULL DEFAULT 'TYANA OTOMOTİV',
+  plant TEXT NOT NULL DEFAULT 'Kullanıcı Tanımlı Tesis',
   department TEXT NOT NULL DEFAULT 'Kalite',
   version INTEGER NOT NULL DEFAULT 1,
   created_at TEXT NOT NULL,
@@ -99,7 +99,7 @@ const defaultUser = {
   displayName: 'Eren',
   role: 'admin',
   status: 'active',
-  plant: 'TYANA OTOMOTİV',
+  plant: 'Kullanıcı Tanımlı Tesis',
   department: 'Kalite'
 };
 
@@ -147,7 +147,7 @@ function toUserDb(user, now = new Date().toISOString()) {
     display_name: String(user.displayName || '').trim(),
     role: String(user.role || 'viewer').trim(),
     status: String(user.status || 'active').trim(),
-    plant: String(user.plant || 'TYANA OTOMOTİV').trim(),
+    plant: String(user.plant || 'Kullanıcı Tanımlı Tesis').trim(),
     department: String(user.department || 'Kalite').trim(),
     version: Number(user.version) || 1,
     created_at: user.createdAt || now,
@@ -192,6 +192,8 @@ async function ensureDatabase(env) {
   const record = toUserDb(defaultUser);
   const insertUserSql = `INSERT OR IGNORE INTO users (${userColumns.join(', ')}) VALUES (${userColumns.map(() => '?').join(', ')})`;
   await env.DB.prepare(insertUserSql).bind(...userColumns.map(column => record[column])).run();
+  await env.DB.prepare("UPDATE users SET plant = ? WHERE id = 'user-eren' AND email = 'eren@tyana.local' AND version = 1 AND plant <> ?")
+    .bind(defaultUser.plant, defaultUser.plant).run();
 }
 
 function json(data, status = 200) {

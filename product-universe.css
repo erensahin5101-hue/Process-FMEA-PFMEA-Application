@@ -1,0 +1,7 @@
+.external-item-badge{display:inline-flex;align-items:center;justify-content:center;margin-right:5px;padding:3px 5px;border-radius:5px;background:#f9e5c4;color:#9a5e08;font-size:6px;font-weight:950;letter-spacing:.05em;vertical-align:middle}
+.item-master-toolbar label{gap:5px}
+.item-master-toolbar label kbd{flex:0 0 auto;padding:3px 5px;border:1px solid #dce5f1;border-radius:4px;background:#f7faff;color:#8190a4;font-size:5.5px;white-space:nowrap}
+.boundary-external-zone article[draggable],.boundary-system-zone article[draggable]{cursor:grab;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.boundary-external-zone article.boundary-node-dragging,.boundary-system-zone article.boundary-node-dragging{opacity:.58;cursor:grabbing;transform:scale(.98)}
+.boundary-external-zone article.boundary-node-drop-target,.boundary-system-zone article.boundary-node-drop-target{border-color:#2678a7;box-shadow:0 0 0 3px rgba(38,120,167,.16),0 9px 18px rgba(38,120,167,.13)}
+.boundary-external-zone article.boundary-node-connect-source,.boundary-system-zone article.boundary-node-connect-source{border-color:#d39a24;box-shadow:0 0 0 3px rgba(211,154,36,.2),0 9px 18px rgba(211,154,36,.14)}

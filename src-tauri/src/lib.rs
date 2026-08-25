@@ -1,4 +1,6 @@
 mod data;
+mod embedded_assets;
+mod trial;
 
 use data::*;
 use serde::Serialize;
@@ -113,6 +115,8 @@ enum ExportError {
     InvalidPath,
     #[error("Dosya yazilamadi: {0}")]
     Io(String),
+    #[error("{0}")]
+    License(String),
 }
 
 impl Serialize for ExportError {
@@ -227,6 +231,30 @@ fn purge_expired(entries: &mut HashMap<String, PendingExport>) {
     entries.retain(|_, export| export.expires_at > now);
 }
 
+fn write_export_atomically(destination: &std::path::Path, bytes: &[u8]) -> Result<(), ExportError> {
+    let parent = destination.parent().ok_or(ExportError::InvalidPath)?;
+    if !parent.is_dir() {
+        return Err(ExportError::InvalidPath);
+    }
+    let temporary = parent.join(format!(".tyana-export-{}.tmp", Uuid::new_v4()));
+    let write_result = (|| -> std::io::Result<()> {
+        let mut file = OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&temporary)?;
+        file.write_all(bytes)?;
+        file.flush()?;
+        file.sync_all()?;
+        drop(file);
+        replace_file(&temporary, destination)
+    })();
+    if let Err(error) = write_result {
+        let _ = fs::remove_file(&temporary);
+        return Err(ExportError::Io(error.to_string()));
+    }
+    Ok(())
+}
+
 #[tauri::command]
 async fn prepare_export(
     app: tauri::AppHandle,
@@ -235,13 +263,15 @@ async fn prepare_export(
     export_type: String,
 ) -> Result<Option<String>, ExportError> {
     ensure_main_window(&window)?;
+    trial::ensure_active(&app).map_err(|error| ExportError::License(error.to_string()))?;
     let kind = ExportKind::parse(&export_type)?;
     let file_name = safe_file_name(&suggested_name, kind)?;
 
     let selected = app
         .dialog()
         .file()
-        .set_title("TYANA OTOMOTİV - Kontrollü çıktıyı kaydet")
+        .set_parent(&window)
+        .set_title("TYANA Q-FLOW - Kontrollü çıktıyı kaydet")
         .set_file_name(&file_name)
         .add_filter(kind.label(), &[kind.extension()])
         .blocking_save_file();
@@ -282,10 +312,12 @@ async fn prepare_export(
 
 #[tauri::command]
 fn write_export(
+    app: tauri::AppHandle,
     window: tauri::WebviewWindow,
     request: Request<'_>,
 ) -> Result<SaveResult, ExportError> {
     ensure_main_window(&window)?;
+    trial::ensure_active(&app).map_err(|error| ExportError::License(error.to_string()))?;
     let ticket = request
         .headers()
         .get("x-tyana-export-ticket")
@@ -315,23 +347,7 @@ fn write_export(
         return Err(ExportError::InvalidSignature);
     }
 
-    let parent = pending.path.parent().ok_or(ExportError::InvalidPath)?;
-    let temporary = parent.join(format!(".tyana-export-{}.tmp", Uuid::new_v4()));
-    let write_result = (|| -> std::io::Result<()> {
-        let mut file = OpenOptions::new()
-            .create_new(true)
-            .write(true)
-            .open(&temporary)?;
-        file.write_all(bytes)?;
-        file.flush()?;
-        file.sync_all()?;
-        drop(file);
-        replace_file(&temporary, &pending.path)
-    })();
-    if let Err(error) = write_result {
-        let _ = fs::remove_file(&temporary);
-        return Err(ExportError::Io(error.to_string()));
-    }
+    write_export_atomically(&pending.path, bytes)?;
 
     let file_name = pending
         .path
@@ -346,22 +362,73 @@ fn write_export(
     })
 }
 
+#[tauri::command]
+fn license_status(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+) -> Result<trial::LicenseStatus, trial::TrialError> {
+    if window.label() != MAIN_WINDOW {
+        return Err(trial::TrialError::Tampered);
+    }
+    trial::status(&app)
+}
+
+#[tauri::command]
+fn license_activate(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    key: String,
+) -> Result<trial::LicenseStatus, trial::TrialError> {
+    if window.label() != MAIN_WINDOW {
+        return Err(trial::TrialError::Tampered);
+    }
+    trial::activate_permanent(&app, &key)
+}
+
+#[tauri::command]
+fn library_asset_get(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    asset_id: String,
+) -> Result<serde_json::Value, String> {
+    if window.label() != MAIN_WINDOW {
+        return Err("Bu pencereden kütüphaneye erişmeye izin verilmiyor.".into());
+    }
+    trial::ensure_active(&app).map_err(|error| error.to_string())?;
+    embedded_assets::public_value(&asset_id).map_err(|error| error.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
+            // Lisans kaydı bozuk/kurcalanmışsa pencere yine açılır; yalnız lisans
+            // durumu komutu çalışır ve arayüz kilit ekranını gösterir. Tüm veri,
+            // kütüphane ve çıktı komutları ayrıca Rust tarafında kapalı kalır.
+            let _ = trial::initialize(app.handle());
             data::initialize(app.handle())?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            license_status,
+            license_activate,
+            library_asset_get,
             prepare_export,
             write_export,
             process_list,
             process_save,
             process_archive,
+            machine_library_get,
+            machine_save,
+            machine_delete,
+            operation_machine_eligibility_save,
             project_latest,
             project_save,
+            master_template_list,
+            master_template_get,
+            master_template_save,
+            master_template_archive,
             user_me,
             user_list,
             user_save,
@@ -369,7 +436,7 @@ pub fn run() {
             drawing_store
         ])
         .run(tauri::generate_context!())
-        .expect("TYANA OTOMOTİV masaüstü uygulaması başlatılamadı");
+        .expect("TYANA Q-FLOW masaüstü uygulaması başlatılamadı");
 }
 
 #[cfg(test)]
@@ -400,5 +467,28 @@ mod tests {
         assert!(!ExportKind::Pdf.validate(b"not a pdf"));
         assert!(!ExportKind::Xlsx.validate(b"PK\x03\x04generic zip"));
         assert!(!ExportKind::Dxf.validate(b"MZ\0binary"));
+    }
+
+    #[test]
+    fn atomic_export_writer_creates_and_replaces_a_document() {
+        let directory = std::env::temp_dir().join(format!("tyana-export-test-{}", Uuid::new_v4()));
+        fs::create_dir_all(&directory).unwrap();
+        let destination = directory.join("CP-TEST.pdf");
+
+        write_export_atomically(&destination, b"%PDF-1.7\nfirst\n%%EOF\n").unwrap();
+        assert_eq!(fs::read(&destination).unwrap(), b"%PDF-1.7\nfirst\n%%EOF\n");
+
+        write_export_atomically(&destination, b"%PDF-1.7\nreplacement\n%%EOF\n").unwrap();
+        assert_eq!(
+            fs::read(&destination).unwrap(),
+            b"%PDF-1.7\nreplacement\n%%EOF\n"
+        );
+        assert!(fs::read_dir(&directory).unwrap().all(|entry| !entry
+            .unwrap()
+            .file_name()
+            .to_string_lossy()
+            .starts_with(".tyana-export-")));
+
+        fs::remove_dir_all(directory).unwrap();
     }
 }

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "product": "TYANA Q-FLOW",
+  "installationProfile": {
+    "id": "tyana-qflow-default",
+    "displayName": "Genel Kurulum Profili",
+    "organization": "Kullanıcı Tanımlı Kuruluş",
+    "plant": "Kullanıcı Tanımlı Tesis"
+  },
+  "version": "1.16.0",
+  "platform": "Windows",
+  "architecture": "x86_64",
+  "installer": "TYANA-Q-Flow-1.16.0-x64-Setup.exe",
+  "bytes": 216006449,
+  "sha256": "99bade401f85f0f03812c67704dd149d84c9528bccf165faa1a183ad6a51c310",
+  "sourceQualityLibrary": {
+    "id": "tyana.qflow.quality-document-examples",
+    "version": "2026.07.17",
+    "sha256": "4799a72bbfab73e508fad476ea9436a2883ec642f3b3f5ba412b48cb2a70ad31"
+  },
+  "operationCodeLibrary": {
+    "id": "tyana.qflow.operation-codes.tr-en",
+    "version": "2026.07.18",
+    "entries": 380,
+    "sha256": "acc50c7cc4aee3b6e3fc1349022062402d859ac2e29c9999c37ead074658b086"
+  },
+  "desktopAssetManifestSha256": "4c8c7a37f2b6c9aaea4e4cbab89171a50a5c939d8cb0e982520366d333ffbfc1",
+  "licenseProfile": {
+    "mode": "device-bound-full-trial-or-permanent-activation",
+    "durationDays": 30,
+    "permanentActivation": true,
+    "clockRollbackProtection": true,
+    "dualLocalAnchor": true
+  },
+  "packageProtection": {
+    "devtools": false,
+    "sourceMaps": false,
+    "minifiedRuntime": true,
+    "engineeringLibrariesEmbeddedInNativeBinary": true
+  },
+  "signatureStatus": "unsigned",
+  "authenticodeStatus": "NotSigned",
+  "webView2": "offline-installer-bundled",
+  "generatedAt": "2026-08-02T05:46:33.349Z"
+}

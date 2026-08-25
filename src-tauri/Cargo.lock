@@ -3646,9 +3646,10 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "tyana-qflow-desktop"
-version = "1.0.0"
+version = "1.16.0"
 dependencies = [
  "chrono",
+ "flate2",
  "rusqlite",
  "serde",
  "serde_json",
@@ -3659,6 +3660,7 @@ dependencies = [
  "thiserror 2.0.18",
  "uuid",
  "windows-sys 0.61.2",
+ "winreg",
 ]
 
 [[package]]

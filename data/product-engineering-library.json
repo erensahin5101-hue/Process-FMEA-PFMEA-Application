@@ -1,0 +1,1209 @@
+{
+  "schemaVersion": "1.0.0",
+  "libraryVersion": "2026.07.0",
+  "libraryId": "tyana.product-engineering",
+  "metadata": {
+    "owner": "TYANA OTOMOTİV",
+    "maintainer": "Eren",
+    "status": "controlled-draft",
+    "defaultLocale": "tr-TR",
+    "supportedLocales": [
+      "tr-TR"
+    ],
+    "plannedLocales": [
+      "en-US"
+    ],
+    "translationContract": "Every user-facing entity carries an immutable labelKey and a tr-TR fallback label. Additional locales must be added without changing IDs.",
+    "scope": "Ürün grubu, mamul ağacı, komponent üretim aşaması, ana üretim yöntemi ve teknik resim sorgu omurgası",
+    "disclaimer": "Kütüphane seçimleri mühendislik sorgusunu yönlendirir; teknik resim, müşteri şartı, özel karakteristik listesi ve onaylı proses doğrulanmadan üretim şartı sayılmaz.",
+    "lastReviewedAt": "2026-07-15"
+  },
+  "contracts": {
+    "questionTypes": [
+      "text",
+      "textarea",
+      "select",
+      "multi_select",
+      "boolean",
+      "number",
+      "number_range",
+      "tolerance",
+      "date",
+      "file_reference",
+      "entity_reference",
+      "repeating_group"
+    ],
+    "conditionOperators": [
+      "equals",
+      "not_equals",
+      "in",
+      "not_in",
+      "contains",
+      "is_true",
+      "is_false",
+      "exists",
+      "greater_than",
+      "less_than"
+    ],
+    "answerRecord": {
+      "requiredFields": [
+        "questionId",
+        "value",
+        "source",
+        "verificationStatus"
+      ],
+      "optionalFields": [
+        "unit",
+        "upperTolerance",
+        "lowerTolerance",
+        "evidenceRef",
+        "verifiedBy",
+        "verifiedAt",
+        "notApplicableReason"
+      ]
+    },
+    "sourceHierarchy": [
+      "customer-drawing",
+      "customer-specification",
+      "approved-engineering-specification",
+      "approved-bom",
+      "approved-process-standard",
+      "supplier-document",
+      "user-entry"
+    ]
+  },
+  "valueSets": [
+    {
+      "id": "vs.yes-no-unknown",
+      "labelKey": "values.yesNoUnknown",
+      "labels": { "tr-TR": "Evet / Hayır / Bilinmiyor" },
+      "options": [
+        { "id": "yes", "labelKey": "common.yes", "labels": { "tr-TR": "Evet" } },
+        { "id": "no", "labelKey": "common.no", "labels": { "tr-TR": "Hayır" } },
+        { "id": "unknown", "labelKey": "common.unknown", "labels": { "tr-TR": "Bilinmiyor — doğrulama gerekli" } },
+        { "id": "not-applicable", "labelKey": "common.notApplicable", "labels": { "tr-TR": "Uygulanamaz — gerekçe gerekli" } }
+      ]
+    },
+    {
+      "id": "vs.product-structure",
+      "labelKey": "values.productStructure",
+      "labels": { "tr-TR": "Mamul yapısı" },
+      "options": [
+        { "id": "single-part", "labelKey": "structure.singlePart", "labels": { "tr-TR": "Tek parça mamul" } },
+        { "id": "assembly", "labelKey": "structure.assembly", "labels": { "tr-TR": "Çok seviyeli montaj" } },
+        { "id": "subassembly", "labelKey": "structure.subassembly", "labels": { "tr-TR": "Alt montaj" } },
+        { "id": "service-kit", "labelKey": "structure.serviceKit", "labels": { "tr-TR": "Servis kiti / paketli set" } },
+        { "id": "bulk", "labelKey": "structure.bulk", "labels": { "tr-TR": "Dökme / sürekli mamul" } },
+        { "id": "custom", "labelKey": "structure.custom", "labels": { "tr-TR": "Kullanıcı tanımlı yapı" } }
+      ]
+    },
+    {
+      "id": "vs.component-type",
+      "labelKey": "values.componentType",
+      "labels": { "tr-TR": "BOM kalem tipi" },
+      "options": [
+        { "id": "manufactured-component", "labelKey": "component.manufactured", "labels": { "tr-TR": "Üretilen bileşen" } },
+        { "id": "purchased-component", "labelKey": "component.purchased", "labels": { "tr-TR": "Satın alınan bileşen" } },
+        { "id": "subassembly", "labelKey": "component.subassembly", "labels": { "tr-TR": "Alt montaj" } },
+        { "id": "raw-material", "labelKey": "component.rawMaterial", "labels": { "tr-TR": "Hammadde" } },
+        { "id": "fastener", "labelKey": "component.fastener", "labels": { "tr-TR": "Bağlantı elemanı" } },
+        { "id": "consumable", "labelKey": "component.consumable", "labels": { "tr-TR": "Sarf malzeme" } },
+        { "id": "packaging", "labelKey": "component.packaging", "labels": { "tr-TR": "Ambalaj" } }
+      ]
+    },
+    {
+      "id": "vs.make-buy",
+      "labelKey": "values.makeBuy",
+      "labels": { "tr-TR": "Üret / satın al kararı" },
+      "options": [
+        { "id": "make", "labelKey": "makeBuy.make", "labels": { "tr-TR": "İç üretim" } },
+        { "id": "buy", "labelKey": "makeBuy.buy", "labels": { "tr-TR": "Satın al" } },
+        { "id": "subcontract", "labelKey": "makeBuy.subcontract", "labels": { "tr-TR": "Fason proses" } },
+        { "id": "customer-supplied", "labelKey": "makeBuy.customerSupplied", "labels": { "tr-TR": "Müşteri tedariki" } }
+      ]
+    },
+    {
+      "id": "vs.manufacturing-stage",
+      "labelKey": "values.manufacturingStage",
+      "labels": { "tr-TR": "Bileşenin üretim aşaması" },
+      "options": [
+        { "id": "raw-material", "labelKey": "stage.rawMaterial", "labels": { "tr-TR": "Hammadde" } },
+        { "id": "blank", "labelKey": "stage.blank", "labels": { "tr-TR": "Taslak / ön şekillendirilmiş parça" } },
+        { "id": "rough-machined", "labelKey": "stage.roughMachined", "labels": { "tr-TR": "Kaba işlenmiş yarı mamul" } },
+        { "id": "finished-machined", "labelKey": "stage.finishedMachined", "labels": { "tr-TR": "İşlenmiş bileşen" } },
+        { "id": "heat-treated", "labelKey": "stage.heatTreated", "labels": { "tr-TR": "Isıl işlemli bileşen" } },
+        { "id": "surface-treated", "labelKey": "stage.surfaceTreated", "labels": { "tr-TR": "Kaplanmış / yüzey işlemli bileşen" } },
+        { "id": "standard-part", "labelKey": "stage.standardPart", "labels": { "tr-TR": "Standart satın alınan parça" } },
+        { "id": "subassembly", "labelKey": "stage.subassembly", "labels": { "tr-TR": "Alt montaj" } },
+        { "id": "finished-good", "labelKey": "stage.finishedGood", "labels": { "tr-TR": "Bitmiş mamul" } }
+      ]
+    },
+    {
+      "id": "vs.manufacturing-method",
+      "labelKey": "values.manufacturingMethod",
+      "labels": { "tr-TR": "Ana üretim yöntemi" },
+      "options": [
+        { "id": "purchased-as-is", "labelKey": "method.purchasedAsIs", "labels": { "tr-TR": "Satın al — değişiklik yapılmadan" } },
+        { "id": "cutting", "labelKey": "method.cutting", "labels": { "tr-TR": "Kesme / boy hazırlama" } },
+        { "id": "cold-forming", "labelKey": "method.coldForming", "labels": { "tr-TR": "Soğuk şekillendirme" } },
+        { "id": "hot-forging", "labelKey": "method.hotForging", "labels": { "tr-TR": "Sıcak dövme" } },
+        { "id": "cold-forging", "labelKey": "method.coldForging", "labels": { "tr-TR": "Soğuk dövme" } },
+        { "id": "casting", "labelKey": "method.casting", "labels": { "tr-TR": "Döküm" } },
+        { "id": "machining", "labelKey": "method.machining", "labels": { "tr-TR": "Talaşlı imalat" } },
+        { "id": "sheet-forming", "labelKey": "method.sheetForming", "labels": { "tr-TR": "Sac şekillendirme / pres" } },
+        { "id": "tube-forming", "labelKey": "method.tubeForming", "labels": { "tr-TR": "Boru / profil şekillendirme" } },
+        { "id": "welding", "labelKey": "method.welding", "labels": { "tr-TR": "Kaynaklı imalat" } },
+        { "id": "powder-metallurgy", "labelKey": "method.powderMetallurgy", "labels": { "tr-TR": "Toz metalurjisi" } },
+        { "id": "plastic-injection", "labelKey": "method.plasticInjection", "labels": { "tr-TR": "Plastik enjeksiyon" } },
+        { "id": "rubber-molding", "labelKey": "method.rubberMolding", "labels": { "tr-TR": "Elastomer kalıplama" } },
+        { "id": "extrusion", "labelKey": "method.extrusion", "labels": { "tr-TR": "Ekstrüzyon" } },
+        { "id": "additive", "labelKey": "method.additive", "labels": { "tr-TR": "Eklemeli imalat" } },
+        { "id": "electrical-assembly", "labelKey": "method.electricalAssembly", "labels": { "tr-TR": "Elektrik / elektronik montaj" } },
+        { "id": "mechanical-assembly", "labelKey": "method.mechanicalAssembly", "labels": { "tr-TR": "Mekanik montaj" } },
+        { "id": "packaging", "labelKey": "method.packaging", "labels": { "tr-TR": "Paketleme / kit oluşturma" } },
+        { "id": "custom", "labelKey": "method.custom", "labels": { "tr-TR": "Kullanıcı tanımlı yöntem" } }
+      ]
+    },
+    {
+      "id": "vs.raw-form",
+      "labelKey": "values.rawForm",
+      "labels": { "tr-TR": "Başlangıç hammadde / taslak formu" },
+      "options": [
+        { "id": "tube", "labelKey": "rawForm.tube", "labels": { "tr-TR": "Boru" } },
+        { "id": "bar", "labelKey": "rawForm.bar", "labels": { "tr-TR": "Çubuk" } },
+        { "id": "wire", "labelKey": "rawForm.wire", "labels": { "tr-TR": "Tel" } },
+        { "id": "forged-blank", "labelKey": "rawForm.forgedBlank", "labels": { "tr-TR": "Dövme taslağı" } },
+        { "id": "cast-blank", "labelKey": "rawForm.castBlank", "labels": { "tr-TR": "Döküm taslağı" } },
+        { "id": "sheet", "labelKey": "rawForm.sheet", "labels": { "tr-TR": "Sac / rulo" } },
+        { "id": "profile", "labelKey": "rawForm.profile", "labels": { "tr-TR": "Profil / ekstrüzyon" } },
+        { "id": "powder", "labelKey": "rawForm.powder", "labels": { "tr-TR": "Toz" } },
+        { "id": "polymer-granule", "labelKey": "rawForm.polymerGranule", "labels": { "tr-TR": "Polimer granül" } },
+        { "id": "rubber-compound", "labelKey": "rawForm.rubberCompound", "labels": { "tr-TR": "Elastomer hamuru" } },
+        { "id": "molded-part", "labelKey": "rawForm.moldedPart", "labels": { "tr-TR": "Kalıplanmış parça" } },
+        { "id": "standard-part", "labelKey": "rawForm.standardPart", "labels": { "tr-TR": "Standart parça" } },
+        { "id": "electronic-part", "labelKey": "rawForm.electronicPart", "labels": { "tr-TR": "Elektronik komponent" } },
+        { "id": "chemical", "labelKey": "rawForm.chemical", "labels": { "tr-TR": "Kimyasal / sarf" } },
+        { "id": "custom", "labelKey": "rawForm.custom", "labels": { "tr-TR": "Kullanıcı tanımlı form" } }
+      ]
+    },
+    {
+      "id": "vs.material-family",
+      "labelKey": "values.materialFamily",
+      "labels": { "tr-TR": "Malzeme ailesi" },
+      "options": [
+        { "id": "structural-steel", "labelKey": "material.structuralSteel", "labels": { "tr-TR": "Yapı çeliği" } },
+        { "id": "carbon-steel", "labelKey": "material.carbonSteel", "labels": { "tr-TR": "Karbon çeliği" } },
+        { "id": "alloy-steel", "labelKey": "material.alloySteel", "labels": { "tr-TR": "Alaşımlı çelik" } },
+        { "id": "stainless-steel", "labelKey": "material.stainlessSteel", "labels": { "tr-TR": "Paslanmaz çelik" } },
+        { "id": "cast-iron", "labelKey": "material.castIron", "labels": { "tr-TR": "Dökme demir" } },
+        { "id": "aluminum", "labelKey": "material.aluminum", "labels": { "tr-TR": "Alüminyum alaşımı" } },
+        { "id": "copper", "labelKey": "material.copper", "labels": { "tr-TR": "Bakır alaşımı" } },
+        { "id": "thermoplastic", "labelKey": "material.thermoplastic", "labels": { "tr-TR": "Termoplastik" } },
+        { "id": "thermoset", "labelKey": "material.thermoset", "labels": { "tr-TR": "Termoset" } },
+        { "id": "elastomer", "labelKey": "material.elastomer", "labels": { "tr-TR": "Elastomer" } },
+        { "id": "composite", "labelKey": "material.composite", "labels": { "tr-TR": "Kompozit" } },
+        { "id": "ceramic", "labelKey": "material.ceramic", "labels": { "tr-TR": "Seramik" } },
+        { "id": "multi-material", "labelKey": "material.multiMaterial", "labels": { "tr-TR": "Çoklu malzeme / alt BOM" } },
+        { "id": "custom", "labelKey": "material.custom", "labels": { "tr-TR": "Kullanıcı tanımlı malzeme" } }
+      ]
+    },
+    {
+      "id": "vs.heat-treatment",
+      "labelKey": "values.heatTreatment",
+      "labels": { "tr-TR": "Isıl işlem" },
+      "options": [
+        { "id": "none", "labelKey": "heat.none", "labels": { "tr-TR": "Uygulanmıyor" } },
+        { "id": "normalize", "labelKey": "heat.normalize", "labels": { "tr-TR": "Normalizasyon" } },
+        { "id": "quench-temper", "labelKey": "heat.quenchTemper", "labels": { "tr-TR": "Su verme + temperleme" } },
+        { "id": "induction", "labelKey": "heat.induction", "labels": { "tr-TR": "İndüksiyon sertleştirme" } },
+        { "id": "carburizing", "labelKey": "heat.carburizing", "labels": { "tr-TR": "Sementasyon" } },
+        { "id": "carbonitriding", "labelKey": "heat.carbonitriding", "labels": { "tr-TR": "Karbonitrasyon" } },
+        { "id": "nitriding", "labelKey": "heat.nitriding", "labels": { "tr-TR": "Nitrasyon" } },
+        { "id": "annealing", "labelKey": "heat.annealing", "labels": { "tr-TR": "Tavlama" } },
+        { "id": "stress-relief", "labelKey": "heat.stressRelief", "labels": { "tr-TR": "Gerilim giderme" } },
+        { "id": "supplier-defined", "labelKey": "heat.supplierDefined", "labels": { "tr-TR": "Onaylı tedarikçi şartı" } },
+        { "id": "drawing-defined", "labelKey": "heat.drawingDefined", "labels": { "tr-TR": "Teknik resme göre — değer girişi gerekli" } },
+        { "id": "custom", "labelKey": "heat.custom", "labels": { "tr-TR": "Kullanıcı tanımlı ısıl işlem" } }
+      ]
+    },
+    {
+      "id": "vs.coating-type",
+      "labelKey": "values.coatingType",
+      "labels": { "tr-TR": "Kaplama / yüzey işlemi" },
+      "options": [
+        { "id": "none", "labelKey": "coating.none", "labels": { "tr-TR": "Kaplama yok" } },
+        { "id": "zinc", "labelKey": "coating.zinc", "labels": { "tr-TR": "Çinko" } },
+        { "id": "zinc-nickel", "labelKey": "coating.zincNickel", "labels": { "tr-TR": "Çinko-Nikel" } },
+        { "id": "zinc-flake", "labelKey": "coating.zincFlake", "labels": { "tr-TR": "Çinko lamel" } },
+        { "id": "cataphoresis", "labelKey": "coating.cataphoresis", "labels": { "tr-TR": "Kataforez" } },
+        { "id": "phosphate", "labelKey": "coating.phosphate", "labels": { "tr-TR": "Fosfat" } },
+        { "id": "paint", "labelKey": "coating.paint", "labels": { "tr-TR": "Yaş / toz boya" } },
+        { "id": "anodizing", "labelKey": "coating.anodizing", "labels": { "tr-TR": "Eloksal" } },
+        { "id": "passivation", "labelKey": "coating.passivation", "labels": { "tr-TR": "Pasivasyon" } },
+        { "id": "plating-other", "labelKey": "coating.platingOther", "labels": { "tr-TR": "Diğer metalik kaplama" } },
+        { "id": "drawing-defined", "labelKey": "coating.drawingDefined", "labels": { "tr-TR": "Teknik resme göre — değer girişi gerekli" } },
+        { "id": "custom", "labelKey": "coating.custom", "labels": { "tr-TR": "Kullanıcı tanımlı kaplama" } }
+      ]
+    },
+    {
+      "id": "vs.characteristic-class",
+      "labelKey": "values.characteristicClass",
+      "labels": { "tr-TR": "Karakteristik sınıfı" },
+      "options": [
+        { "id": "dimensional", "labelKey": "characteristic.dimensional", "labels": { "tr-TR": "Boyutsal" } },
+        { "id": "geometric", "labelKey": "characteristic.geometric", "labels": { "tr-TR": "Geometrik tolerans" } },
+        { "id": "material", "labelKey": "characteristic.material", "labels": { "tr-TR": "Malzeme / kimyasal" } },
+        { "id": "mechanical", "labelKey": "characteristic.mechanical", "labels": { "tr-TR": "Mekanik özellik" } },
+        { "id": "surface", "labelKey": "characteristic.surface", "labels": { "tr-TR": "Yüzey / kaplama" } },
+        { "id": "functional", "labelKey": "characteristic.functional", "labels": { "tr-TR": "Fonksiyonel" } },
+        { "id": "visual", "labelKey": "characteristic.visual", "labels": { "tr-TR": "Görsel" } },
+        { "id": "assembly", "labelKey": "characteristic.assembly", "labels": { "tr-TR": "Montaj / bağlantı" } },
+        { "id": "regulatory", "labelKey": "characteristic.regulatory", "labels": { "tr-TR": "Yasal / mevzuat" } },
+        { "id": "packaging", "labelKey": "characteristic.packaging", "labels": { "tr-TR": "Ambalaj / sevkiyat" } }
+      ]
+    },
+    {
+      "id": "vs.special-characteristic",
+      "labelKey": "values.specialCharacteristic",
+      "labels": { "tr-TR": "Özel karakteristik sınıfı" },
+      "options": [
+        { "id": "none", "labelKey": "special.none", "labels": { "tr-TR": "Özel karakteristik değil" } },
+        { "id": "customer-special", "labelKey": "special.customer", "labels": { "tr-TR": "Müşteri özel karakteristiği" } },
+        { "id": "safety", "labelKey": "special.safety", "labels": { "tr-TR": "Emniyet / ürün güvenliği" } },
+        { "id": "regulatory", "labelKey": "special.regulatory", "labels": { "tr-TR": "Yasal / mevzuat" } },
+        { "id": "fit-function", "labelKey": "special.fitFunction", "labels": { "tr-TR": "Uyum / fonksiyon kritik" } },
+        { "id": "process-special", "labelKey": "special.process", "labels": { "tr-TR": "Proses özel karakteristiği" } },
+        { "id": "pending-classification", "labelKey": "special.pending", "labels": { "tr-TR": "Sınıflandırma bekliyor" } }
+      ]
+    },
+    {
+      "id": "vs.tolerance-definition",
+      "labelKey": "values.toleranceDefinition",
+      "labels": { "tr-TR": "Tolerans tanımlama biçimi" },
+      "options": [
+        { "id": "bilateral", "labelKey": "tolerance.bilateral", "labels": { "tr-TR": "Çift taraflı ±" } },
+        { "id": "asymmetric", "labelKey": "tolerance.asymmetric", "labels": { "tr-TR": "Asimetrik + / -" } },
+        { "id": "limit", "labelKey": "tolerance.limit", "labels": { "tr-TR": "Alt / üst limit" } },
+        { "id": "fit-class", "labelKey": "tolerance.fitClass", "labels": { "tr-TR": "Geçme / tolerans sınıfı" } },
+        { "id": "geometric", "labelKey": "tolerance.geometric", "labels": { "tr-TR": "Geometrik tolerans çerçevesi" } },
+        { "id": "minimum", "labelKey": "tolerance.minimum", "labels": { "tr-TR": "Minimum değer" } },
+        { "id": "maximum", "labelKey": "tolerance.maximum", "labels": { "tr-TR": "Maksimum değer" } },
+        { "id": "target-range", "labelKey": "tolerance.targetRange", "labels": { "tr-TR": "Hedef aralık" } },
+        { "id": "attribute", "labelKey": "tolerance.attribute", "labels": { "tr-TR": "Nitel uygun / uygunsuz" } }
+      ]
+    },
+    {
+      "id": "vs.traceability-level",
+      "labelKey": "values.traceabilityLevel",
+      "labels": { "tr-TR": "İzlenebilirlik seviyesi" },
+      "options": [
+        { "id": "none", "labelKey": "trace.none", "labels": { "tr-TR": "İzlenebilirlik gerekmiyor" } },
+        { "id": "production-date", "labelKey": "trace.productionDate", "labels": { "tr-TR": "Üretim tarihi / vardiya" } },
+        { "id": "batch", "labelKey": "trace.batch", "labels": { "tr-TR": "Üretim lotu" } },
+        { "id": "heat-batch", "labelKey": "trace.heatBatch", "labels": { "tr-TR": "Isı / döküm no + lot" } },
+        { "id": "component-lot", "labelKey": "trace.componentLot", "labels": { "tr-TR": "Alt bileşen lotu" } },
+        { "id": "serial", "labelKey": "trace.serial", "labels": { "tr-TR": "Tekil seri numarası" } },
+        { "id": "full-genealogy", "labelKey": "trace.fullGenealogy", "labels": { "tr-TR": "Tam ürün soy ağacı" } },
+        { "id": "customer-defined", "labelKey": "trace.customerDefined", "labels": { "tr-TR": "Müşteri tanımlı izlenebilirlik" } }
+      ]
+    },
+    {
+      "id": "vs.verification-status",
+      "labelKey": "values.verificationStatus",
+      "labels": { "tr-TR": "Doğrulama durumu" },
+      "options": [
+        { "id": "pending", "labelKey": "verification.pending", "labels": { "tr-TR": "Doğrulama bekliyor" } },
+        { "id": "drawing-verified", "labelKey": "verification.drawing", "labels": { "tr-TR": "Teknik resimle doğrulandı" } },
+        { "id": "customer-verified", "labelKey": "verification.customer", "labels": { "tr-TR": "Müşteri şartıyla doğrulandı" } },
+        { "id": "engineering-approved", "labelKey": "verification.engineering", "labels": { "tr-TR": "Mühendislik onaylı" } },
+        { "id": "not-applicable", "labelKey": "verification.notApplicable", "labels": { "tr-TR": "Uygulanamaz — gerekçe kayıtlı" } }
+      ]
+    },
+    {
+      "id": "vs.production-phase",
+      "labelKey": "values.productionPhase",
+      "labels": { "tr-TR": "Üretim fazı" },
+      "options": [
+        { "id": "concept", "labelKey": "phase.concept", "labels": { "tr-TR": "Konsept / fizibilite" } },
+        { "id": "prototype", "labelKey": "phase.prototype", "labels": { "tr-TR": "Prototip" } },
+        { "id": "pre-launch", "labelKey": "phase.preLaunch", "labels": { "tr-TR": "Ön seri" } },
+        { "id": "safe-launch", "labelKey": "phase.safeLaunch", "labels": { "tr-TR": "Güvenli devreye alma" } },
+        { "id": "series", "labelKey": "phase.series", "labels": { "tr-TR": "Seri üretim" } },
+        { "id": "service", "labelKey": "phase.service", "labels": { "tr-TR": "Servis / yedek parça" } }
+      ]
+    }
+  ],
+  "questionSets": [
+    {
+      "id": "qs.product.identity",
+      "scope": "product",
+      "titleKey": "questions.productIdentity.title",
+      "titles": { "tr-TR": "Mamul kimliği ve teknik kaynak" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.product.group", "labelKey": "questions.product.group", "labels": { "tr-TR": "Ürün grubu nedir?" }, "type": "entity_reference", "entity": "productGroup", "required": true },
+        { "id": "q.product.type", "labelKey": "questions.product.type", "labels": { "tr-TR": "Mamul tipi / alt grubu nedir?" }, "type": "entity_reference", "entity": "productType", "required": true, "allowCreate": true },
+        { "id": "q.product.structure", "labelKey": "questions.product.structure", "labels": { "tr-TR": "Mamul yapısı nasıldır?" }, "type": "select", "valueSet": "vs.product-structure", "required": true },
+        { "id": "q.product.part-number", "labelKey": "questions.product.partNumber", "labels": { "tr-TR": "Parça / mamul numarası nedir?" }, "type": "text", "required": true },
+        { "id": "q.product.part-name", "labelKey": "questions.product.partName", "labels": { "tr-TR": "Parça / mamul adı nedir?" }, "type": "text", "required": true },
+        { "id": "q.product.customer", "labelKey": "questions.product.customer", "labels": { "tr-TR": "Müşteri ve müşteri parça numarası nedir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "customerName", "labelKey": "fields.customerName", "labels": { "tr-TR": "Müşteri" }, "type": "text", "required": true },
+          { "id": "customerPartNumber", "labelKey": "fields.customerPartNumber", "labels": { "tr-TR": "Müşteri parça no" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.product.project-code", "labelKey": "questions.product.projectCode", "labels": { "tr-TR": "Proje / APQP kodu nedir?" }, "type": "text", "required": true },
+        { "id": "q.product.production-phase", "labelKey": "questions.product.productionPhase", "labels": { "tr-TR": "Üretim fazı nedir?" }, "type": "select", "valueSet": "vs.production-phase", "required": true },
+        { "id": "q.product.annual-volume", "labelKey": "questions.product.annualVolume", "labels": { "tr-TR": "Yıllık planlanan miktar nedir?" }, "type": "number", "required": true, "numeric": { "unit": "adet/yıl", "minimum": 0, "precision": 0 } },
+        { "id": "q.product.drawing-number", "labelKey": "questions.product.drawingNumber", "labels": { "tr-TR": "Teknik resim / şartname numarası nedir?" }, "type": "text", "required": true },
+        { "id": "q.product.drawing-revision", "labelKey": "questions.product.drawingRevision", "labels": { "tr-TR": "Teknik resim revizyonu nedir?" }, "type": "text", "required": true },
+        { "id": "q.product.drawing-source", "labelKey": "questions.product.drawingSource", "labels": { "tr-TR": "Kaynak teknik resim dosyası nedir?" }, "type": "file_reference", "required": true, "allowedExtensions": ["pdf", "png", "jpg", "jpeg", "tif", "tiff"], "requireSha256": true },
+        { "id": "q.product.drawing-unit", "labelKey": "questions.product.drawingUnit", "labels": { "tr-TR": "Teknik resmin varsayılan ölçü birimi nedir?" }, "type": "select", "required": true, "inlineOptions": ["mm", "inch"] },
+        { "id": "q.product.general-tolerance", "labelKey": "questions.product.generalTolerance", "labels": { "tr-TR": "Genel tolerans standardı / notu nedir?" }, "type": "text", "required": false },
+        { "id": "q.product.customer-specific-requirements", "labelKey": "questions.product.customerSpecificRequirements", "labels": { "tr-TR": "Müşteriye özel istekler ve sembol tanımları nelerdir?" }, "type": "textarea", "required": false },
+        { "id": "q.product.product-safety", "labelKey": "questions.product.productSafety", "labels": { "tr-TR": "Ürün güvenliği veya yasal karakteristik var mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true }
+      ]
+    },
+    {
+      "id": "qs.product.bom",
+      "scope": "product",
+      "titleKey": "questions.bom.title",
+      "titles": { "tr-TR": "Mamul ağacı ve alt montajlar" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.bom.items", "labelKey": "questions.bom.items", "labels": { "tr-TR": "Mamulü oluşturan tüm alt kalemler nelerdir?" }, "type": "repeating_group", "required": true, "minimumRowsWhen": { "path": "product.structure", "operator": "in", "value": ["assembly", "subassembly", "service-kit"] }, "fields": [
+          { "id": "position", "labelKey": "fields.bom.position", "labels": { "tr-TR": "Pozisyon no" }, "type": "text", "required": true },
+          { "id": "itemNumber", "labelKey": "fields.bom.itemNumber", "labels": { "tr-TR": "Parça / stok kodu" }, "type": "text", "required": true },
+          { "id": "itemName", "labelKey": "fields.bom.itemName", "labels": { "tr-TR": "Bileşen / alt montaj adı" }, "type": "text", "required": true },
+          { "id": "componentType", "labelKey": "fields.bom.componentType", "labels": { "tr-TR": "Kalem tipi" }, "type": "select", "valueSet": "vs.component-type", "required": true },
+          { "id": "parentItem", "labelKey": "fields.bom.parentItem", "labels": { "tr-TR": "Bağlı olduğu üst kalem" }, "type": "entity_reference", "entity": "bomItem", "required": true },
+          { "id": "quantity", "labelKey": "fields.bom.quantity", "labels": { "tr-TR": "Miktar" }, "type": "number", "required": true, "numeric": { "minimumExclusive": 0, "precision": 4 } },
+          { "id": "uom", "labelKey": "fields.bom.uom", "labels": { "tr-TR": "Birim" }, "type": "select", "required": true, "inlineOptions": ["adet", "kg", "g", "m", "ml", "set"] },
+          { "id": "makeBuy", "labelKey": "fields.bom.makeBuy", "labels": { "tr-TR": "Üret / satın al" }, "type": "select", "valueSet": "vs.make-buy", "required": true },
+          { "id": "drawingNumber", "labelKey": "fields.bom.drawingNumber", "labels": { "tr-TR": "Alt kalem teknik resmi / şartnamesi" }, "type": "text", "required": true },
+          { "id": "revision", "labelKey": "fields.bom.revision", "labels": { "tr-TR": "Revizyon" }, "type": "text", "required": true },
+          { "id": "supplier", "labelKey": "fields.bom.supplier", "labels": { "tr-TR": "Kaynak / tedarikçi" }, "type": "text", "required": false }
+        ] },
+        { "id": "q.bom.alternative-items", "labelKey": "questions.bom.alternatives", "labels": { "tr-TR": "Onaylı alternatif malzeme veya komponent var mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.bom.effectivity", "labelKey": "questions.bom.effectivity", "labels": { "tr-TR": "BOM geçerlilik tarihi / seri aralığı nedir?" }, "type": "text", "required": false }
+      ]
+    },
+    {
+      "id": "qs.component.classification",
+      "scope": "component",
+      "titleKey": "questions.componentClassification.title",
+      "titles": { "tr-TR": "Komponent aşaması ve üretim yöntemi" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.component.stage", "labelKey": "questions.component.stage", "labels": { "tr-TR": "Bu kayıt bileşenin hangi üretim aşamasını temsil ediyor?" }, "type": "select", "valueSet": "vs.manufacturing-stage", "required": true },
+        { "id": "q.component.primary-method", "labelKey": "questions.component.primaryMethod", "labels": { "tr-TR": "Bu aşamadaki ana üretim yöntemi nedir?" }, "type": "select", "valueSet": "vs.manufacturing-method", "required": true },
+        { "id": "q.component.secondary-methods", "labelKey": "questions.component.secondaryMethods", "labels": { "tr-TR": "İkincil üretim yöntemleri nelerdir?" }, "type": "multi_select", "valueSet": "vs.manufacturing-method", "required": false },
+        { "id": "q.component.input-stage", "labelKey": "questions.component.inputStage", "labels": { "tr-TR": "Girdi olarak hangi aşamadaki parça kullanılıyor?" }, "type": "select", "valueSet": "vs.manufacturing-stage", "required": true },
+        { "id": "q.component.raw-form", "labelKey": "questions.component.rawForm", "labels": { "tr-TR": "Başlangıç hammadde / taslak formu nedir?" }, "type": "select", "valueSet": "vs.raw-form", "required": true },
+        { "id": "q.component.upstream-item", "labelKey": "questions.component.upstreamItem", "labels": { "tr-TR": "Bu bileşenin kaynak taslak / alt kalem kaydı hangisidir?" }, "type": "entity_reference", "entity": "bomItem", "required": false },
+        { "id": "q.component.outsourced", "labelKey": "questions.component.outsourced", "labels": { "tr-TR": "Ana yöntem fason / dış kaynak mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.component.special-process", "labelKey": "questions.component.specialProcess", "labels": { "tr-TR": "Çıktısı yalnız sonraki muayene ile tam doğrulanamayan özel proses var mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.component.process-family", "labelKey": "questions.component.processFamily", "labels": { "tr-TR": "Benzer ürün / proses ailesi ve geçmiş referansı nedir?" }, "type": "text", "required": false }
+      ]
+    },
+    {
+      "id": "qs.component.material",
+      "scope": "component",
+      "titleKey": "questions.material.title",
+      "titles": { "tr-TR": "Malzeme ve tedarik şartı" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.material.family", "labelKey": "questions.material.family", "labels": { "tr-TR": "Malzeme ailesi nedir?" }, "type": "select", "valueSet": "vs.material-family", "required": true },
+        { "id": "q.material.grade", "labelKey": "questions.material.grade", "labels": { "tr-TR": "Malzeme kalite / sınıfı nedir?" }, "type": "text", "required": true },
+        { "id": "q.material.standard", "labelKey": "questions.material.standard", "labels": { "tr-TR": "Malzeme standardı ve revizyonu nedir?" }, "type": "text", "required": true },
+        { "id": "q.material.delivery-condition", "labelKey": "questions.material.deliveryCondition", "labels": { "tr-TR": "Teslim durumu / metalurjik şart nedir?" }, "type": "text", "required": false },
+        { "id": "q.material.chemical-requirements", "labelKey": "questions.material.chemicalRequirements", "labels": { "tr-TR": "Kimyasal bileşim için özel limit var mı?" }, "type": "textarea", "required": false },
+        { "id": "q.material.mechanical-requirements", "labelKey": "questions.material.mechanicalRequirements", "labels": { "tr-TR": "Çekme, akma, uzama veya darbe şartları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "property", "labelKey": "fields.material.property", "labels": { "tr-TR": "Özellik" }, "type": "text", "required": true },
+          { "id": "minimum", "labelKey": "fields.minimum", "labels": { "tr-TR": "Minimum" }, "type": "number", "required": false, "numeric": { "precision": 4 } },
+          { "id": "maximum", "labelKey": "fields.maximum", "labels": { "tr-TR": "Maksimum" }, "type": "number", "required": false, "numeric": { "precision": 4 } },
+          { "id": "unit", "labelKey": "fields.unit", "labels": { "tr-TR": "Birim" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.material.certificate", "labelKey": "questions.material.certificate", "labels": { "tr-TR": "Malzeme sertifikası ve doğrulama planı nedir?" }, "type": "text", "required": true },
+        { "id": "q.material.positive-identification", "labelKey": "questions.material.positiveIdentification", "labels": { "tr-TR": "Pozitif malzeme doğrulaması / spektrometre kontrolü gerekli mi?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.material.source-lot", "labelKey": "questions.material.sourceLot", "labels": { "tr-TR": "Isı, döküm, bobin veya hammadde lotu nasıl izlenecek?" }, "type": "text", "required": true }
+      ]
+    },
+    {
+      "id": "qs.drawing.characteristics",
+      "scope": "product-and-component",
+      "titleKey": "questions.drawingCharacteristics.title",
+      "titles": { "tr-TR": "Numaralı teknik resim karakteristikleri" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.drawing.characteristics", "labelKey": "questions.drawingCharacteristics.rows", "labels": { "tr-TR": "Teknik resimdeki tüm ölçü, tolerans, not ve fonksiyonel şartlar nelerdir?" }, "type": "repeating_group", "required": true, "minimumRows": 1, "fields": [
+          { "id": "balloonNumber", "labelKey": "fields.characteristic.balloon", "labels": { "tr-TR": "Balon / karakteristik no" }, "type": "text", "required": true },
+          { "id": "componentId", "labelKey": "fields.characteristic.component", "labels": { "tr-TR": "Bağlı bileşen / ana mamul" }, "type": "entity_reference", "entity": "bomItem", "required": true },
+          { "id": "name", "labelKey": "fields.characteristic.name", "labels": { "tr-TR": "Karakteristik tanımı" }, "type": "text", "required": true },
+          { "id": "class", "labelKey": "fields.characteristic.class", "labels": { "tr-TR": "Karakteristik sınıfı" }, "type": "select", "valueSet": "vs.characteristic-class", "required": true },
+          { "id": "specialClass", "labelKey": "fields.characteristic.specialClass", "labels": { "tr-TR": "Özel karakteristik sınıfı" }, "type": "select", "valueSet": "vs.special-characteristic", "required": true },
+          { "id": "nominal", "labelKey": "fields.characteristic.nominal", "labels": { "tr-TR": "Nominal / hedef değer" }, "type": "number", "required": false, "numeric": { "precision": 6 } },
+          { "id": "unit", "labelKey": "fields.characteristic.unit", "labels": { "tr-TR": "Birim" }, "type": "text", "required": false },
+          { "id": "toleranceType", "labelKey": "fields.characteristic.toleranceType", "labels": { "tr-TR": "Tolerans tanımı" }, "type": "select", "valueSet": "vs.tolerance-definition", "required": true },
+          { "id": "upperTolerance", "labelKey": "fields.characteristic.upperTolerance", "labels": { "tr-TR": "Üst sapma / üst limit" }, "type": "number", "required": false, "numeric": { "precision": 6 } },
+          { "id": "lowerTolerance", "labelKey": "fields.characteristic.lowerTolerance", "labels": { "tr-TR": "Alt sapma / alt limit" }, "type": "number", "required": false, "numeric": { "precision": 6 } },
+          { "id": "fitOrGdtFrame", "labelKey": "fields.characteristic.fitOrGdt", "labels": { "tr-TR": "Geçme sınıfı / GD&T çerçevesi" }, "type": "text", "required": false },
+          { "id": "datumReferences", "labelKey": "fields.characteristic.datums", "labels": { "tr-TR": "Datum referansları" }, "type": "text", "required": false },
+          { "id": "sourceZone", "labelKey": "fields.characteristic.sourceZone", "labels": { "tr-TR": "Resim sayfa / bölge / not referansı" }, "type": "text", "required": true },
+          { "id": "proposedProcess", "labelKey": "fields.characteristic.proposedProcess", "labels": { "tr-TR": "Üreten proses" }, "type": "entity_reference", "entity": "process", "required": false },
+          { "id": "proposedMeasurement", "labelKey": "fields.characteristic.proposedMeasurement", "labels": { "tr-TR": "Önerilen ölçüm yöntemi / cihazı" }, "type": "text", "required": false },
+          { "id": "verificationStatus", "labelKey": "fields.verificationStatus", "labels": { "tr-TR": "Doğrulama durumu" }, "type": "select", "valueSet": "vs.verification-status", "required": true }
+        ] },
+        { "id": "q.drawing.datum-system", "labelKey": "questions.drawing.datumSystem", "labels": { "tr-TR": "Datum sistemi ve bağlama stratejisi nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.drawing.surface-roughness", "labelKey": "questions.drawing.surfaceRoughness", "labels": { "tr-TR": "Genel ve yerel yüzey pürüzlülüğü şartları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "featureRef", "labelKey": "fields.featureRef", "labels": { "tr-TR": "Yüzey / karakteristik no" }, "type": "text", "required": true },
+          { "id": "parameter", "labelKey": "fields.roughnessParameter", "labels": { "tr-TR": "Parametre" }, "type": "select", "inlineOptions": ["Ra", "Rz", "Rt", "Diğer"], "required": true },
+          { "id": "value", "labelKey": "fields.value", "labels": { "tr-TR": "Limit" }, "type": "number", "required": true, "numeric": { "unit": "µm", "minimum": 0, "precision": 3 } }
+        ] },
+        { "id": "q.drawing.edge-condition", "labelKey": "questions.drawing.edgeCondition", "labels": { "tr-TR": "Çapak, keskin kenar, radyüs ve pah şartları nelerdir?" }, "type": "textarea", "required": false },
+        { "id": "q.drawing.thread-spline", "labelKey": "questions.drawing.threadSpline", "labels": { "tr-TR": "Diş, vida, kama veya spline şartları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "balloonNumber", "labelKey": "fields.characteristic.balloon", "labels": { "tr-TR": "Karakteristik no" }, "type": "text", "required": true },
+          { "id": "designation", "labelKey": "fields.thread.designation", "labels": { "tr-TR": "Tanım / sınıf" }, "type": "text", "required": true },
+          { "id": "length", "labelKey": "fields.thread.length", "labels": { "tr-TR": "Etkin boy" }, "type": "number", "required": false, "numeric": { "unit": "mm", "minimum": 0, "precision": 3 } },
+          { "id": "gauge", "labelKey": "fields.thread.gauge", "labels": { "tr-TR": "Mastar / kontrol yöntemi" }, "type": "text", "required": true }
+        ] }
+      ]
+    },
+    {
+      "id": "qs.component.heat-treatment",
+      "scope": "component",
+      "titleKey": "questions.heatTreatment.title",
+      "titles": { "tr-TR": "Isıl işlem ve metalurjik şartlar" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.heat.type", "labelKey": "questions.heat.type", "labels": { "tr-TR": "Isıl işlem tipi nedir?" }, "type": "select", "valueSet": "vs.heat-treatment", "required": true },
+        { "id": "q.heat.hardness", "labelKey": "questions.heat.hardness", "labels": { "tr-TR": "Sertlik hedefi ve kabul aralığı nedir?" }, "type": "number_range", "required": false, "numeric": { "unitSelectable": ["HRC", "HRB", "HBW", "HV", "Shore A", "Shore D"], "precision": 2 } },
+        { "id": "q.heat.case-depth", "labelKey": "questions.heat.caseDepth", "labels": { "tr-TR": "Efektif / toplam sertlik derinliği nedir?" }, "type": "number_range", "required": false, "numeric": { "unit": "mm", "minimum": 0, "precision": 3 } },
+        { "id": "q.heat.pattern", "labelKey": "questions.heat.pattern", "labels": { "tr-TR": "Sertleşme bölgesi, geçiş alanı ve yasaklı bölge nasıl tanımlı?" }, "type": "textarea", "required": false },
+        { "id": "q.heat.microstructure", "labelKey": "questions.heat.microstructure", "labels": { "tr-TR": "Mikroyapı, tane boyutu, dekarbürizasyon veya çatlak şartı nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.heat.validation", "labelKey": "questions.heat.validation", "labels": { "tr-TR": "Proses validasyonu, reçete kilidi ve laboratuvar kontrol planı nedir?" }, "type": "textarea", "required": true }
+      ]
+    },
+    {
+      "id": "qs.component.coating",
+      "scope": "component",
+      "titleKey": "questions.coating.title",
+      "titles": { "tr-TR": "Kaplama, boya ve korozyon performansı" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.coating.type", "labelKey": "questions.coating.type", "labels": { "tr-TR": "Kaplama / yüzey işlemi nedir?" }, "type": "select", "valueSet": "vs.coating-type", "required": true },
+        { "id": "q.coating.standard", "labelKey": "questions.coating.standard", "labels": { "tr-TR": "Kaplama standardı ve sınıfı nedir?" }, "type": "text", "required": true },
+        { "id": "q.coating.thickness", "labelKey": "questions.coating.thickness", "labels": { "tr-TR": "Kaplama kalınlığı kabul aralığı nedir?" }, "type": "number_range", "required": false, "numeric": { "unit": "µm", "minimum": 0, "precision": 2 } },
+        { "id": "q.coating.masking", "labelKey": "questions.coating.masking", "labels": { "tr-TR": "Maskelenecek / kaplanmayacak bölgeler nelerdir?" }, "type": "textarea", "required": false },
+        { "id": "q.coating.color-gloss", "labelKey": "questions.coating.colorGloss", "labels": { "tr-TR": "Renk, parlaklık ve görünüş şartı nedir?" }, "type": "text", "required": false },
+        { "id": "q.coating.corrosion", "labelKey": "questions.coating.corrosion", "labels": { "tr-TR": "Korozyon testi, süre ve kabul kriteri nedir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "method", "labelKey": "fields.corrosion.method", "labels": { "tr-TR": "Test yöntemi / standardı" }, "type": "text", "required": true },
+          { "id": "duration", "labelKey": "fields.corrosion.duration", "labels": { "tr-TR": "Süre" }, "type": "number", "required": true, "numeric": { "unit": "saat", "minimum": 0, "precision": 1 } },
+          { "id": "acceptance", "labelKey": "fields.corrosion.acceptance", "labels": { "tr-TR": "Kabul kriteri" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.coating.hydrogen-embrittlement", "labelKey": "questions.coating.hydrogenEmbrittlement", "labels": { "tr-TR": "Hidrojen gevrekliği giderme şartı var mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.coating.outsource-control", "labelKey": "questions.coating.outsourceControl", "labels": { "tr-TR": "Fason kaplama için parti, askı ve sertifika izlenebilirliği nasıl sağlanacak?" }, "type": "textarea", "required": true }
+      ]
+    },
+    {
+      "id": "qs.product.traceability",
+      "scope": "product-and-component",
+      "titleKey": "questions.traceability.title",
+      "titles": { "tr-TR": "Özel karakteristik ve izlenebilirlik" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.trace.level", "labelKey": "questions.trace.level", "labels": { "tr-TR": "Gerekli izlenebilirlik seviyesi nedir?" }, "type": "select", "valueSet": "vs.traceability-level", "required": true },
+        { "id": "q.trace.identifier", "labelKey": "questions.trace.identifier", "labels": { "tr-TR": "Lot / seri numarası formatı ve üretim noktası nedir?" }, "type": "text", "required": true },
+        { "id": "q.trace.component-genealogy", "labelKey": "questions.trace.componentGenealogy", "labels": { "tr-TR": "Hangi alt bileşen lotları mamule bağlanacak?" }, "type": "multi_select", "entity": "bomItem", "required": false },
+        { "id": "q.trace.process-records", "labelKey": "questions.trace.processRecords", "labels": { "tr-TR": "Hangi proses parametreleri ve kontrol sonuçları saklanacak?" }, "type": "multi_select", "entity": "processCharacteristic", "required": true },
+        { "id": "q.trace.retention", "labelKey": "questions.trace.retention", "labels": { "tr-TR": "Kayıt saklama süresi ve sorumlusu nedir?" }, "type": "text", "required": true },
+        { "id": "q.trace.special-symbol-map", "labelKey": "questions.trace.specialSymbolMap", "labels": { "tr-TR": "Müşteri özel karakteristik sembolleri TYANA sınıflarıyla nasıl eşleşiyor?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "customerSymbol", "labelKey": "fields.special.customerSymbol", "labels": { "tr-TR": "Müşteri sembolü" }, "type": "text", "required": true },
+          { "id": "internalClass", "labelKey": "fields.special.internalClass", "labels": { "tr-TR": "İç sınıf" }, "type": "select", "valueSet": "vs.special-characteristic", "required": true },
+          { "id": "definition", "labelKey": "fields.special.definition", "labels": { "tr-TR": "Tanım / yönetim kuralı" }, "type": "text", "required": true }
+        ] }
+      ]
+    },
+    {
+      "id": "qs.manufacturing.forging",
+      "scope": "component",
+      "titleKey": "questions.forging.title",
+      "titles": { "tr-TR": "Dövme taslağı ve dövme prosesi" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.forging.input-size", "labelKey": "questions.forging.inputSize", "labels": { "tr-TR": "Dövme girdisinin çapı / kesim ölçüsü ve toleransı nedir?" }, "type": "tolerance", "required": true, "numeric": { "unit": "mm", "precision": 3 } },
+        { "id": "q.forging.temperature", "labelKey": "questions.forging.temperature", "labels": { "tr-TR": "Başlangıç ve bitiş dövme sıcaklığı aralığı nedir?" }, "type": "number_range", "required": true, "numeric": { "unit": "°C", "precision": 0 } },
+        { "id": "q.forging.tool-cavity", "labelKey": "questions.forging.toolCavity", "labels": { "tr-TR": "Kalıp, göz ve baskı izlenebilirliği nasıl yapılacak?" }, "type": "text", "required": true },
+        { "id": "q.forging.fiber-flow", "labelKey": "questions.forging.fiberFlow", "labels": { "tr-TR": "Lif akışı / tane yönü şartı var mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.forging.flash-draft", "labelKey": "questions.forging.flashDraft", "labels": { "tr-TR": "Çapak izi, kalıp kaçıklığı, draft ve yüzey kabul kriterleri nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.forging.post-treatment", "labelKey": "questions.forging.postTreatment", "labels": { "tr-TR": "Dövme sonrası soğutma, normalizasyon, kumlama veya yüzey temizleme şartı nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.forging.defect-control", "labelKey": "questions.forging.defectControl", "labels": { "tr-TR": "Katmer, çatlak, eksik dolum ve kalıp kaçıklığı nasıl kontrol edilecek?" }, "type": "textarea", "required": true }
+      ]
+    },
+    {
+      "id": "qs.manufacturing.machining",
+      "scope": "component",
+      "titleKey": "questions.machining.title",
+      "titles": { "tr-TR": "Talaşlı imalat proses tanımı" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.machining.input-condition", "labelKey": "questions.machining.inputCondition", "labels": { "tr-TR": "İşlenecek girdi nedir: çubuk, boru, dövme taslak, döküm taslak veya yarı mamul?" }, "type": "select", "valueSet": "vs.raw-form", "required": true },
+        { "id": "q.machining.datums", "labelKey": "questions.machining.datums", "labels": { "tr-TR": "İşleme datumları ve bağlama sırası nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.machining.operations", "labelKey": "questions.machining.operations", "labels": { "tr-TR": "Operasyon, tezgâh, bağlama ve çıktı aşamaları nelerdir?" }, "type": "repeating_group", "required": true, "minimumRows": 1, "fields": [
+          { "id": "operationNo", "labelKey": "fields.operationNo", "labels": { "tr-TR": "Operasyon no" }, "type": "number", "required": true, "numeric": { "minimum": 1, "precision": 0 } },
+          { "id": "operation", "labelKey": "fields.operation", "labels": { "tr-TR": "İşlem" }, "type": "multi_select", "required": true, "inlineOptions": ["Tornalama", "Frezeleme", "Delme", "Raybalama", "Broşlama", "Diş çekme", "Taşlama", "Honlama", "Özel"] },
+          { "id": "machine", "labelKey": "fields.machine", "labels": { "tr-TR": "Tezgâh / makine grubu" }, "type": "text", "required": true },
+          { "id": "fixture", "labelKey": "fields.fixture", "labels": { "tr-TR": "Fikstür / bağlama" }, "type": "text", "required": true },
+          { "id": "outputStage", "labelKey": "fields.outputStage", "labels": { "tr-TR": "Çıktı aşaması" }, "type": "select", "valueSet": "vs.manufacturing-stage", "required": true }
+        ] },
+        { "id": "q.machining.parameters", "labelKey": "questions.machining.parameters", "labels": { "tr-TR": "Kritik sayısal kesme ve proses parametreleri nelerdir?" }, "type": "repeating_group", "required": true, "fields": [
+          { "id": "parameter", "labelKey": "fields.parameter", "labels": { "tr-TR": "Parametre" }, "type": "text", "required": true },
+          { "id": "target", "labelKey": "fields.target", "labels": { "tr-TR": "Hedef" }, "type": "number", "required": true, "numeric": { "precision": 4 } },
+          { "id": "minimum", "labelKey": "fields.minimum", "labels": { "tr-TR": "Alt limit" }, "type": "number", "required": false, "numeric": { "precision": 4 } },
+          { "id": "maximum", "labelKey": "fields.maximum", "labels": { "tr-TR": "Üst limit" }, "type": "number", "required": false, "numeric": { "precision": 4 } },
+          { "id": "unit", "labelKey": "fields.unit", "labels": { "tr-TR": "Birim" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.machining.tool-life", "labelKey": "questions.machining.toolLife", "labels": { "tr-TR": "Takım ömrü, aşınma limiti ve değişim kuralı nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.machining.coolant", "labelKey": "questions.machining.coolant", "labels": { "tr-TR": "Soğutma sıvısı tipi, konsantrasyonu ve kontrol aralığı nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.machining.burr-cleanliness", "labelKey": "questions.machining.burrCleanliness", "labels": { "tr-TR": "Çapak alma ve talaş / temizlik kabul kriteri nedir?" }, "type": "textarea", "required": true }
+      ]
+    },
+    {
+      "id": "qs.manufacturing.casting",
+      "scope": "component",
+      "titleKey": "questions.casting.title",
+      "titles": { "tr-TR": "Döküm ve işlenmiş döküm" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.casting.method", "labelKey": "questions.casting.method", "labels": { "tr-TR": "Döküm yöntemi ve alaşım ergitme şartı nedir?" }, "type": "text", "required": true },
+        { "id": "q.casting.pattern-cavity", "labelKey": "questions.casting.patternCavity", "labels": { "tr-TR": "Model, kalıp, göz ve ergitme lotu nasıl izlenecek?" }, "type": "text", "required": true },
+        { "id": "q.casting.allowance", "labelKey": "questions.casting.allowance", "labels": { "tr-TR": "İşleme payları ve kritik stok bölgeleri nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.casting.defects", "labelKey": "questions.casting.defects", "labels": { "tr-TR": "Porozite, çekinti, inklüzyon ve yüzey kusuru kabul kriterleri nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.casting.ndt", "labelKey": "questions.casting.ndt", "labels": { "tr-TR": "Radyografi, ultrasonik, penetrant veya diğer NDT gereksinimi var mı?" }, "type": "textarea", "required": false },
+        { "id": "q.casting.leak", "labelKey": "questions.casting.leak", "labels": { "tr-TR": "Basınç / sızdırmazlık testi gerekli mi; basınç, süre ve kaçak limiti nedir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "pressure", "labelKey": "fields.pressure", "labels": { "tr-TR": "Test basıncı" }, "type": "number", "required": true, "numeric": { "precision": 3 } },
+          { "id": "pressureUnit", "labelKey": "fields.pressureUnit", "labels": { "tr-TR": "Basınç birimi" }, "type": "select", "inlineOptions": ["bar", "kPa", "MPa"], "required": true },
+          { "id": "holdTime", "labelKey": "fields.holdTime", "labels": { "tr-TR": "Bekleme süresi" }, "type": "number", "required": true, "numeric": { "unit": "s", "minimum": 0, "precision": 1 } },
+          { "id": "leakLimit", "labelKey": "fields.leakLimit", "labels": { "tr-TR": "Kaçak limiti" }, "type": "text", "required": true }
+        ] }
+      ]
+    },
+    {
+      "id": "qs.manufacturing.sheet-weld",
+      "scope": "component",
+      "titleKey": "questions.sheetWeld.title",
+      "titles": { "tr-TR": "Sac / profil şekillendirme ve kaynak" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.sheet.stock", "labelKey": "questions.sheet.stock", "labels": { "tr-TR": "Sac / profil kalite, kalınlık ve toleransı nedir?" }, "type": "tolerance", "required": true, "numeric": { "unit": "mm", "precision": 3 } },
+        { "id": "q.sheet.grain-direction", "labelKey": "questions.sheet.grainDirection", "labels": { "tr-TR": "Hadde yönü / lif yönü kısıtı var mı?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.sheet.forming-sequence", "labelKey": "questions.sheet.formingSequence", "labels": { "tr-TR": "Kesme, delme, bükme ve kalıp sırası nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.weld.method", "labelKey": "questions.weld.method", "labels": { "tr-TR": "Kaynak yöntemi, sınıfı ve onaylı WPS referansı nedir?" }, "type": "text", "required": false },
+        { "id": "q.weld.parameters", "labelKey": "questions.weld.parameters", "labels": { "tr-TR": "Kritik kaynak parametreleri ve kabul aralıkları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "parameter", "labelKey": "fields.parameter", "labels": { "tr-TR": "Parametre" }, "type": "text", "required": true },
+          { "id": "minimum", "labelKey": "fields.minimum", "labels": { "tr-TR": "Alt limit" }, "type": "number", "required": true, "numeric": { "precision": 3 } },
+          { "id": "maximum", "labelKey": "fields.maximum", "labels": { "tr-TR": "Üst limit" }, "type": "number", "required": true, "numeric": { "precision": 3 } },
+          { "id": "unit", "labelKey": "fields.unit", "labels": { "tr-TR": "Birim" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.weld.joint-inspection", "labelKey": "questions.weld.jointInspection", "labels": { "tr-TR": "Dikiş geometrisi, penetrasyon ve tahribatlı / tahribatsız kontrol planı nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.weld.fixture-pokayoke", "labelKey": "questions.weld.fixturePokaYoke", "labels": { "tr-TR": "Fikstür datumları ve yanlış yön / eksik parça önleme yöntemi nedir?" }, "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "id": "qs.manufacturing.polymer",
+      "scope": "component",
+      "titleKey": "questions.polymer.title",
+      "titles": { "tr-TR": "Polimer / elastomer proses şartları" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.polymer.material", "labelKey": "questions.polymer.material", "labels": { "tr-TR": "Reçine / elastomer sınıfı, üretici kodu ve onaylı alternatifleri nelerdir?" }, "type": "text", "required": true },
+        { "id": "q.polymer.conditioning", "labelKey": "questions.polymer.conditioning", "labels": { "tr-TR": "Kurutma / kondisyonlama sıcaklığı ve süresi nedir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "temperature", "labelKey": "fields.temperature", "labels": { "tr-TR": "Sıcaklık" }, "type": "number", "required": true, "numeric": { "unit": "°C", "precision": 1 } },
+          { "id": "time", "labelKey": "fields.time", "labels": { "tr-TR": "Süre" }, "type": "number", "required": true, "numeric": { "unit": "dakika", "minimum": 0, "precision": 1 } }
+        ] },
+        { "id": "q.polymer.process-window", "labelKey": "questions.polymer.processWindow", "labels": { "tr-TR": "Enjeksiyon / kalıplama proses penceresi nedir?" }, "type": "repeating_group", "required": true, "fields": [
+          { "id": "parameter", "labelKey": "fields.parameter", "labels": { "tr-TR": "Parametre" }, "type": "text", "required": true },
+          { "id": "minimum", "labelKey": "fields.minimum", "labels": { "tr-TR": "Alt limit" }, "type": "number", "required": true, "numeric": { "precision": 3 } },
+          { "id": "maximum", "labelKey": "fields.maximum", "labels": { "tr-TR": "Üst limit" }, "type": "number", "required": true, "numeric": { "precision": 3 } },
+          { "id": "unit", "labelKey": "fields.unit", "labels": { "tr-TR": "Birim" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.polymer.regrind", "labelKey": "questions.polymer.regrind", "labels": { "tr-TR": "Kırma / regrind kullanım limiti nedir?" }, "type": "number_range", "required": false, "numeric": { "unit": "%", "minimum": 0, "maximum": 100, "precision": 1 } },
+        { "id": "q.polymer.visual", "labelKey": "questions.polymer.visual", "labels": { "tr-TR": "Çapak, çökme, yanık, akış izi ve renk kabul kriterleri nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.polymer.functional", "labelKey": "questions.polymer.functional", "labels": { "tr-TR": "Shore, çekme, sızdırmazlık veya çevresel dayanım şartları nelerdir?" }, "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "id": "qs.product.assembly",
+      "scope": "product-and-subassembly",
+      "titleKey": "questions.assembly.title",
+      "titles": { "tr-TR": "Montaj ve fonksiyon doğrulama" },
+      "fixed": false,
+      "questions": [
+        { "id": "q.assembly.sequence", "labelKey": "questions.assembly.sequence", "labels": { "tr-TR": "Montaj sırası ve istasyon geçişleri nelerdir?" }, "type": "repeating_group", "required": true, "fields": [
+          { "id": "sequence", "labelKey": "fields.sequence", "labels": { "tr-TR": "Sıra" }, "type": "number", "required": true, "numeric": { "minimum": 1, "precision": 0 } },
+          { "id": "inputItems", "labelKey": "fields.inputItems", "labels": { "tr-TR": "Tüketilen BOM kalemleri" }, "type": "multi_select", "entity": "bomItem", "required": true },
+          { "id": "operation", "labelKey": "fields.operation", "labels": { "tr-TR": "Montaj işlemi" }, "type": "text", "required": true },
+          { "id": "outputItem", "labelKey": "fields.outputItem", "labels": { "tr-TR": "Çıktı alt montaj / mamul" }, "type": "entity_reference", "entity": "bomItem", "required": true }
+        ] },
+        { "id": "q.assembly.torque", "labelKey": "questions.assembly.torque", "labels": { "tr-TR": "Sıkma noktaları, tork / açı değerleri ve toleransları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "jointRef", "labelKey": "fields.jointRef", "labels": { "tr-TR": "Bağlantı / karakteristik no" }, "type": "text", "required": true },
+          { "id": "targetTorque", "labelKey": "fields.targetTorque", "labels": { "tr-TR": "Hedef tork" }, "type": "number", "required": true, "numeric": { "unit": "N·m", "minimum": 0, "precision": 2 } },
+          { "id": "lowerTorque", "labelKey": "fields.lowerTorque", "labels": { "tr-TR": "Alt limit" }, "type": "number", "required": true, "numeric": { "unit": "N·m", "minimum": 0, "precision": 2 } },
+          { "id": "upperTorque", "labelKey": "fields.upperTorque", "labels": { "tr-TR": "Üst limit" }, "type": "number", "required": true, "numeric": { "unit": "N·m", "minimum": 0, "precision": 2 } },
+          { "id": "angle", "labelKey": "fields.angle", "labels": { "tr-TR": "Açı şartı" }, "type": "number", "required": false, "numeric": { "unit": "°", "precision": 1 } }
+        ] },
+        { "id": "q.assembly.press-fit", "labelKey": "questions.assembly.pressFit", "labels": { "tr-TR": "Presleme kuvveti, strok, yükseklik ve pencere şartları nelerdir?" }, "type": "textarea", "required": false },
+        { "id": "q.assembly.lubrication", "labelKey": "questions.assembly.lubrication", "labels": { "tr-TR": "Yağ / gres tipi, miktarı ve uygulama noktaları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "material", "labelKey": "fields.lubricant", "labels": { "tr-TR": "Yağlayıcı" }, "type": "text", "required": true },
+          { "id": "quantity", "labelKey": "fields.quantity", "labels": { "tr-TR": "Miktar" }, "type": "number", "required": true, "numeric": { "precision": 3 } },
+          { "id": "unit", "labelKey": "fields.unit", "labels": { "tr-TR": "Birim" }, "type": "select", "inlineOptions": ["g", "mg", "ml", "cm³"], "required": true },
+          { "id": "applicationPoint", "labelKey": "fields.applicationPoint", "labels": { "tr-TR": "Uygulama noktası" }, "type": "text", "required": true }
+        ] },
+        { "id": "q.assembly.pokayoke", "labelKey": "questions.assembly.pokaYoke", "labels": { "tr-TR": "Eksik, yanlış, ters ve karışık parça için poka-yoke yöntemi nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.assembly.end-of-line", "labelKey": "questions.assembly.endOfLine", "labels": { "tr-TR": "Hat sonu fonksiyon testi ve sayısal kabul limitleri nelerdir?" }, "type": "repeating_group", "required": true, "fields": [
+          { "id": "test", "labelKey": "fields.test", "labels": { "tr-TR": "Test" }, "type": "text", "required": true },
+          { "id": "minimum", "labelKey": "fields.minimum", "labels": { "tr-TR": "Alt limit" }, "type": "number", "required": false, "numeric": { "precision": 4 } },
+          { "id": "maximum", "labelKey": "fields.maximum", "labels": { "tr-TR": "Üst limit" }, "type": "number", "required": false, "numeric": { "precision": 4 } },
+          { "id": "unit", "labelKey": "fields.unit", "labels": { "tr-TR": "Birim" }, "type": "text", "required": false },
+          { "id": "attributeCriterion", "labelKey": "fields.attributeCriterion", "labels": { "tr-TR": "Nitel kabul kriteri" }, "type": "text", "required": false }
+        ] }
+      ]
+    },
+    {
+      "id": "qs.group.steering",
+      "scope": "product",
+      "titleKey": "questions.group.steering.title",
+      "titles": { "tr-TR": "Direksiyon sistemi sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.steering.joint-angle", "labelKey": "questions.steering.jointAngle", "labels": { "tr-TR": "Mafsallı yapı için çalışma / salınım açısı kabul aralığı nedir?" }, "type": "number_range", "required": false, "numeric": { "unit": "°", "precision": 2 } },
+        { "id": "q.steering.breakaway-torque", "labelKey": "questions.steering.breakawayTorque", "labels": { "tr-TR": "İlk hareket / mafsal torku kabul aralığı nedir?" }, "type": "number_range", "required": false, "numeric": { "unit": "N·m", "minimum": 0, "precision": 3 } },
+        { "id": "q.steering.axial-radial-play", "labelKey": "questions.steering.play", "labels": { "tr-TR": "Eksenel ve radyal boşluk limitleri nedir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "direction", "labelKey": "fields.direction", "labels": { "tr-TR": "Yön" }, "type": "select", "inlineOptions": ["Eksenel", "Radyal"], "required": true },
+          { "id": "maximum", "labelKey": "fields.maximum", "labels": { "tr-TR": "Maksimum" }, "type": "number", "required": true, "numeric": { "unit": "mm", "minimum": 0, "precision": 4 } }
+        ] },
+        { "id": "q.steering.pull-push", "labelKey": "questions.steering.pullPush", "labels": { "tr-TR": "Çekme / itme veya kopma kuvveti şartı var mı?" }, "type": "number_range", "required": false, "numeric": { "unit": "kN", "minimum": 0, "precision": 2 } },
+        { "id": "q.steering.sealing", "labelKey": "questions.steering.sealing", "labels": { "tr-TR": "Körük, kelepçe ve sızdırmazlık kabul kriteri nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.steering.safety-classification", "labelKey": "questions.steering.safetyClassification", "labels": { "tr-TR": "Direksiyon fonksiyonunu etkileyen emniyet karakteristikleri hangileridir?" }, "type": "multi_select", "entity": "drawingCharacteristic", "required": true }
+      ]
+    },
+    {
+      "id": "qs.group.suspension",
+      "scope": "product",
+      "titleKey": "questions.group.suspension.title",
+      "titles": { "tr-TR": "Süspansiyon sistemi sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.suspension.load-directions", "labelKey": "questions.suspension.loadDirections", "labels": { "tr-TR": "Kritik yük yönleri ve tasarım yükleri nelerdir?" }, "type": "repeating_group", "required": true, "fields": [
+          { "id": "direction", "labelKey": "fields.direction", "labels": { "tr-TR": "Yön / yük durumu" }, "type": "text", "required": true },
+          { "id": "load", "labelKey": "fields.load", "labels": { "tr-TR": "Yük" }, "type": "number", "required": true, "numeric": { "unit": "kN", "minimum": 0, "precision": 2 } }
+        ] },
+        { "id": "q.suspension.articulation", "labelKey": "questions.suspension.articulation", "labels": { "tr-TR": "Mafsal / burç çalışma açısı ve hareket zarfı nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.suspension.fatigue", "labelKey": "questions.suspension.fatigue", "labels": { "tr-TR": "Yorulma test çevrimi ve kabul kriteri nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.suspension.bushing-orientation", "labelKey": "questions.suspension.bushingOrientation", "labels": { "tr-TR": "Burç presleme yönü, derinliği ve oryantasyon toleransı nedir?" }, "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "id": "qs.group.braking",
+      "scope": "product",
+      "titleKey": "questions.group.braking.title",
+      "titles": { "tr-TR": "Fren sistemi sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.braking.fluid-contact", "labelKey": "questions.braking.fluidContact", "labels": { "tr-TR": "Parça fren hidroliği veya basınçlı akışkanla temas ediyor mu?" }, "type": "select", "valueSet": "vs.yes-no-unknown", "required": true },
+        { "id": "q.braking.pressure", "labelKey": "questions.braking.pressure", "labels": { "tr-TR": "Çalışma, kanıt ve patlama basıncı şartları nelerdir?" }, "type": "repeating_group", "required": false, "fields": [
+          { "id": "type", "labelKey": "fields.pressureType", "labels": { "tr-TR": "Basınç tipi" }, "type": "select", "inlineOptions": ["Çalışma", "Kanıt", "Patlama"], "required": true },
+          { "id": "value", "labelKey": "fields.value", "labels": { "tr-TR": "Değer" }, "type": "number", "required": true, "numeric": { "unit": "bar", "minimum": 0, "precision": 2 } }
+        ] },
+        { "id": "q.braking.cleanliness", "labelKey": "questions.braking.cleanliness", "labels": { "tr-TR": "Partikül, yağ ve iyonik temizlik limitleri nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.braking.leak-rate", "labelKey": "questions.braking.leakRate", "labels": { "tr-TR": "Kaçak testi medyası, basıncı, süresi ve kaçak limiti nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.braking.safety-characteristics", "labelKey": "questions.braking.safetyCharacteristics", "labels": { "tr-TR": "Fren fonksiyonunu etkileyen emniyet / mevzuat karakteristikleri hangileridir?" }, "type": "multi_select", "entity": "drawingCharacteristic", "required": true }
+      ]
+    },
+    {
+      "id": "qs.group.powertrain",
+      "scope": "product",
+      "titleKey": "questions.group.powertrain.title",
+      "titles": { "tr-TR": "Güç aktarma sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.powertrain.torque", "labelKey": "questions.powertrain.torque", "labels": { "tr-TR": "Sürekli, pik ve kanıt torku değerleri nedir?" }, "type": "repeating_group", "required": true, "fields": [
+          { "id": "type", "labelKey": "fields.torqueType", "labels": { "tr-TR": "Tork tipi" }, "type": "select", "inlineOptions": ["Sürekli", "Pik", "Kanıt"], "required": true },
+          { "id": "value", "labelKey": "fields.value", "labels": { "tr-TR": "Değer" }, "type": "number", "required": true, "numeric": { "unit": "N·m", "minimum": 0, "precision": 2 } }
+        ] },
+        { "id": "q.powertrain.runout", "labelKey": "questions.powertrain.runout", "labels": { "tr-TR": "Salgı, eşmerkezlilik ve balans limitleri nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.powertrain.spline", "labelKey": "questions.powertrain.spline", "labels": { "tr-TR": "Spline / dişli kalite sınıfı ve mastar yöntemi nedir?" }, "type": "textarea", "required": false },
+        { "id": "q.powertrain.nvh", "labelKey": "questions.powertrain.nvh", "labels": { "tr-TR": "NVH, balans veya dönme direnci kriteri var mı?" }, "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "id": "qs.group.chassis-connection",
+      "scope": "product",
+      "titleKey": "questions.group.chassisConnection.title",
+      "titles": { "tr-TR": "Şasi ve bağlantı mamulü sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.chassis.interfaces", "labelKey": "questions.chassis.interfaces", "labels": { "tr-TR": "Araç bağlantı noktaları, datumlar ve delik / pim arayüzleri hangileridir?" }, "type": "textarea", "required": true },
+        { "id": "q.chassis.static-load", "labelKey": "questions.chassis.staticLoad", "labels": { "tr-TR": "Statik yük ve deformasyon kabul kriterleri nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.chassis.weld-class", "labelKey": "questions.chassis.weldClass", "labels": { "tr-TR": "Kaynak sınıfı ve dikiş kritikliği var mı?" }, "type": "textarea", "required": false },
+        { "id": "q.chassis.installation", "labelKey": "questions.chassis.installation", "labels": { "tr-TR": "Araç montaj yönü, torku ve servis erişimi şartları nedir?" }, "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "id": "qs.group.electrical",
+      "scope": "product",
+      "titleKey": "questions.group.electrical.title",
+      "titles": { "tr-TR": "Elektrik / elektronik sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.electrical.voltage-current", "labelKey": "questions.electrical.voltageCurrent", "labels": { "tr-TR": "Nominal / sınır gerilim ve akım değerleri nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.electrical.connector", "labelKey": "questions.electrical.connector", "labels": { "tr-TR": "Konnektör, pinleme, kilit ve terminal çekme kuvveti şartları nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.electrical.software", "labelKey": "questions.electrical.software", "labels": { "tr-TR": "Yazılım / kalibrasyon parça numarası ve sürümü var mı?" }, "type": "text", "required": false },
+        { "id": "q.electrical.eol", "labelKey": "questions.electrical.eol", "labels": { "tr-TR": "Elektriksel hat sonu testleri ve sayısal limitleri nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.electrical.environment", "labelKey": "questions.electrical.environment", "labels": { "tr-TR": "IP, EMC, sıcaklık, titreşim ve çevresel dayanım şartları nelerdir?" }, "type": "textarea", "required": true }
+      ]
+    },
+    {
+      "id": "qs.group.service-kit",
+      "scope": "product",
+      "titleKey": "questions.group.serviceKit.title",
+      "titles": { "tr-TR": "Servis kiti ve paketli mamul sabit soruları" },
+      "fixed": true,
+      "questions": [
+        { "id": "q.service.contents", "labelKey": "questions.service.contents", "labels": { "tr-TR": "Kit içeriği ve her kalemin miktarı nedir?" }, "type": "multi_select", "entity": "bomItem", "required": true },
+        { "id": "q.service.compatibility", "labelKey": "questions.service.compatibility", "labels": { "tr-TR": "Araç / ürün uyumluluk ve varyant matrisi nedir?" }, "type": "textarea", "required": true },
+        { "id": "q.service.label", "labelKey": "questions.service.label", "labels": { "tr-TR": "Etiket, barkod, son kullanım tarihi ve dil şartları nelerdir?" }, "type": "textarea", "required": true },
+        { "id": "q.service.missing-part", "labelKey": "questions.service.missingPart", "labels": { "tr-TR": "Eksik / yanlış parça önleme ve ağırlık kontrolü nasıl yapılacak?" }, "type": "textarea", "required": true }
+      ]
+    }
+  ],
+  "componentArchetypes": [
+    {
+      "id": "archetype.generic-component",
+      "labelKey": "archetypes.genericComponent",
+      "labels": { "tr-TR": "Sıfırdan kullanıcı tanımlı bileşen" },
+      "defaultStage": "blank",
+      "defaultPrimaryMethod": "custom",
+      "defaultRawForm": "custom",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics"]
+    },
+    {
+      "id": "archetype.steel-tube-body",
+      "labelKey": "archetypes.steelTubeBody",
+      "labels": { "tr-TR": "Çelik boru / borudan gövde" },
+      "defaultStage": "blank",
+      "defaultPrimaryMethod": "tube-forming",
+      "defaultRawForm": "tube",
+      "defaultMaterialFamily": "structural-steel",
+      "suggestedMaterialExamples": ["ST52 veya teknik resimde tanımlanan onaylı eşdeğer"],
+      "exampleOnly": true,
+      "verificationRequired": true,
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.machining"]
+    },
+    {
+      "id": "archetype.forged-blank-body",
+      "labelKey": "archetypes.forgedBlankBody",
+      "labels": { "tr-TR": "Dövme taslak gövde" },
+      "defaultStage": "blank",
+      "defaultPrimaryMethod": "hot-forging",
+      "defaultRawForm": "bar",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.forging"]
+    },
+    {
+      "id": "archetype.machined-body-from-forging",
+      "labelKey": "archetypes.machinedBodyFromForging",
+      "labels": { "tr-TR": "Dövme taslaktan işlenmiş gövde" },
+      "defaultStage": "finished-machined",
+      "defaultPrimaryMethod": "machining",
+      "defaultRawForm": "forged-blank",
+      "requiredUpstreamArchetypeIds": ["archetype.forged-blank-body"],
+      "suggestedMaterialExamples": ["C45 veya teknik resimde tanımlanan kalite"],
+      "exampleOnly": true,
+      "verificationRequired": true,
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.machining", "qs.component.heat-treatment", "qs.component.coating"]
+    },
+    {
+      "id": "archetype.forged-machined-ball-pin",
+      "labelKey": "archetypes.forgedMachinedBallPin",
+      "labels": { "tr-TR": "Dövme + işlenmiş mafsal / küresel pim" },
+      "defaultStage": "finished-machined",
+      "defaultPrimaryMethod": "machining",
+      "defaultRawForm": "forged-blank",
+      "suggestedMaterialExamples": ["41Cr4 veya teknik resimde tanımlanan alaşımlı çelik"],
+      "exampleOnly": true,
+      "verificationRequired": true,
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.forging", "qs.manufacturing.machining", "qs.component.heat-treatment", "qs.component.coating"]
+    },
+    {
+      "id": "archetype.machined-bar-component",
+      "labelKey": "archetypes.machinedBarComponent",
+      "labels": { "tr-TR": "Çubuktan talaşlı imalat bileşeni" },
+      "defaultStage": "finished-machined",
+      "defaultPrimaryMethod": "machining",
+      "defaultRawForm": "bar",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.machining", "qs.component.heat-treatment", "qs.component.coating"]
+    },
+    {
+      "id": "archetype.cast-blank",
+      "labelKey": "archetypes.castBlank",
+      "labels": { "tr-TR": "Döküm taslağı" },
+      "defaultStage": "blank",
+      "defaultPrimaryMethod": "casting",
+      "defaultRawForm": "custom",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.casting"]
+    },
+    {
+      "id": "archetype.machined-casting",
+      "labelKey": "archetypes.machinedCasting",
+      "labels": { "tr-TR": "İşlenmiş döküm bileşen" },
+      "defaultStage": "finished-machined",
+      "defaultPrimaryMethod": "machining",
+      "defaultRawForm": "cast-blank",
+      "requiredUpstreamArchetypeIds": ["archetype.cast-blank"],
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.casting", "qs.manufacturing.machining", "qs.component.coating"]
+    },
+    {
+      "id": "archetype.sheet-formed-component",
+      "labelKey": "archetypes.sheetFormedComponent",
+      "labels": { "tr-TR": "Sac şekillendirme bileşeni" },
+      "defaultStage": "blank",
+      "defaultPrimaryMethod": "sheet-forming",
+      "defaultRawForm": "sheet",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.sheet-weld", "qs.component.coating"]
+    },
+    {
+      "id": "archetype.welded-subassembly",
+      "labelKey": "archetypes.weldedSubassembly",
+      "labels": { "tr-TR": "Kaynaklı alt montaj" },
+      "defaultStage": "subassembly",
+      "defaultPrimaryMethod": "welding",
+      "defaultRawForm": "custom",
+      "questionSetIds": ["qs.component.classification", "qs.product.bom", "qs.drawing.characteristics", "qs.manufacturing.sheet-weld", "qs.product.assembly", "qs.component.coating"]
+    },
+    {
+      "id": "archetype.polymer-molded-component",
+      "labelKey": "archetypes.polymerMoldedComponent",
+      "labels": { "tr-TR": "Plastik / elastomer kalıplanmış bileşen" },
+      "defaultStage": "finished-good",
+      "defaultPrimaryMethod": "plastic-injection",
+      "defaultRawForm": "polymer-granule",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.manufacturing.polymer"]
+    },
+    {
+      "id": "archetype.purchased-standard-part",
+      "labelKey": "archetypes.purchasedStandardPart",
+      "labels": { "tr-TR": "Satın alınan standart parça" },
+      "defaultStage": "standard-part",
+      "defaultPrimaryMethod": "purchased-as-is",
+      "defaultRawForm": "standard-part",
+      "questionSetIds": ["qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability"]
+    },
+    {
+      "id": "archetype.electrical-subassembly",
+      "labelKey": "archetypes.electricalSubassembly",
+      "labels": { "tr-TR": "Elektrik / elektronik alt montaj" },
+      "defaultStage": "subassembly",
+      "defaultPrimaryMethod": "electrical-assembly",
+      "defaultRawForm": "electronic-part",
+      "questionSetIds": ["qs.component.classification", "qs.product.bom", "qs.drawing.characteristics", "qs.product.assembly", "qs.group.electrical", "qs.product.traceability"]
+    }
+  ],
+  "productGroups": [
+    {
+      "id": "steering",
+      "legacyAliases": [],
+      "labelKey": "productGroups.steering",
+      "labels": { "tr-TR": "Direksiyon Sistemleri" },
+      "productTypes": [
+        { "id": "steering-rod-assembly", "labelKey": "productTypes.steeringRodAssembly", "labels": { "tr-TR": "Rot kolu komple" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.steel-tube-body", "archetype.forged-machined-ball-pin", "archetype.machined-body-from-forging", "archetype.purchased-standard-part"] },
+        { "id": "tie-rod-end", "labelKey": "productTypes.tieRodEnd", "labels": { "tr-TR": "Rot başı" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.forged-machined-ball-pin", "archetype.machined-body-from-forging", "archetype.polymer-molded-component"] },
+        { "id": "inner-tie-rod", "labelKey": "productTypes.innerTieRod", "labels": { "tr-TR": "İç rot" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.machined-bar-component", "archetype.forged-machined-ball-pin"] },
+        { "id": "steering-joint", "labelKey": "productTypes.steeringJoint", "labels": { "tr-TR": "Direksiyon mafsalı" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.forged-machined-ball-pin", "archetype.machined-body-from-forging"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı direksiyon mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.steering"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kesme", "Dövme / taslak hazırlama", "Kumlama", "Talaşlı imalat", "Diş açma", "Isıl işlem", "Yıkama", "Kaplama", "Entegre tesis montaj", "Torklama", "Fonksiyon testi", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "suspension",
+      "legacyAliases": [],
+      "labelKey": "productGroups.suspension",
+      "labels": { "tr-TR": "Süspansiyon Sistemleri" },
+      "productTypes": [
+        { "id": "stabilizer-link", "labelKey": "productTypes.stabilizerLink", "labels": { "tr-TR": "Askı rotu / denge bağlantısı" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.machined-bar-component", "archetype.forged-machined-ball-pin", "archetype.polymer-molded-component"] },
+        { "id": "control-arm", "labelKey": "productTypes.controlArm", "labels": { "tr-TR": "Salıncak kolu" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.sheet-formed-component", "archetype.welded-subassembly", "archetype.forged-machined-ball-pin"] },
+        { "id": "torque-rod", "labelKey": "productTypes.torqueRod", "labels": { "tr-TR": "Tork / V kolu" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.steel-tube-body", "archetype.machined-body-from-forging"] },
+        { "id": "ball-joint", "labelKey": "productTypes.ballJoint", "labels": { "tr-TR": "Rotil" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.forged-machined-ball-pin", "archetype.machined-body-from-forging", "archetype.polymer-molded-component"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı süspansiyon mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.suspension"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kesme", "Dövme", "Sac / profil şekillendirme", "Kaynak", "Talaşlı imalat", "Isıl işlem", "Kaplama", "Montaj", "Yük / fonksiyon testi", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "braking",
+      "legacyAliases": [],
+      "labelKey": "productGroups.braking",
+      "labels": { "tr-TR": "Fren Sistemleri" },
+      "productTypes": [
+        { "id": "caliper-housing", "labelKey": "productTypes.caliperHousing", "labels": { "tr-TR": "Kaliper gövdesi" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.machined-casting"] },
+        { "id": "caliper-carrier", "labelKey": "productTypes.caliperCarrier", "labels": { "tr-TR": "Kaliper taşıyıcı" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.machined-casting", "archetype.machined-body-from-forging"] },
+        { "id": "mechanical-brake-linkage", "labelKey": "productTypes.mechanicalBrakeLinkage", "labels": { "tr-TR": "Mekanik fren bağlantı mamulü" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.machined-bar-component", "archetype.sheet-formed-component", "archetype.purchased-standard-part"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı fren mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.braking"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Döküm / dövme", "Talaşlı imalat", "Yıkama", "Kaplama", "Montaj", "Torklama", "Sızdırmazlık / basınç testi", "Fonksiyon testi", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "powertrain",
+      "legacyAliases": [],
+      "labelKey": "productGroups.powertrain",
+      "labels": { "tr-TR": "Güç Aktarma Sistemleri" },
+      "productTypes": [
+        { "id": "shaft", "labelKey": "productTypes.shaft", "labels": { "tr-TR": "Mil" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.forged-machined-ball-pin", "archetype.machined-bar-component"] },
+        { "id": "flange-yoke", "labelKey": "productTypes.flangeYoke", "labels": { "tr-TR": "Flanş / çatal" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.machined-body-from-forging", "archetype.machined-casting"] },
+        { "id": "housing-assembly", "labelKey": "productTypes.housingAssembly", "labels": { "tr-TR": "Muhafaza alt montajı" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.machined-casting", "archetype.purchased-standard-part"] },
+        { "id": "coupling", "labelKey": "productTypes.coupling", "labels": { "tr-TR": "Kaplin / bağlantı" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.machined-bar-component", "archetype.purchased-standard-part"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı güç aktarma mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.powertrain"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kesme", "Dövme / döküm", "Talaşlı imalat", "Diş / spline", "Isıl işlem", "Taşlama", "Yıkama", "Montaj", "Balans / fonksiyon testi", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "chassis-connection",
+      "legacyAliases": ["chassis"],
+      "labelKey": "productGroups.chassisConnection",
+      "labels": { "tr-TR": "Şasi ve Bağlantı Elemanları" },
+      "productTypes": [
+        { "id": "v-rod", "labelKey": "productTypes.vRod", "labels": { "tr-TR": "V kolu" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.steel-tube-body", "archetype.machined-body-from-forging", "archetype.welded-subassembly"] },
+        { "id": "bracket", "labelKey": "productTypes.bracket", "labels": { "tr-TR": "Bağlantı braketi" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.sheet-formed-component", "archetype.machined-casting"] },
+        { "id": "crossmember-connection", "labelKey": "productTypes.crossmemberConnection", "labels": { "tr-TR": "Travers / şasi bağlantı alt montajı" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.welded-subassembly", "archetype.sheet-formed-component"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı şasi mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.chassis-connection"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kesme", "Sac / profil şekillendirme", "Dövme / döküm", "Talaşlı imalat", "Kaynak", "Kaplama", "Montaj", "Yük testi", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "machined-products",
+      "legacyAliases": ["machined"],
+      "labelKey": "productGroups.machinedProducts",
+      "labels": { "tr-TR": "Talaşlı İmalat Mamulleri" },
+      "productTypes": [
+        { "id": "ball-pin", "labelKey": "productTypes.ballPin", "labels": { "tr-TR": "Küresel pim" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.forged-machined-ball-pin", "archetype.machined-bar-component"] },
+        { "id": "bushing", "labelKey": "productTypes.bushing", "labels": { "tr-TR": "Burç / kovan" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.machined-bar-component"] },
+        { "id": "adapter", "labelKey": "productTypes.adapter", "labels": { "tr-TR": "Bağlantı adaptörü" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.machined-bar-component", "archetype.machined-body-from-forging"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı talaşlı mamul" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.manufacturing.machining"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kesme", "Tornalama", "Frezeleme", "Delme", "Diş açma", "Taşlama", "Yıkama", "Kaplama", "Final kontrol", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "welded-products",
+      "legacyAliases": ["welded"],
+      "labelKey": "productGroups.weldedProducts",
+      "labels": { "tr-TR": "Kaynaklı Mamuller" },
+      "productTypes": [
+        { "id": "welded-subassembly", "labelKey": "productTypes.weldedSubassembly", "labels": { "tr-TR": "Kaynaklı alt montaj" }, "defaultStructure": "subassembly", "recommendedArchetypeIds": ["archetype.welded-subassembly", "archetype.sheet-formed-component"] },
+        { "id": "tube-assembly", "labelKey": "productTypes.tubeAssembly", "labels": { "tr-TR": "Boru / profil kaynaklı mamul" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.steel-tube-body", "archetype.welded-subassembly"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı kaynaklı mamul" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.manufacturing.sheet-weld", "qs.product.assembly"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kesme", "Şekillendirme", "Fikstürleme", "Kaynak", "Kaynak kontrol", "Taşlama / temizleme", "Kaplama", "Montaj", "Final kontrol", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "cast-products",
+      "legacyAliases": ["cast"],
+      "labelKey": "productGroups.castProducts",
+      "labels": { "tr-TR": "Döküm ve İşlenmiş Döküm Mamulleri" },
+      "productTypes": [
+        { "id": "cast-blank", "labelKey": "productTypes.castBlank", "labels": { "tr-TR": "Döküm taslağı" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.cast-blank"] },
+        { "id": "machined-casting", "labelKey": "productTypes.machinedCasting", "labels": { "tr-TR": "İşlenmiş döküm mamul" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.machined-casting"] },
+        { "id": "cast-assembly", "labelKey": "productTypes.castAssembly", "labels": { "tr-TR": "Döküm alt montaj" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.machined-casting", "archetype.purchased-standard-part"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı döküm mamul" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.manufacturing.casting"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Ergitme / döküm", "Temizleme / kumlama", "Isıl işlem", "Talaşlı imalat", "Yıkama", "Kaplama", "Sızdırmazlık / final kontrol", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "formed-products",
+      "legacyAliases": ["formed"],
+      "labelKey": "productGroups.formedProducts",
+      "labels": { "tr-TR": "Sac ve Profil Şekillendirme Mamulleri" },
+      "productTypes": [
+        { "id": "press-part", "labelKey": "productTypes.pressPart", "labels": { "tr-TR": "Pres parça" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.sheet-formed-component"] },
+        { "id": "formed-profile", "labelKey": "productTypes.formedProfile", "labels": { "tr-TR": "Bükümlü profil" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.sheet-formed-component", "archetype.steel-tube-body"] },
+        { "id": "sheet-assembly", "labelKey": "productTypes.sheetAssembly", "labels": { "tr-TR": "Kaynaklı sac alt montaj" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.sheet-formed-component", "archetype.welded-subassembly"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı şekillendirme mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.manufacturing.sheet-weld"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Rulo / sac kesme", "Delme", "Bükme / pres", "Kaynak", "Çapak alma", "Yıkama", "Kaplama", "Montaj", "Final kontrol", "Paketleme"]
+    },
+    {
+      "id": "polymer-elastomer",
+      "legacyAliases": ["polymer"],
+      "labelKey": "productGroups.polymerElastomer",
+      "labels": { "tr-TR": "Polimer ve Elastomer Mamulleri" },
+      "productTypes": [
+        { "id": "plastic-part", "labelKey": "productTypes.plasticPart", "labels": { "tr-TR": "Plastik mamul" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.polymer-molded-component"] },
+        { "id": "elastomer-part", "labelKey": "productTypes.elastomerPart", "labels": { "tr-TR": "Elastomer mamul" }, "defaultStructure": "single-part", "recommendedArchetypeIds": ["archetype.polymer-molded-component"] },
+        { "id": "multi-material-assembly", "labelKey": "productTypes.multiMaterialAssembly", "labels": { "tr-TR": "Çok malzemeli alt montaj" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.polymer-molded-component", "archetype.purchased-standard-part"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı polimer / elastomer mamul" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability", "qs.manufacturing.polymer"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kurutma / hazırlama", "Enjeksiyon / kalıplama", "Kürleme", "Çapak alma", "Kondisyonlama", "Montaj", "Fonksiyon / görsel kontrol", "Markalama", "Paketleme"]
+    },
+    {
+      "id": "electrical-mechatronic",
+      "legacyAliases": ["electrical"],
+      "labelKey": "productGroups.electricalMechatronic",
+      "labels": { "tr-TR": "Elektrik, Elektronik ve Mekatronik Alt Montajlar" },
+      "productTypes": [
+        { "id": "harness-sensor", "labelKey": "productTypes.harnessSensor", "labels": { "tr-TR": "Kablo / sensör alt montajı" }, "defaultStructure": "subassembly", "recommendedArchetypeIds": ["archetype.electrical-subassembly"] },
+        { "id": "mechatronic-module", "labelKey": "productTypes.mechatronicModule", "labels": { "tr-TR": "Mekatronik modül" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.electrical-subassembly", "archetype.machined-casting", "archetype.polymer-molded-component"] },
+        { "id": "electronic-module", "labelKey": "productTypes.electronicModule", "labels": { "tr-TR": "Elektronik kontrollü modül" }, "defaultStructure": "assembly", "recommendedArchetypeIds": ["archetype.electrical-subassembly"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı elektrik / elektronik mamul" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.electrical", "qs.product.assembly"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kitting", "Krimp / lehim", "Elektrik montaj", "Mekanik montaj", "Yazılım / kalibrasyon", "Hat sonu test", "Etiketleme", "Paketleme"]
+    },
+    {
+      "id": "service-kits",
+      "legacyAliases": ["service"],
+      "labelKey": "productGroups.serviceKits",
+      "labels": { "tr-TR": "Servis Kitleri ve Paketli Mamuller" },
+      "productTypes": [
+        { "id": "service-kit", "labelKey": "productTypes.serviceKit", "labels": { "tr-TR": "Servis kiti" }, "defaultStructure": "service-kit", "recommendedArchetypeIds": ["archetype.purchased-standard-part"] },
+        { "id": "spare-part-pack", "labelKey": "productTypes.sparePartPack", "labels": { "tr-TR": "Yedek parça paketi" }, "defaultStructure": "service-kit", "recommendedArchetypeIds": ["archetype.purchased-standard-part"] },
+        { "id": "multi-product-set", "labelKey": "productTypes.multiProductSet", "labels": { "tr-TR": "Çoklu ürün seti" }, "defaultStructure": "service-kit", "recommendedArchetypeIds": ["archetype.purchased-standard-part"] },
+        { "id": "custom", "labelKey": "productTypes.custom", "labels": { "tr-TR": "Kullanıcı tanımlı servis mamulü" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.drawing.characteristics", "qs.product.traceability", "qs.group.service-kit"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kitting", "İçerik doğrulama", "Etiketleme", "Ağırlık / eksik parça kontrolü", "Paketleme", "Sevkiyat kontrolü"]
+    },
+    {
+      "id": "custom-product",
+      "legacyAliases": ["__custom__"],
+      "labelKey": "productGroups.customProduct",
+      "labels": { "tr-TR": "Sıfırdan Kullanıcı Tanımlı Mamul" },
+      "allowCreateProductTypes": true,
+      "productTypes": [
+        { "id": "blank", "labelKey": "productTypes.blank", "labels": { "tr-TR": "Boş mamul" }, "defaultStructure": "custom", "recommendedArchetypeIds": ["archetype.generic-component"] }
+      ],
+      "fixedQuestionSetIds": ["qs.product.identity", "qs.product.bom", "qs.component.classification", "qs.component.material", "qs.drawing.characteristics", "qs.product.traceability"],
+      "recommendedProcessFamilies": ["Girdi kontrol", "Kullanıcı tanımlı üretim adımları", "Final kontrol", "Markalama", "Paketleme"]
+    }
+  ],
+  "conditionalBindings": [
+    { "id": "rule.structure.assembly", "when": { "path": "product.structure", "operator": "in", "value": ["assembly", "subassembly", "service-kit"] }, "addQuestionSetIds": ["qs.product.bom", "qs.product.assembly"] },
+    { "id": "rule.method.forging", "when": { "path": "component.primaryMethod", "operator": "in", "value": ["hot-forging", "cold-forging"] }, "addQuestionSetIds": ["qs.manufacturing.forging"] },
+    { "id": "rule.method.machining", "when": { "path": "component.primaryMethod", "operator": "equals", "value": "machining" }, "addQuestionSetIds": ["qs.manufacturing.machining"] },
+    { "id": "rule.input.forged-blank", "when": { "path": "component.rawForm", "operator": "equals", "value": "forged-blank" }, "addQuestionSetIds": ["qs.manufacturing.forging", "qs.manufacturing.machining"], "requiredLinks": ["component.upstreamItem"] },
+    { "id": "rule.method.casting", "when": { "path": "component.primaryMethod", "operator": "equals", "value": "casting" }, "addQuestionSetIds": ["qs.manufacturing.casting"] },
+    { "id": "rule.input.cast-blank", "when": { "path": "component.rawForm", "operator": "equals", "value": "cast-blank" }, "addQuestionSetIds": ["qs.manufacturing.casting", "qs.manufacturing.machining"], "requiredLinks": ["component.upstreamItem"] },
+    { "id": "rule.method.sheet-weld", "when": { "path": "component.primaryMethod", "operator": "in", "value": ["sheet-forming", "tube-forming", "welding"] }, "addQuestionSetIds": ["qs.manufacturing.sheet-weld"] },
+    { "id": "rule.method.polymer", "when": { "path": "component.primaryMethod", "operator": "in", "value": ["plastic-injection", "rubber-molding", "extrusion"] }, "addQuestionSetIds": ["qs.manufacturing.polymer"] },
+    { "id": "rule.heat-treatment", "when": { "path": "component.heatTreatment", "operator": "not_in", "value": ["none", null, ""] }, "addQuestionSetIds": ["qs.component.heat-treatment"] },
+    { "id": "rule.coating", "when": { "path": "component.coatingType", "operator": "not_in", "value": ["none", null, ""] }, "addQuestionSetIds": ["qs.component.coating"] },
+    { "id": "rule.product-safety", "when": { "path": "product.productSafety", "operator": "equals", "value": "yes" }, "enforceQuestionIds": ["q.trace.special-symbol-map", "q.trace.process-records", "q.trace.retention"] },
+    { "id": "rule.purchased-item", "when": { "path": "component.makeBuy", "operator": "in", "value": ["buy", "subcontract", "customer-supplied"] }, "enforceFields": ["component.supplier", "component.certificate", "component.traceability", "component.verificationStatus"] }
+  ],
+  "templates": [
+    {
+      "id": "template.blank-product",
+      "labelKey": "templates.blankProduct",
+      "labels": { "tr-TR": "Sıfırdan mamul" },
+      "productGroupId": "custom-product",
+      "productTypeId": "blank",
+      "structure": "custom",
+      "components": [],
+      "warning": "Boş şablon; ürün grubu, BOM, proses rotası ve tüm teknik karakteristikler kullanıcı tarafından oluşturulmalıdır."
+    },
+    {
+      "id": "template.steering-rod-demo",
+      "labelKey": "templates.steeringRodDemo",
+      "labels": { "tr-TR": "Rot kolu komple — tanıtım şablonu" },
+      "productGroupId": "steering",
+      "productTypeId": "steering-rod-assembly",
+      "structure": "assembly",
+      "exampleOnly": true,
+      "warning": "Aşağıdaki kalite ve malzeme değerleri yalnız veri modelini göstermek içindir; teknik resim ve müşteri şartıyla doğrulanmadan kullanılamaz.",
+      "components": [
+        { "position": "10", "name": "Rot kolu borusu", "archetypeId": "archetype.steel-tube-body", "materialExample": "ST52 / onaylı eşdeğer", "primaryMethod": "tube-forming", "rawForm": "tube" },
+        { "position": "20", "name": "Mafsal", "archetypeId": "archetype.forged-machined-ball-pin", "materialExample": "41Cr4", "primaryMethod": "machining", "rawForm": "forged-blank" },
+        { "position": "30", "name": "Gövde", "archetypeId": "archetype.machined-body-from-forging", "materialExample": "C45", "primaryMethod": "machining", "rawForm": "forged-blank" },
+        { "position": "40", "name": "Koruyucu körük", "archetypeId": "archetype.polymer-molded-component", "materialExample": "Teknik şartnameden seçilecek elastomer", "primaryMethod": "purchased-as-is", "rawForm": "molded-part" },
+        { "position": "50", "name": "Kelepçe / segman seti", "archetypeId": "archetype.purchased-standard-part", "materialExample": "Tedarikçi resmi / BOM şartı", "primaryMethod": "purchased-as-is", "rawForm": "standard-part" },
+        { "position": "60", "name": "Gresörlük", "archetypeId": "archetype.purchased-standard-part", "materialExample": "Tedarikçi resmi / BOM şartı", "primaryMethod": "purchased-as-is", "rawForm": "standard-part" },
+        { "position": "70", "name": "Alt montaj elemanları", "archetypeId": "archetype.generic-component", "materialExample": "Alt BOM ile yönetilir", "primaryMethod": "mechanical-assembly", "rawForm": "custom" }
+      ]
+    }
+  ],
+  "qualityGates": [
+    {
+      "id": "gate.source-integrity",
+      "labelKey": "qualityGates.sourceIntegrity",
+      "labels": { "tr-TR": "Teknik kaynak bütünlüğü" },
+      "severity": "block",
+      "checks": [
+        "Teknik resim numarası ve revizyonu dolu olmalı.",
+        "Kaynak dosya SHA-256 değeri kaydedilmiş olmalı.",
+        "Her karakteristik sayfa / bölge / not referansına bağlanmalı."
+      ]
+    },
+    {
+      "id": "gate.bom-completeness",
+      "labelKey": "qualityGates.bomCompleteness",
+      "labels": { "tr-TR": "Mamul ağacı bütünlüğü" },
+      "severity": "block",
+      "checks": [
+        "Montaj ve kit yapılarında en az bir alt kalem olmalı.",
+        "BOM pozisyonları ve parça numaraları benzersiz olmalı.",
+        "Alt montaj bağlantıları döngü ve yetim kayıt içermemeli.",
+        "Her alt kalemde teknik resim / şartname, revizyon, miktar, malzeme ve kaynak kararı bulunmalı."
+      ]
+    },
+    {
+      "id": "gate.method-stage-consistency",
+      "labelKey": "qualityGates.methodStageConsistency",
+      "labels": { "tr-TR": "Üretim aşaması / yöntem tutarlılığı" },
+      "severity": "block",
+      "checks": [
+        "Dövme taslak kaydı ile işlenmiş gövde kaydı ayrı aşamalar olarak tanımlanmalı.",
+        "İşlenmiş bileşenin hammadde / taslak formu ve varsa kaynak BOM kalemi seçilmeli.",
+        "Ana yöntem ve ikincil yöntemler birbirinden ayrılmalı.",
+        "Fason ve özel prosesler açıkça işaretlenmeli."
+      ]
+    },
+    {
+      "id": "gate.numeric-characteristics",
+      "labelKey": "qualityGates.numericCharacteristics",
+      "labels": { "tr-TR": "Sayısal karakteristik bütünlüğü" },
+      "severity": "block",
+      "checks": [
+        "Sayısal karakteristikte birim bulunmalı.",
+        "Nominal ve sapma veya alt / üst limit mantıksal olarak tutarlı olmalı.",
+        "Alt limit üst limitten büyük olamaz.",
+        "Uygulanamaz seçimi gerekçesiz bırakılamaz."
+      ]
+    },
+    {
+      "id": "gate.special-characteristic-flowdown",
+      "labelKey": "qualityGates.specialCharacteristicFlowdown",
+      "labels": { "tr-TR": "Özel karakteristik yayılımı" },
+      "severity": "block",
+      "checks": [
+        "Özel karakteristik teknik resim kaynağına bağlanmalı.",
+        "İlgili proses, PFMEA, kontrol planı ve operatör talimatına aynı kalıcı ID ile aktarılmalı.",
+        "Ölçüm yöntemi, sıklığı, reaksiyon planı ve kayıt saklama şartı tanımlanmalı."
+      ]
+    },
+    {
+      "id": "gate.engineering-verification",
+      "labelKey": "qualityGates.engineeringVerification",
+      "labels": { "tr-TR": "Mühendislik doğrulaması" },
+      "severity": "block",
+      "checks": [
+        "Örnek ve varsayılan değerler doğrulanmış değer gibi yayımlanamaz.",
+        "Malzeme, ısıl işlem, kaplama ve fonksiyon şartları yetkili kaynakla doğrulanmalı.",
+        "Kaynak değiştiğinde etkilenen cevaplar yeniden doğrulama durumuna alınmalı."
+      ]
+    }
+  ]
+}

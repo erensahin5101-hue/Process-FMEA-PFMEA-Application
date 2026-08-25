@@ -112,11 +112,11 @@ assert.equal(usersResponse.status, 200);
 const seededUsers = (await usersResponse.json()).users;
 assert.equal(seededUsers.length, 1);
 assert.equal(seededUsers[0].displayName, 'Eren');
-assert.equal(seededUsers[0].plant, 'TYANA OTOMOTİV');
+assert.equal(seededUsers[0].plant, 'Kullanıcı Tanımlı Tesis');
 assert.equal(env.DB.processes.get('incoming').name, 'Kullanıcı Düzenlemesi Korunur');
 assert.equal(env.DB.processes.get('integrated-assembly').name, 'Entegre Tesis Montaj Prosesi');
 
-const newUser = { email: 'kalite@tyana.local', displayName: 'Kalite Uzmanı', role: 'quality_engineer', status: 'active', plant: 'TYANA OTOMOTİV', department: 'Kalite' };
+const newUser = { email: 'kalite@tyana.local', displayName: 'Kalite Uzmanı', role: 'quality_engineer', status: 'active', plant: 'Kullanıcı Tanımlı Tesis', department: 'Kalite' };
 const createUserResponse = await worker.fetch(new Request(`${origin}/api/users`, { method: 'POST', headers: { 'content-type': 'application/json', origin, ...authHeaders }, body: JSON.stringify(newUser) }), env);
 assert.equal(createUserResponse.status, 201);
 const createdUser = (await createUserResponse.json()).user;

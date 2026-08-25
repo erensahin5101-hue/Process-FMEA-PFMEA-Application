@@ -9,7 +9,9 @@ def main() -> None:
     parser.add_argument("database", type=Path)
     args = parser.parse_args()
     database = args.database.resolve(strict=True)
-    connection = sqlite3.connect(f"file:{database.as_posix()}?mode=ro", uri=True)
+    # The acceptance check must not create WAL/SHM sidecars in the user's app
+    # data directory. Run only after the desktop process has fully stopped.
+    connection = sqlite3.connect(f"{database.as_uri()}?mode=ro&immutable=1", uri=True)
     try:
         result = {
             "quick_check": connection.execute("PRAGMA quick_check").fetchone()[0],

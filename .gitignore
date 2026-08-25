@@ -1,7 +1,10 @@
 node_modules/
 *.tgz
 output/
-release-desktop/
+release-desktop/*.exe
+release-desktop/*.msi
+release-desktop/*.zip
+kalite_dök/
 desktop-dist/
 src-tauri/target/
 src-tauri/gen/
